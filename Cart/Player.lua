@@ -90,13 +90,18 @@ function Player:update()
 
     self.sprite:next_frame()
     self.x = math.fence(self.x + self.dx * self.v * k, 0, 240 - 8)
+    gm.x = self.x // 8
+    sx = (gm.x - 1) * 8 - self.x
+    gm.x = gm.x - 120 // 8
+
     self.y = math.fence(self.y + self.dy * self.v * k, 0, 136 - 8)
+    gm.y = self.y // 8
+    sy = (gm.y - 1) * 8 - self.y
+    gm.y = gm.y - 68 // 8
+
     self.hitbox:set_xy(self.x+2, self.y+1)
     self:draw()
 
-    -- if btnp(4) and not self.boomerang then
-    --     self:shoot()
-    -- end
     if not self.boomerang then
         self:shoot()
     end
