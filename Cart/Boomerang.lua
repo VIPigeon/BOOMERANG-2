@@ -1,4 +1,3 @@
-
 Boomerang = table.copy(Body)
 BOOMERANG_A = Sprite:new(anim.gen60({264, 265, 266, 264, 265, 266, 264, 265, 266, 264, 265, 266}), 1)
 
@@ -11,11 +10,11 @@ function Boomerang:new(x, y, dx, dy)
         px = 0, py = 0,
         hitbox = Hitbox:new(x+2, y+2, x+5, y+5)
     }
-    obj['flip'] = -fence(dx, -1, 0)
+    obj['flip'] = -math.fence(dx, -1, 0)
     if obj['dx'] * obj['dy'] ~= 0 then
         obj['k'] = 1 / math.sqrt(2)
     end
-    obj['dv'] = obj['v'] / 90
+    obj['dv'] = obj['v'] / 80
     -- чистая магия!
     setmetatable(obj, self)
     self.__index = self; return obj-- body

@@ -1,10 +1,10 @@
-
 Game = {}
 
 
 function Game:new()
     obj = {
-        mode = 'debug'
+        mode = 'debug',
+        plr = Player:new(10,10)
     }
     -- чистая магия!
     setmetatable(obj, self)
@@ -13,7 +13,7 @@ end
 
 
 function Game:update()
-    rect(1, 1, 10, 10, 2)
+    self.plr:update()
 end
 
 
