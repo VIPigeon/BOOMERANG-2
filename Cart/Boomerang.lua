@@ -1,9 +1,10 @@
+
 Boomerang = table.copy(Body)
--- BOOMERANG_A = Sprite:new(animation_generation({264, 265, 266, 264, 265, 266, 264, 265, 266, 264, 265, 266}), 1)
+BOOMERANG_A = Sprite:new(anim.gen60({264, 265, 266, 264, 265, 266, 264, 265, 266, 264, 265, 266}), 1)
 
 function Boomerang:new(x, y, dx, dy)
     obj = {  -- dx, dy in [-1, 1]
-        -- sprite = BOOMERANG_A:copy(),
+        sprite = BOOMERANG_A:copy(),
         x = x, y = y,
         dx = dx, dy = dy,
         v = 1.8, k = 1,

@@ -13,6 +13,7 @@ end
 
 
 function anim.gen60(t)
+    -- Забудьте про этот метод, он используется только в легаси
     -- #t -- делитель 60
     res = {}
     for _, pict in ipairs(t) do
