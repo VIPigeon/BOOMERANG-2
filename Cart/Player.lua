@@ -37,6 +37,15 @@ function Player:new(x, y)
     self.__index = self; return obj
 end
 
+KEY_W = 23
+KEY_A = 01
+KEY_S = 19
+KEY_D = 04
+KEY_UP = 58
+KEY_DOWN = 59
+KEY_LEFT = 60
+KEY_RIGHT = 61
+
 function Player:update()
     if self.isDead then
         self:death_update()
@@ -55,16 +64,16 @@ function Player:update()
     end
 
     self.dx = 0; self.dy = 0
-    if btn(0) then
+    if key(KEY_W) then
         self.dy = self.dy - 1
     end
-    if btn(1) then
+    if key(KEY_S) then
         self.dy = self.dy + 1
     end
-    if btn(2) then
+    if key(KEY_A) then
         self.dx = self.dx - 1
     end
-    if btn(3) then
+    if key(KEY_D) then
         self.dx = self.dx + 1
     end
 
@@ -117,13 +126,13 @@ function Player:update()
 end
 
 function Player:shoot()
-    if btnp(4) then
+    if key(KEY_UP) then
         self.boomerang = Boomerang:new(self.x, self.y, 0, -1)
-    elseif btnp(5) then
+    elseif key(KEY_DOWN) then
         self.boomerang = Boomerang:new(self.x, self.y, 0, 1)
-    elseif btnp(6) then
+    elseif key(KEY_LEFT) then
         self.boomerang = Boomerang:new(self.x, self.y, -1, 0)
-    elseif btnp(7) then
+    elseif key(KEY_RIGHT) then
         self.boomerang = Boomerang:new(self.x, self.y, 1, 0)
     end
 end
