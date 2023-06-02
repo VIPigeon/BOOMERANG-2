@@ -6,19 +6,14 @@ gm.y = 0  -- glabal map Y
 gm.sx = 0 -- start map X :D
 gm.sy = 0 -- start map Y >:(
 
+TEST_BLOCK_TYPE = 1
 
 function gm.get_tile_type(x, y)
     -- local tile = mget(math.round(x/8), math.round(y/8))
     x = x % (240 * 8)
     y = y % (136 * 8)
     local tile = mget(x//8, y//8)
-    -- trace(tile)
-    if tile == 16 or
-            (10 <= tile and tile <= 12) or 
-            (26 <= tile and tile <= 28) or
-            tile == 135 or
-            tile == 151 or
-            tile == 192 then
+    if tile == TEST_BLOCK_TYPE then
         return 'block'
     end
     return 'void'
