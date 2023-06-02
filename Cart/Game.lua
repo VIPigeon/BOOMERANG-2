@@ -3,7 +3,7 @@ Game = {}
 
 function Game:new()
     obj = {
-        mode = 'debug',
+        mode = 'action',
         plr = Player:new(10,10)
     }
     -- чистая магия!
@@ -13,6 +13,8 @@ end
 
 
 function Game:update()
+    map(gm.x, gm.y , 30, 17, gm.sx, gm.sy)
+    
     self.plr:update()
 end
 

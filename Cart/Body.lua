@@ -30,7 +30,7 @@ end
 
 
 function Body:draw()
-    self.sprite:draw(self.x - gm.x*8, self.y - gm.y*8, self.flip)
+    self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip)
 end
 
 

@@ -27,7 +27,7 @@ function Player:new(x, y)
         last_dx = 1, last_dy = 0,
         dx = 0, dy = 0, v = 1,
         flip = 0,  -- направление при отрисовке спрайта
-        hitbox = Hitbox:new(x+2, y+1, x+5, y+7),
+        hitbox = Hitbox:new_with_shift(x, y, x+3, y+6, 2, 1),
         hp = 1,
         born_flag = true,
         boomerang = false
@@ -36,6 +36,70 @@ function Player:new(x, y)
     setmetatable(obj, self)
     self.__index = self; return obj
 end
+
+
+function Player:tryMove(kNormal)
+    -- if not self.hitbox:mapCheck() then
+    --     self.x = self.x - self.dx * self.v * self.k
+    --     self.hitbox:set_xy(self.x, self.y)
+    -- end
+
+    -- self.y = self.y + self.dy * self.v * self.k
+    -- self.hitbox:set_xy(self.x, self.y)
+    -- if not self.hitbox:mapCheck() then
+    --     self.y = self.y - self.dy * self.v * self.k
+    --     self.hitbox:set_xy(self.x, self.y)
+    -- end
+
+    local tryX = math.fence(self.x + self.dx * self.v * kNormal, 0, 240 - 8)
+    local tryY = math.fence(self.y + self.dy * self.v * kNormal, 0, 136 - 8)
+
+    self.hitbox:set_xy(tryX, tryY);
+
+    print(self.hitbox:mapCheck())
+
+    if not self.hitbox:mapCheck() then
+        self.hitbox:set_xy(self.x, tryY)
+
+        if self.hitbox:mapCheck() then
+            self:move(self.x, tryY)
+        end
+
+        self.hitbox:set_xy(tryX, self.y)
+
+        if self.hitbox:mapCheck() then
+            self:move(tryX, self.y)
+        end
+    else
+        self:move(tryX, tryY)
+    end
+
+    self.hitbox:set_xy(self.x, self.y)
+end
+
+
+function Player:move(newX, newY)
+    self.x = newX
+    self.y = newY
+
+    gm.x = self.x // 8
+    gm.sx = (gm.x - 1) * 8 - self.x
+    gm.x = gm.x - 120 // 8
+
+    gm.y = self.y // 8
+    gm.sy = (gm.y - 1) * 8 - self.y
+    gm.y = gm.y - 68 // 8
+end
+
+KEY_W = 23
+KEY_A = 01
+KEY_S = 19
+KEY_D = 04
+KEY_UP = 58
+KEY_DOWN = 59
+KEY_LEFT = 60
+KEY_RIGHT = 61
+
 
 function Player:update()
     if self.isDead then
@@ -55,22 +119,17 @@ function Player:update()
     end
 
     self.dx = 0; self.dy = 0
-    if btn(0) then
+    if key(KEY_W) then
         self.dy = self.dy - 1
     end
-    if btn(1) then
+    if key(KEY_S) then
         self.dy = self.dy + 1
     end
-    if btn(2) then
+    if key(KEY_A) then
         self.dx = self.dx - 1
     end
-    if btn(3) then
+    if key(KEY_D) then
         self.dx = self.dx + 1
-    end
-
-    k = 1
-    if self.dx * self.dy ~= 0 then
-        k = 1 / math.sqrt(2)
     end
 
     if math.abs(self.dx) + math.abs(self.dy) ~= 0 then  -- is moving
@@ -88,15 +147,16 @@ function Player:update()
         self.flip = 0
     end
 
+    k = 1
+    if self.dx * self.dy ~= 0 then
+        k = 1 / math.sqrt(2)
+    end
+
     self.sprite:next_frame()
-    self.x = math.fence(self.x + self.dx * self.v * k, 0, 240 - 8)
-    self.y = math.fence(self.y + self.dy * self.v * k, 0, 136 - 8)
-    self.hitbox:set_xy(self.x+2, self.y+1)
+
+    self:tryMove(k)
     self:draw()
 
-    -- if btnp(4) and not self.boomerang then
-    --     self:shoot()
-    -- end
     if not self.boomerang then
         self:shoot()
     end
@@ -112,13 +172,13 @@ function Player:update()
 end
 
 function Player:shoot()
-    if btnp(4) then
+    if key(KEY_UP) then
         self.boomerang = Boomerang:new(self.x, self.y, 0, -1)
-    elseif btnp(5) then
+    elseif key(KEY_DOWN) then
         self.boomerang = Boomerang:new(self.x, self.y, 0, 1)
-    elseif btnp(6) then
+    elseif key(KEY_LEFT) then
         self.boomerang = Boomerang:new(self.x, self.y, -1, 0)
-    elseif btnp(7) then
+    elseif key(KEY_RIGHT) then
         self.boomerang = Boomerang:new(self.x, self.y, 1, 0)
     end
 end
