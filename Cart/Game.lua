@@ -11,11 +11,9 @@ function Game:new()
     self.__index = self; return obj
 end
 
-sx = 0
-sy = 0
 
 function Game:update()
-    map(gm.x, gm.y , 30, 17, sx, sy)
+    map(gm.x, gm.y , 30, 17, gm.sx, gm.sy)
     
     self.plr:update()
 end

@@ -3,6 +3,8 @@ gm = {}
 
 gm.x = 0  -- global map X
 gm.y = 0  -- glabal map Y
+gm.sx = 0 -- start map X :D
+gm.sy = 0 -- start map Y >:(
 
 
 function gm.get_tile_type(x, y)
