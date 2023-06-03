@@ -19,6 +19,7 @@ function Game.addLevers()
     for x = 0, 239 do
         for y = 0, 135 do
             if mget(x, y) == 1 then
+                mset(x, y, 0)
                 table.insert(res, Lever:new(x * 8, y * 8))
 
                 --trace(mget(x,y))
