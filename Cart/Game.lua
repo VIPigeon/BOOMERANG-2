@@ -26,6 +26,8 @@ function Game.addLevers()
         end
     end
 
+    trace('AHHAHA LEVERS')
+
     return res
 end
 
@@ -54,12 +56,11 @@ function Game:draw()
         lever:draw()
     end
 
-    self:draw()
-
+    self.plr:draw()
 end
 
 function Game:update()
-    self.draw()
+    self:draw()
     
     self:checkLever()
     self.plr:update()
