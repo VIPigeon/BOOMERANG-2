@@ -5,7 +5,8 @@ function Game:new()
     obj = {
         mode = 'action',
         plr = Player:new(10,10),
-        levers = Game.addLevers()
+        levers = Game.addLevers(),
+		camera = CameraWindow:new(-30, -20, 30, 20),
     }
 
     -- чистая магия!
@@ -62,6 +63,8 @@ function Game:update()
     
     self:checkLever()
     self.plr:update()
+    self.camera:tryMove(self.plr.x, self.plr.y)
+    self.camera:update()
 end
 
 

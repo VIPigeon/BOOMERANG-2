@@ -81,14 +81,6 @@ end
 function Player:move(newX, newY)
     self.x = newX
     self.y = newY
-
-    gm.x = self.x // 8
-    gm.sx = (gm.x - 1) * 8 - self.x
-    gm.x = gm.x - 120 // 8
-
-    gm.y = self.y // 8
-    gm.sy = (gm.y - 1) * 8 - self.y
-    gm.y = gm.y - 68 // 8
 end
 
 KEY_W = 23
