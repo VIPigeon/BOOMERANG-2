@@ -19,6 +19,7 @@ function Game.addLevers()
         for y = 0, 135 do
             if mget(x, y) == 1 then
                 table.insert(res, Lever:new(x * 8, y * 8))
+
                 --trace(mget(x,y))
             end
         end
@@ -28,17 +29,36 @@ function Game.addLevers()
 end
 
 function Game:checkLever()
+    if not self.plr.boomerang then
+        return
+    end
+    
     for i, lever in ipairs(self.levers) do
-        if self.plr.boomerang and lever.hitbox:collide(self.plr.boomerang.hitbox) then
-            lever:turn(self.plr.boomerang.hitbox)
-            --trace(lever:collide(self.plr.boomerang.hitbox))
+        if not lever.isJustTurned and lever.hitbox:collide(self.plr.boomerang.hitbox) then
+            lever:turn()
+            lever.isJustTurned = true
+        elseif lever.isJustTurned and not lever.hitbox:collide(self.plr.boomerang.hitbox) then
+            lever.isJustTurned = false
         end
+        
+        --trace(lever:collide(self.plr.boomerang.hitbox))
+    end
+
+end
+
+function Game:draw()
+    map(gm.x, gm.y , 30, 17, gm.sx, gm.sy)
+
+    for i, lever in ipairs(self.levers) do
         lever:draw()
     end
+
+    self:draw()
+
 end
 
 function Game:update()
-    map(gm.x, gm.y , 30, 17, gm.sx, gm.sy)
+    self.draw()
     
     self:checkLever()
     self.plr:update()
