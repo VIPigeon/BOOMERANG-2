@@ -41,10 +41,27 @@ function Body:will_collide_after(dx, dy)
     return will_collide
 end
 
+function Body:move_unclamped(dx, dy)
+    local newX = self.x + dx * Time.dt()
+    local newY = self.y + dy * Time.dt()
+
+    self.x = newX
+    self.y = newY
+
+    self.hitbox:set_xy(self.x, self.y)
+end
+
 function Body:move(dx, dy)
     local newX = self.x + dx * Time.dt()
     local newY = self.y + dy * Time.dt()
 
+    self.x = math.fence(newX, 0, 240 - 8)
+    self.y = math.fence(newY, 0, 136 - 8)
+
+    self.hitbox:set_xy(self.x, self.y)
+end
+
+function Body:stay_in_borders()
     self.x = math.fence(newX, 0, 240 - 8)
     self.y = math.fence(newY, 0, 136 - 8)
 
