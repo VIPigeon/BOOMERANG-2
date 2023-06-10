@@ -3,7 +3,7 @@ gm = {}
 
 gm.x = 0  -- global map X
 gm.y = 0  -- glabal map Y
-gm.sx = 0 -- start map X :D
+gm.sx = 0 -- start map X 0w0
 gm.sy = 0 -- start map Y >:(
 
 TEST_BLOCK_TYPE = 1
