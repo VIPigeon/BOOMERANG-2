@@ -117,7 +117,6 @@ function Player:update()
     self.sprite:next_frame()
 
     self:tryMove(k)
-    self:draw()
 
     if not self.boomerang then
         self:shoot()
