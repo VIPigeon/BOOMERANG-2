@@ -91,6 +91,8 @@ function Game:draw()
 end
 
 function Game:update()
+    Time.update()
+
     self:draw()
     self:checkLever()
 
