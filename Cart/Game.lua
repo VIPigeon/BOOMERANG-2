@@ -5,7 +5,7 @@ function Game:new()
     obj = {
         mode = 'action',
         plr = Player:new(10,10),
-        levers = Game.addLevers(),
+        doorlever = DoorAndLever:new(),
 		camera = CameraWindow:new(-30, -20, 30, 20),
     }
 
@@ -14,6 +14,7 @@ function Game:new()
     self.__index = self; return obj
 end
 
+<<<<<<< Updated upstream
 function Game.addLevers()
     res = {}
     for x = 0, 239 do
@@ -32,13 +33,16 @@ function Game.addLevers()
     return res
 end
 
+=======
+>>>>>>> Stashed changes
 function Game:checkLever()
     if not self.plr.boomerang then
         return
     end
     
-    for i, lever in ipairs(self.levers) do
+    for i, lever in ipairs(self.doorlever.levers) do
         if not lever.isJustTurned and lever.hitbox:collide(self.plr.boomerang.hitbox) then
+            --trace(22)
             lever:turn()
             lever.isJustTurned = true
         elseif lever.isJustTurned and not lever.hitbox:collide(self.plr.boomerang.hitbox) then
@@ -53,8 +57,12 @@ end
 function Game:draw()
     map(gm.x, gm.y , 30, 17, gm.sx, gm.sy)
 
-    for i, lever in ipairs(self.levers) do
+    for i, lever in ipairs(self.doorlever.levers) do
         lever:draw()
+    end
+
+    for i, door in ipairs(self.doorlever.doors) do
+        door:draw()
     end
 
     self.plr:draw()
