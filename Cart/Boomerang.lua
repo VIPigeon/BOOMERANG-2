@@ -6,7 +6,7 @@ function Boomerang:new(x, y, dx, dy)
         sprite = BOOMERANG_A:copy(),
         x = x, y = y,
         dx = dx, dy = dy,
-        v = 1.8, k = 1,
+        v = 0.1, k = 1,
         px = 0, py = 0,
         hitbox = Hitbox:new(x+2, y+2, x+5, y+5)
     }
@@ -27,9 +27,11 @@ function Boomerang:update()
         self:reverse_update()
         return
     end
-    self.x = self.x + self.v * self.dx * self.k
-    self.y = self.y + self.v * self.dy * self.k
-    self.hitbox:set_xy(self.x + 2, self.y + 2)
+
+    local dx = self.v * self.dx * self.k
+    local dy = self.v * self.dy * self.k
+
+    self:move_unclamped(dx, dy)
     self:draw()
 end
 
@@ -54,9 +56,10 @@ function Boomerang:reverse_update()
     if fy < y then
         ky = -1
     end
-    self.x = self.x - kx * dx
-    self.y = self.y - ky * dy
-    self.hitbox:set_xy(self.x + 2, self.y + 2)
+    
+    local ddx = -1 * kx * dx
+    local ddy = -1 * ky * dy
+    self:move_unclamped(ddx, ddy)
     self:draw()
 end
 

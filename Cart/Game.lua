@@ -10,6 +10,8 @@ function Game:new()
         metronome = Metronome:new(60),
     }
 
+    obj.camera:move()
+
     Game.initialize_decoration_animations(obj.metronome)
 
     -- чистая магия!
@@ -91,6 +93,8 @@ function Game:draw()
 end
 
 function Game:update()
+    Time.update()
+
     self:draw()
     self:checkLever()
 
