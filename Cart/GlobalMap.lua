@@ -6,7 +6,7 @@ gm.y = 0  -- glabal map Y
 gm.sx = 0 -- start map X :D
 gm.sy = 0 -- start map Y >:(
 
-TEST_BLOCK_TYPE = 1
+TEST_BLOCK_TYPE = 4
 
 function gm.get_tile_type(x, y)
     -- local tile = mget(math.round(x/8), math.round(y/8))
