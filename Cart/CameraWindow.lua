@@ -63,14 +63,20 @@ function CameraWindow:startFollow(x, y)
     end
 end
 
-function CameraWindow:move()
-    gm.x = self.x // 8
-    gm.sx = (gm.x - 1) * 8 - self.x
-    gm.x = gm.x - 120 // 8
+function CameraWindow:trace()
+    trace("Camera position: " .. '(' .. gm.x .. ', ' .. gm.y .. ') tiles, (' .. gm.sx .. ', ' .. gm.sy .. ') px')
+end
 
-    gm.y = self.y // 8
-    gm.sy = (gm.y - 1) * 8 - self.y
-    gm.y = gm.y - 68 // 8
+function CameraWindow:move()
+    gm.x = math.floor(self.x / 8)
+    gm.sx = (gm.x - 1) * 8 - math.floor(self.x)
+    gm.x = gm.x - math.floor(120 / 8)
+
+    gm.y = math.floor(self.y / 8)
+    gm.sy = (gm.y - 1) * 8 - math.floor(self.y)
+    gm.y = gm.y - math.floor(68 / 8)
+
+    self:trace()
 end
 
 function CameraWindow:drawDebug()
