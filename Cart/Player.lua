@@ -164,7 +164,7 @@ function Player:set_start_stats()
     self.y = self.start_y
     self.sprite = Player.born_a:copy()
     self.born_flag = true
-    self.hitbox = Hitbox:new(self.x+2, self.y+1, self.x+5, self.y+7)
+    self.hitbox = Hitbox:new_with_shift(self.start_x, self.start_y, self.start_x + 3, self.start_y + 6, 2, 1)
 end
 
 
