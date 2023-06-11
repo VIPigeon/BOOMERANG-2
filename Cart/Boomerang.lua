@@ -8,6 +8,7 @@ function Boomerang:new(x, y, dx, dy)
         dx = dx, dy = dy,
         v = 0.1, k = 1,
         px = 0, py = 0,
+        damage_per_ms = 0.1,
         hitbox = Hitbox:new_with_shift(x+2, y+2, x+6, y+6, 2, 2)
     }
     obj['flip'] = -math.fence(dx, -1, 0)

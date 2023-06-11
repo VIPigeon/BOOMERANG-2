@@ -8,6 +8,12 @@ function Game:new()
         doorlever = DoorAndLever:new(),
 		camera = CameraWindow:new(-30, -20, 30, 20),
         metronome = Metronome:new(60),
+        enemies = {
+            Enemy:new(15, 15),
+            Enemy:new(200, 100),
+            Enemy:new(35, 80),
+            Enemy:new(120, 10),
+        }
     }
 
     obj.camera:move()
@@ -19,21 +25,30 @@ function Game:new()
     return obj
 end
 
-function Game:checkLever()
+function Game:checkCollisions()
     if not self.plr.boomerang then
         return
+    end
+
+    for i, enemy in ipairs(self.enemies) do
+        if enemy.hitbox:collide(self.plr.boomerang.hitbox) then
+            local damage = math.round(self.plr.boomerang.damage_per_ms * Time.dt())
+            enemy:take_damage(damage)
+
+            if enemy:is_dead() then
+                enemy:die()
+                table.remove(self.enemies, i)
+            end
+        end
     end
     
     for i, lever in ipairs(self.doorlever.levers) do
         if not lever.isJustTurned and lever.hitbox:collide(self.plr.boomerang.hitbox) then
-            --trace(22)
             lever:turn()
             lever.isJustTurned = true
         elseif lever.isJustTurned and not lever.hitbox:collide(self.plr.boomerang.hitbox) then
             lever.isJustTurned = false
         end
-        
-        --trace(lever:collide(self.plr.boomerang.hitbox))
     end
 end
 
@@ -78,6 +93,10 @@ function Game:draw()
         door:draw()
     end
 
+    for i, enemy in ipairs(self.enemies) do
+        enemy:draw()
+    end
+
     self.plr:draw()
 end
 
@@ -85,7 +104,7 @@ function Game:update()
     Time.update()
 
     self:draw()
-    self:checkLever()
+    self:checkCollisions()
 
     self.metronome:update()
     self.plr:update()
