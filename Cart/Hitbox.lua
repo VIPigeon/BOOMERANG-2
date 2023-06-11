@@ -62,7 +62,11 @@ end
 
 
 function Hitbox:draw(color)
-    rect(self.x1, self.y1, self.x2 - self.x1, self.y2 - self.y1, color)
+    local x1 = self.x1 - gm.x*8 + gm.sx
+    local y1 = self.y1 - gm.y*8 + gm.sy
+    local w = (self.x2 - self.x1)
+    local h = (self.y2 - self.y1)
+    rect(x1, y1, w, h, color)
 end
 
 

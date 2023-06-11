@@ -75,8 +75,6 @@ function CameraWindow:move()
     gm.y = math.floor(self.y / 8)
     gm.sy = (gm.y - 1) * 8 - math.floor(self.y)
     gm.y = gm.y - math.floor(68 / 8)
-
-    self:trace()
 end
 
 function CameraWindow:drawDebug()
