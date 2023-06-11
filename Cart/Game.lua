@@ -52,6 +52,28 @@ function Game:checkCollisions()
     end
 end
 
+
+-- function Game:debug_paletteChange()
+--     if not self.debug_counter then
+--         self.debug_counter = 0
+--         self.current_debug_color = 0
+--     end
+--     self.debug_counter = self.debug_counter + 1
+--     if self.debug_counter > 80 then
+--         self.debug_counter = 0
+--         self.current_debug_color = self.current_debug_color + 1
+--     end
+
+--     palette.colorChange(self.current_debug_color, 70, 70, 70)
+
+--     rect_side = 16
+--     for i = 1, 15 do
+--         rect((i-1)*rect_side, 0, rect_side, rect_side, i)
+--         print(i, (i-1)*rect_side + 1, 1, 0)
+--     end
+-- end
+
+
 decoration_ids = {
     100,
     101,
@@ -62,6 +84,8 @@ decoration_ids = {
 ANIMATE_OFFSET = 16
 
 function Game.initialize_decoration_animations(metronome)
+    -- palette.colorChange(0, 70, 70, 70)
+
     for x = 0, 239 do
         for y = 0, 135 do
             for _, decoration in ipairs(decoration_ids) do
@@ -83,6 +107,7 @@ function Game.initialize_decoration_animations(metronome)
 end
 
 function Game:draw()
+    -- self:debug_paletteChange()
     map(gm.x, gm.y , 30, 17, gm.sx, gm.sy)
 
     for i, lever in ipairs(self.doorlever.levers) do
