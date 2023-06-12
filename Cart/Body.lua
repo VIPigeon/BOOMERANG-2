@@ -27,8 +27,6 @@ function Body:is_dead()
 end
 
 function Body:take_damage(damage)
-    trace("HP: " .. self.hp)
-
     self.hp = math.fence(self.hp - damage, 0, self.hp)
 
     if self:is_dead() then
