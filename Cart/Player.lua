@@ -19,10 +19,14 @@ Player.death_a = Sprite:new(anim.gen60(plr_death_anim()), 1)
 Player.born_a = Sprite:new(table.reversed(anim.gen60(plr_death_anim())), 1)
 Player.hat_a = Sprite:new(anim.gen60({279}), 1)
 
+Player.stay_b = Sprite:new({465}, 1)
+Player.run_b = Sprite:new(anim.gen60({464, 465, 466, 467, 464, 465, 466, 467, 464, 465, 466, 467}), 1)
+
 function Player:new(x, y)
     obj = {
         sprite = Player.born_a:copy(),
         start_x = x, start_y = y,
+        vertical_flip = false,
         x = x, y = y,
         last_dx = 1, last_dy = 0,
         dx = 0, dy = 0, v = 0.07,
@@ -68,6 +72,7 @@ function Player:update()
         self:death_update()
         return
     end
+
     if self.born_flag then
         if not self:born_update() then  -- если рождение закончилось
             self.sprite = Player.stay_a:copy()
@@ -95,12 +100,33 @@ function Player:update()
     end
 
     if math.abs(self.dx) + math.abs(self.dy) ~= 0 then  -- is moving
-        self.last_dx = self.dx; self.last_dy = self.dy
+        self.last_dx = self.dx;
+        self.last_dy = self.dy
+        if self.dy < 0 and not self.vertical_flip then
+            frame = self.sprite:get_frame()
+            self.vertical_flip = true
+            self.sprite = Player.run_b:copy();
+            self.sprite:set_frame(frame)
+        elseif self.dy > 0 and self.vertical_flip then
+            frame = self.sprite:get_frame()
+            self.vertical_flip = false
+            self.sprite = Player.run_a:copy();
+            self.sprite:set_frame(frame)
+        end
+
         if not flag or #self.sprite.animation == 1 then
-            self.sprite = Player.run_a:copy()
+            if self.vertical_flip then
+                self.sprite = Player.run_b:copy()
+            else
+                self.sprite = Player.run_a:copy()
+            end
         end
     else
-        self.sprite = Player.stay_a:copy()
+        if self.vertical_flip then
+            self.sprite = Player.stay_b:copy()
+        else
+            self.sprite = Player.stay_a:copy()
+        end
     end
 
     if self.dx == -1 then
