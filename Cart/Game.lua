@@ -83,14 +83,14 @@ function Game.initialize_decoration_animations(metronome)
 end
 
 function Game:draw()
-    map(gm.x, gm.y , 30, 17, gm.sx, gm.sy)
+    for i, door in ipairs(self.doorlever.doors) do
+        door:draw()
+    end
+
+    map(gm.x, gm.y , 30, 17, gm.sx, gm.sy, C0)
 
     for i, lever in ipairs(self.doorlever.levers) do
         lever:draw()
-    end
-
-    for i, door in ipairs(self.doorlever.doors) do
-        door:draw()
     end
 
     for i, enemy in ipairs(self.enemies) do
@@ -105,6 +105,10 @@ function Game:update()
 
     self:draw()
     self:checkCollisions()
+
+    for _, door in ipairs(self.doorlever.doors) do
+        door:update()
+    end
 
     self.metronome:update()
     self.plr:update()

@@ -19,14 +19,11 @@ function DoorAndLever.addDoors()
     res = {}
     for x = 0, 239 do
         for y = 0, 135 do
-            if mget(x, y) == 46 then
+            if mget(x, y) == 34 then
                 mset(x, y, 0)
-                mset(x + 1, y, 0)
-                mset(x, y + 1, 0)
-                mset(x + 1, y + 1, 0)
                 table.insert(res, Door:new(x * 8, y * 8))
 
-                --trace(mget(x,y))
+                trace(mget(x,y))
             end
         end
     end
@@ -39,8 +36,9 @@ function DoorAndLever:new()
         doors = DoorAndLever.addDoors()
     }
 
-    for id = 1, 2 do
+    for id = 1, 1 do
     	obj.levers[id].door = obj.doors[id]
+        obj.doors[id].lever = obj.levers[id]
     	trace(obj.levers[id].door)
     end
 

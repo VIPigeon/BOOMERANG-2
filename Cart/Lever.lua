@@ -23,14 +23,14 @@ function Lever:turn()
 		self.sprite = Lever.sPriteOn
 		self.status = true
 		self.isJustTurned = true
-		self.door:changeState()
+		--self.door:changeState()
 		trace(self.door.state)
 		return
 	else
 		self.sprite = Lever.sPriteOff
 		self.status = false
 		self.isJustTurned = true
-		self.door:changeState()
+		--self.door:changeState()
 		trace(self.door.state)
 		return
 	end
