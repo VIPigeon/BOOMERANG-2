@@ -1,4 +1,3 @@
-
 gm = {}
 
 gm.x = 0  -- global map X
@@ -8,31 +7,49 @@ gm.sy = 0 -- start map Y >:(
 
 TEST_BLOCK_TYPE = 4
 
+function gm.isTurnedOnWire(tileX, tileY)
+end
+
+function gm.isTurnedOffWire(tileX, tileY)
+end
+
+TileType = {
+    Void = 0,
+    Block = 1,
+    TurnedOffWire = 2,
+    TurnedOnWire = 3,
+    Door = 4,
+    Lever = 5,
+    Decoration = 6,
+}
+
 function gm.get_tile_type(x, y)
-    -- local tile = mget(math.round(x/8), math.round(y/8))
     x = x % (240 * 8)
     y = y % (136 * 8)
-    local tile = mget(x//8, y//8)
-    if tile == TEST_BLOCK_TYPE then
-        return 'block'
-    end
-    return 'void'
-end
+    
+    x = x // 8
+    y = y // 8
 
+    return gm.get_tile_type8(x, y)
+end
 
 function gm.get_tile_type8(x, y)  -- x, y даются как координаты тайла на глобальной карте
-    local tile = mget(x, y)
-    if tile == 16 or
-            (10 <= tile and tile <= 12) or 
-            (26 <= tile and tile <= 28) or
-            tile == 135 or
-            tile == 151 or
-            tile == 192 then
-        return 'block'
-    end
-    return 'void'
-end
+    local tileId = mget(x, y)
 
+    if tileId == TEST_BLOCK_TYPE then
+        return TileType.Block
+    elseif MC.turnedOffWires[tileId] ~= nil then
+        return TileType.TurnedOffWire
+    elseif MC.turnedOnWires[tileId] ~= nil then
+        return TileType.TurnedOnWire
+    elseif MC.doorIds[tileId] ~= nil then
+        return TileType.Door
+    elseif MC.leverIds[tileId] ~= nil then
+        return TileType.Lever
+    else
+        return TileType.Void
+    end
+end
 
 function gm.check(x, y)
     -- аргументы -- глобальные координаты пикселя

@@ -1,6 +1,5 @@
 Game = {}
 
-
 function Game:new()
     obj = {
         mode = 'action',

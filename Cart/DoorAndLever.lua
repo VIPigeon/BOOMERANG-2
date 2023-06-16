@@ -7,8 +7,6 @@ function DoorAndLever.addLevers()
             if mget(x, y) == 1 then
                 mset(x, y, 0)
                 table.insert(res, Lever:new(x * 8, y * 8))
-
-                --trace(mget(x,y))
             end
         end
     end
@@ -25,8 +23,6 @@ function DoorAndLever.addDoors()
                 mset(x, y + 1, 0)
                 mset(x + 1, y + 1, 0)
                 table.insert(res, Door:new(x * 8, y * 8))
-
-                --trace(mget(x,y))
             end
         end
     end
@@ -54,25 +50,11 @@ local leverIds = {
     [1] = 0
 }
 
-function DoorAndLever._isWire(x, y)
-    local tileId = mget(x, y)
-    return MC.turnedOnWires[tileId] ~= nil
-end
-
-function DoorAndLever._isDoor(x, y)
-    local tileId = mget(x, y)
-    return doorIds[tileId] ~= nil
-end
-
-function DoorAndLever._isLever(x, y)
-    local tileId = mget(x, y)
-    return leverIds[tileId] ~= nil
-end
-
 function DoorAndLever.findWires()
     for x = 0, 239 do
         for y = 0, 135 do
-            if DoorAndLever._isWire(x, y) then
+            local tileType = gm.get_tile_type8(x, y)
+            if tileType == TileType.TurnedOnWire then
                 DoorAndLever.walkWire(x, y)
 
                 if doorLeverPair.door == nil or doorLeverPair.lever == nil then
@@ -86,15 +68,17 @@ function DoorAndLever.findWires()
 end
 
 function DoorAndLever.walkWire(x, y)
-    if DoorAndLever._isDoor(x, y) then
+    local tileType = gm.get_tile_type8(x, y)
+
+    if tileType == TileType.Door then
         doorLeverPair.door = { x=x, y=y, id=mget(x, y) }
     end
 
-    if DoorAndLever._isLever(x, y) then
+    if tileType == TileType.Lever then
         doorLeverPair.lever = { x=x, y=y }
     end
 
-    if not DoorAndLever._isWire(x, y) then
+    if tileType ~= TileType.TurnedOnWire then
         return
     end
 
@@ -137,15 +121,10 @@ function DoorAndLever:new()
     end
 
     obj = {
-        doors = doors,--DoorAndLever.addDoors()
-        levers = levers--DoorAndLever.addLevers(),
+        doors = doors,
+        levers = levers
     }
 
-    -- for id = 1, 2 do
-    -- 	obj.levers[id].door = obj.doors[id]
-    -- end
-
-    -- чистая магия!
     setmetatable(obj, self)
     self.__index = self;
     return obj
