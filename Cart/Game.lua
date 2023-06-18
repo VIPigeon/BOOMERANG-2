@@ -12,6 +12,7 @@ function Game:new()
             Enemy:new(200, 100),
             Enemy:new(35, 80),
             Enemy:new(120, 10),
+            Rose:new(70, 80),
         }
     }
 
@@ -109,6 +110,10 @@ function Game:update()
     self.plr:update()
     self.camera:tryMove(self.plr.x, self.plr.y)
     self.camera:update()
+
+    for _, enemy in ipairs(self.enemies) do
+        enemy:update()
+    end
 end
 
 

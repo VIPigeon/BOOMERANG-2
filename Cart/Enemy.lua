@@ -27,6 +27,9 @@ function Enemy:new(x, y)
     return obj
 end
 
+function Enemy:update()
+end
+
 function Enemy.is_enemy(body)
     return body.is_enemy ~= nil and body.is_enemy
 end
