@@ -5,11 +5,18 @@ function Game:new()
     obj = {
         mode = 'action',
         plr = Player:new(10,10),
-        levers = Game.addLevers(),
+        doorlever = DoorAndLever:new(),
 		camera = CameraWindow:new(-30, -20, 30, 20),
         metronome = Metronome:new(60),
+        enemies = {
+            Enemy:new(15, 15),
+            Enemy:new(200, 100),
+            Enemy:new(35, 80),
+            Enemy:new(120, 10),
+        }
     }
 
+    obj.camera:move()
     Game.initialize_decoration_animations(obj.metronome)
 
     -- чистая магия!
@@ -18,35 +25,30 @@ function Game:new()
     return obj
 end
 
-function Game.addLevers()
-    res = {}
-    for x = 0, 239 do
-        for y = 0, 135 do
-            if mget(x, y) == 1 then
-                mset(x, y, 0)
-                table.insert(res, Lever:new(x * 8, y * 8))
-
-                --trace(mget(x,y))
-            end
-        end
-    end
-    return res
-end
-
-function Game:checkLever()
+function Game:checkCollisions()
     if not self.plr.boomerang then
         return
     end
+
+    for i, enemy in ipairs(self.enemies) do
+        if enemy.hitbox:collide(self.plr.boomerang.hitbox) then
+            local damage = math.round(self.plr.boomerang.damage_per_ms * Time.dt())
+            enemy:take_damage(damage)
+
+            if enemy:is_dead() then
+                enemy:die()
+                table.remove(self.enemies, i)
+            end
+        end
+    end
     
-    for i, lever in ipairs(self.levers) do
+    for i, lever in ipairs(self.doorlever.levers) do
         if not lever.isJustTurned and lever.hitbox:collide(self.plr.boomerang.hitbox) then
             lever:turn()
             lever.isJustTurned = true
         elseif lever.isJustTurned and not lever.hitbox:collide(self.plr.boomerang.hitbox) then
             lever.isJustTurned = false
         end
-        
-        --trace(lever:collide(self.plr.boomerang.hitbox))
     end
 end
 
@@ -83,16 +85,26 @@ end
 function Game:draw()
     map(gm.x, gm.y , 30, 17, gm.sx, gm.sy)
 
-    for i, lever in ipairs(self.levers) do
+    for i, lever in ipairs(self.doorlever.levers) do
         lever:draw()
+    end
+
+    for i, door in ipairs(self.doorlever.doors) do
+        door:draw()
+    end
+
+    for i, enemy in ipairs(self.enemies) do
+        enemy:draw()
     end
 
     self.plr:draw()
 end
 
 function Game:update()
+    Time.update()
+
     self:draw()
-    self:checkLever()
+    self:checkCollisions()
 
     self.metronome:update()
     self.plr:update()

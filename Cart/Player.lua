@@ -19,13 +19,17 @@ Player.death_a = Sprite:new(anim.gen60(plr_death_anim()), 1)
 Player.born_a = Sprite:new(table.reversed(anim.gen60(plr_death_anim())), 1)
 Player.hat_a = Sprite:new(anim.gen60({279}), 1)
 
+Player.stay_b = Sprite:new({465}, 1)
+Player.run_b = Sprite:new(anim.gen60({464, 465, 466, 467, 464, 465, 466, 467, 464, 465, 466, 467}), 1)
+
 function Player:new(x, y)
     obj = {
         sprite = Player.born_a:copy(),
         start_x = x, start_y = y,
+        vertical_flip = false,
         x = x, y = y,
         last_dx = 1, last_dy = 0,
-        dx = 0, dy = 0, v = 1,
+        dx = 0, dy = 0, v = 0.07,
         flip = 0,  -- направление при отрисовке спрайта
         hitbox = Hitbox:new_with_shift(x, y, x+3, y+6, 2, 1),
         hp = 1,
@@ -37,50 +41,20 @@ function Player:new(x, y)
     self.__index = self; return obj
 end
 
-
 function Player:tryMove(kNormal)
-    -- if not self.hitbox:mapCheck() then
-    --     self.x = self.x - self.dx * self.v * self.k
-    --     self.hitbox:set_xy(self.x, self.y)
-    -- end
+    local dx = self.dx * self.v * kNormal
+    local dy = self.dy * self.v * kNormal
 
-    -- self.y = self.y + self.dy * self.v * self.k
-    -- self.hitbox:set_xy(self.x, self.y)
-    -- if not self.hitbox:mapCheck() then
-    --     self.y = self.y - self.dy * self.v * self.k
-    --     self.hitbox:set_xy(self.x, self.y)
-    -- end
-
-    local tryX = math.fence(self.x + self.dx * self.v * kNormal, 0, 240 - 8)
-    local tryY = math.fence(self.y + self.dy * self.v * kNormal, 0, 136 - 8)
-
-    self.hitbox:set_xy(tryX, tryY);
-
-    print(self.hitbox:mapCheck())
-
-    if not self.hitbox:mapCheck() then
-        self.hitbox:set_xy(self.x, tryY)
-
-        if self.hitbox:mapCheck() then
-            self:move(self.x, tryY)
+    if self:will_collide_after(dx, dy) then
+        if not self:will_collide_after(dx, 0) then
+            self:move(dx, 0)
         end
-
-        self.hitbox:set_xy(tryX, self.y)
-
-        if self.hitbox:mapCheck() then
-            self:move(tryX, self.y)
+        if not self:will_collide_after(0, dy) then
+            self:move(0, dy)
         end
     else
-        self:move(tryX, tryY)
+        self:move(dx, dy)
     end
-
-    self.hitbox:set_xy(self.x, self.y)
-end
-
-
-function Player:move(newX, newY)
-    self.x = newX
-    self.y = newY
 end
 
 KEY_W = 23
@@ -98,6 +72,7 @@ function Player:update()
         self:death_update()
         return
     end
+
     if self.born_flag then
         if not self:born_update() then  -- если рождение закончилось
             self.sprite = Player.stay_a:copy()
@@ -125,12 +100,33 @@ function Player:update()
     end
 
     if math.abs(self.dx) + math.abs(self.dy) ~= 0 then  -- is moving
-        self.last_dx = self.dx; self.last_dy = self.dy
+        self.last_dx = self.dx;
+        self.last_dy = self.dy
+        if self.dy < 0 and not self.vertical_flip then
+            frame = self.sprite:get_frame()
+            self.vertical_flip = true
+            self.sprite = Player.run_b:copy();
+            self.sprite:set_frame(frame)
+        elseif self.dy > 0 and self.vertical_flip then
+            frame = self.sprite:get_frame()
+            self.vertical_flip = false
+            self.sprite = Player.run_a:copy();
+            self.sprite:set_frame(frame)
+        end
+
         if not flag or #self.sprite.animation == 1 then
-            self.sprite = Player.run_a:copy()
+            if self.vertical_flip then
+                self.sprite = Player.run_b:copy()
+            else
+                self.sprite = Player.run_a:copy()
+            end
         end
     else
-        self.sprite = Player.stay_a:copy()
+        if self.vertical_flip then
+            self.sprite = Player.stay_b:copy()
+        else
+            self.sprite = Player.stay_a:copy()
+        end
     end
 
     if self.dx == -1 then
@@ -147,7 +143,6 @@ function Player:update()
     self.sprite:next_frame()
 
     self:tryMove(k)
-    self:draw()
 
     if not self.boomerang then
         self:shoot()
@@ -195,7 +190,7 @@ function Player:set_start_stats()
     self.y = self.start_y
     self.sprite = Player.born_a:copy()
     self.born_flag = true
-    self.hitbox = Hitbox:new(self.x+2, self.y+1, self.x+5, self.y+7)
+    self.hitbox = Hitbox:new_with_shift(self.start_x, self.start_y, self.start_x + 3, self.start_y + 6, 2, 1)
 end
 
 

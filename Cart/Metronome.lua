@@ -1,22 +1,19 @@
--- ТЗ НА МЕТРОНОМ
-
--- Создать класс Metronom, экземпляр которого:
--- 1) Имеет счетчик кадров, зацикленный по определенному числу
--- 2) на определенные кадры возвращает "команду", показывающую, что сейчас время для определенного звука 
--- и действия (в основном, выстрела противника). Это можно реализовать с помощью полей или функций, не принципиально
--- 3) является полем Game
-
--- Также нужно реализовать обработку метронома внутри Game
-
--- Для демонстрации работы сделать "пульсирующие" декорации
-
 Metronome = {}
 
-function Metronome:new(frames_per_beat)
-    -- TODO: This is not frame-independent. Use tstamp() to calculate delta time.
+-- BPM = Beats / Minute
+-- Minute = Beats / BPM
+--
+-- For one beat:
+-- Minute = 1 / BPM
+--
+-- To milliseconds:
+-- 60 * 1000 * Minute = (60 * 1000) / BPM
+--
+-- Milliseconds = (60 * 1000) / BPM
+function Metronome:new(bpm)
     obj = {
-        tick = 0,
-        frames_per_beat = frames_per_beat,
+        time = 0,
+        ms_per_beat = (60 * 1000) / bpm,
         callbacks = {},
     }
 
@@ -25,27 +22,20 @@ function Metronome:new(frames_per_beat)
 end
 
 function Metronome:add_beat_callback(callback)
-    self:add_on_frame_callback(self.frames_per_beat, callback)
+    table.insert(self.callbacks, callback)
 end
 
-function Metronome:add_on_frame_callback(frame, callback)
-    local fun = function(tick)
-        if tick == frame then
-            callback()
-        end
+function Metronome:on_beat()
+    for _, callback in ipairs(self.callbacks) do
+        callback()
     end
-
-    table.insert(self.callbacks, fun)
 end
 
 function Metronome:update()
-    self.tick = self.tick + 1
-
-    for i, callback in ipairs(self.callbacks) do
-        callback(self.tick)
+    if self.time >= self.ms_per_beat then
+        self:on_beat()
+        self.time = 0
     end
 
-    if self.tick >= self.frames_per_beat then
-        self.tick = 0
-    end
+    self.time = self.time + Time.dt()
 end

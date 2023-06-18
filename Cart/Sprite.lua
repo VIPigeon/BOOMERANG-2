@@ -13,6 +13,13 @@ function Sprite:new(animation, size)
     self.__index = self; return obj
 end
 
+function Sprite:get_frame(frame)
+    return self.frame
+end
+
+function Sprite:set_frame(frame)
+    self.frame = frame
+end
 
 function Sprite:next_frame()
     self.frame = self.frame % #self.animation + 1
