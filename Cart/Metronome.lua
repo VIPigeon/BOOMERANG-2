@@ -25,6 +25,10 @@ function Metronome:add_beat_callback(callback)
     table.insert(self.callbacks, callback)
 end
 
+function Metronome:ms_before_next_beat()
+    return self.ms_per_beat - (self.time % self.ms_per_beat)
+end
+
 function Metronome:on_beat()
     for _, callback in ipairs(self.callbacks) do
         callback()

@@ -26,10 +26,8 @@ function Sprite:next_frame()
 end
 
 
-function Sprite:draw(x, y, flip)
-    -- print(self.animation[self.frame], 20, 20, 5)
-    -- print(self.frame, 40, 40, 3)
-    spr(self.animation[self.frame], x, y, C0, 1, flip, 0, self.size, self.size)
+function Sprite:draw(x, y, flip, rotate)
+    spr(self.animation[self.frame], x, y, C0, 1, flip, rotate, self.size, self.size)
 end
 
 

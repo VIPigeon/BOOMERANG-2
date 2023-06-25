@@ -12,9 +12,19 @@ function Game:new()
             Enemy:new(200, 100),
             Enemy:new(35, 80),
             Enemy:new(120, 10),
-            Rose:new(70, 80),
-        }
+        },
+        roses = {
+            Rose:new(70, 80, 1),
+            Rose:new(150, 70, 2),
+            Rose:new(30, 100, 3),
+            Rose:new(220, 15, 4),
+        },
     }
+
+    for _, rose in ipairs(obj.roses) do
+        obj.metronome:add_beat_callback(function() rose:on_beat() end)
+        rose.metronome = obj.metronome
+    end
 
     obj.camera:move()
     Game.initialize_decoration_animations(obj.metronome)
@@ -85,16 +95,20 @@ end
 function Game:draw()
     map(gm.x, gm.y , 30, 17, gm.sx, gm.sy)
 
-    for i, lever in ipairs(self.doorlever.levers) do
+    for _, lever in ipairs(self.doorlever.levers) do
         lever:draw()
     end
 
-    for i, door in ipairs(self.doorlever.doors) do
+    for _, door in ipairs(self.doorlever.doors) do
         door:draw()
     end
 
-    for i, enemy in ipairs(self.enemies) do
+    for _, enemy in ipairs(self.enemies) do
         enemy:draw()
+    end
+
+    for _, rose in ipairs(self.roses) do
+        rose:draw()
     end
 
     self.plr:draw()
@@ -113,6 +127,10 @@ function Game:update()
 
     for _, enemy in ipairs(self.enemies) do
         enemy:update()
+    end
+
+    for _, rose in ipairs(self.roses) do
+        rose:update(rose)
     end
 end
 

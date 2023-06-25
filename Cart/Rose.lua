@@ -10,21 +10,62 @@ Rose = table.copy(Body)
 
 Rose.sprite = Sprite:new({389, 391, 393, 395, 397, 421}, 2)
 
-function Rose:new(x, y)
+-- ЧТО??!
+local ROSE_ANIMATION_DURATION_MS = 80
+
+function Rose:on_beat()
+    self.ticks = self.ticks + 1
+
+    if not self.shooting then
+        if self.ticks == self.ticksBeforeShot then
+            self:shoot()
+            self.shooting = true
+            self.ticks = 0
+        end
+    else
+        if self.ticks == self.ticksShooting then
+            self.sprite:set_frame(1)
+            self.shooting = false
+            self.ticks = 0
+        end
+    end
+end
+
+function Rose:new(x, y, direction)
+    -- direction:
+    -- 0 - up
+    -- 1 - down
+    -- 2 - left
+    -- 3 - right
+    local flip = 0
+    if direction == 1 then
+        flip = 2
+    elseif direction == 2 then
+        flip = 1
+    end
+    local rotate = 0
+    if direction == 2 or direction == 3 then
+        rotate = 1
+    end
+
     obj = {
         sprite = Rose.sprite:copy(),
         x = x,
         y = y,
+        flip = flip,
+        rotate = rotate,
         
         hitbox = Hitbox:new(x, y, x + 8, y + 8),
-        laserHitbox = Hitbox:new(x + 7, y + 9 - 20, x + 7 + 3, y + 9),
+        laserHitbox = Hitbox:new(x + 7, y + 11 - 20, x + 7 + 3, y + 11),
+        direction = direction,
 
         hp = 200,
         isDead = false,
 
-        time = 0,
-        cooldown = 1 * 1000,
-        shootEnd = 2 * 1000,
+        shooting = false,
+        ticks = 0,
+        ticksBeforeShot = 1,
+        ticksShooting = 2,
     }
 
     setmetatable(obj, self)
@@ -33,16 +74,17 @@ function Rose:new(x, y)
 end
 
 function Rose:update()
-    if self.time <= self.cooldown then
+    if self.shooting then
+        self.animation_playing = false
         self.laserHitbox:draw(1)
+        -- And handle collisions
+    elseif self.metronome:ms_before_next_beat() <= ROSE_ANIMATION_DURATION_MS and not self.animation_playing then
+        self.animation_playing = true
     end
 
-    if self.time > self.shootEnd then
-        self:shoot()
-        self.time = 0
+    if self.animation_playing and not self.sprite:animation_end() then
+        self.sprite:next_frame()
     end
-
-    self.time = self.time + Time.dt()
 end
 
 function Rose:shoot()
@@ -53,11 +95,9 @@ function Rose:shoot()
     end
 
     local x = laserHitbox.x1
-    local y = laserHitbox.y1
+    local y = laserHitbox.y1 + 1
 
     local newHitbox = Hitbox:new(x, y, self.x + 7 + 3, self.y + 9)
-
-    -- trace('Laser: ' .. newHitbox.x1 .. ', ' .. newHitbox.y1 .. ' and ' .. newHitbox.x2 .. ', ' .. newHitbox.y2)
 
     self.laserHitbox = newHitbox
 end

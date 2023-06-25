@@ -9,6 +9,7 @@ function Body:new(sprite, x, y)
         sprite = sprite,
         hitbox = 'nil',
         flip = 0,
+        rotate = 0,
         x = x, y = y,
         isDead = false,  -- в этой игре не нужно понятие здоровья
         born_flag = true
@@ -81,7 +82,7 @@ function Body:set_position(x, y)
 end
 
 function Body:draw()
-    self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip)
+    self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
 end
 
 function Body:born_update()
