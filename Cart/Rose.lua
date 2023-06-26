@@ -12,6 +12,7 @@ Rose.sprite = Sprite:new({389, 391, 393, 395, 397, 421}, 2)
 
 -- ЧТО??!
 local ROSE_ANIMATION_DURATION_MS = 80
+local LASER_WIDTH = 3
 
 function Rose:on_beat()
     self.ticks = self.ticks + 1
@@ -38,14 +39,31 @@ function Rose:new(x, y, direction)
     -- 2 - left
     -- 3 - right
     local flip = 0
-    if direction == 1 then
+    local rotate = 0
+    local laserdx = 0
+    local laserdy = 0
+    local laserbeginx = 0
+    local laserbeginy = 0
+    if direction == 0 then
+        laserdy = -1
+        laserbeginx = x + 7
+        laserbeginy = y + 8
+    elseif direction == 1 then
         flip = 2
+        laserdy = 1
+        laserbeginx = x + 7
+        laserbeginy = y + 16 - 8
     elseif direction == 2 then
         flip = 1
-    end
-    local rotate = 0
-    if direction == 2 or direction == 3 then
         rotate = 1
+        laserdx = -1
+        laserbeginx = x + 16 - 8
+        laserbeginy = y + 7
+    else
+        rotate = 1
+        laserdx = 1
+        laserbeginx = x + 8
+        laserbeginy = y + 7
     end
 
     obj = {
@@ -56,6 +74,10 @@ function Rose:new(x, y, direction)
         rotate = rotate,
         
         hitbox = Hitbox:new(x, y, x + 8, y + 8),
+        laserbeginx = laserbeginx,
+        laserbeginy = laserbeginy,
+        laserdx = laserdx,
+        laserdy = laserdy,
         laserHitbox = Hitbox:new(x + 7, y + 11 - 20, x + 7 + 3, y + 11),
         direction = direction,
 
@@ -77,7 +99,9 @@ function Rose:update()
     if self.shooting then
         self.animation_playing = false
         self.laserHitbox:draw(1)
-        -- And handle collisions
+        if self.laserHitbox:collide(game.plr.hitbox) then
+            trace('Player dead.')
+        end
     elseif self.metronome:ms_before_next_beat() <= ROSE_ANIMATION_DURATION_MS and not self.animation_playing then
         self.animation_playing = true
     end
@@ -87,17 +111,38 @@ function Rose:update()
     end
 end
 
-function Rose:shoot()
-    local laserHitbox = Hitbox:new(self.x + 7, self.y - 9, self.x + 3, self.y + 1)
+-- Потом это куда-то убрать
+local function is_in_bounds(hitbox)
+    return hitbox.x1 >= 0 and hitbox.x2 <= 240 and
+        hitbox.y1 >= 0 and hitbox.y2 <= 136
+end
 
-    while laserHitbox:mapCheck() and laserHitbox.y1 > 0 and laserHitbox.y2 < 256 do
-        laserHitbox:set_xy(laserHitbox.x1, laserHitbox.y1 - 1)
+function Rose:shoot()
+    local laserHitbox = Hitbox:new(self.laserbeginx, self.laserbeginy, self.laserbeginx + 1, self.laserbeginy + 1)
+
+    while laserHitbox:mapCheck() and is_in_bounds(laserHitbox) do
+        local newx = laserHitbox.x1 + self.laserdx
+        local newy = laserHitbox.y1 + self.laserdy
+        laserHitbox:set_xy(newx, newy)
     end
 
-    local x = laserHitbox.x1
-    local y = laserHitbox.y1 + 1
+    local x = laserHitbox.x1 - self.laserdx
+    local y = laserHitbox.y1 - self.laserdy
 
-    local newHitbox = Hitbox:new(x, y, self.x + 7 + 3, self.y + 9)
+    local newHitbox
+    -- 0 - up
+    -- 1 - down
+    -- 2 - left
+    -- 3 - right
+    if self.direction == 0 then
+        newHitbox = Hitbox:new(x, y, x + LASER_WIDTH, self.laserbeginy)
+    elseif self.direction == 1 then
+        newHitbox = Hitbox:new(x, self.laserbeginy, x + LASER_WIDTH, y)
+    elseif self.direction == 2 then
+        newHitbox = Hitbox:new(x, y, self.laserbeginx, y + LASER_WIDTH)
+    else
+        newHitbox = Hitbox:new(self.laserbeginx, y, x, y + LASER_WIDTH)
+    end
 
     self.laserHitbox = newHitbox
 end

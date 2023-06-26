@@ -14,10 +14,10 @@ function Game:new()
             Enemy:new(120, 10),
         },
         roses = {
-            Rose:new(70, 80, 1),
-            Rose:new(150, 70, 2),
-            Rose:new(30, 100, 3),
-            Rose:new(220, 15, 4),
+            Rose:new(70, 80, 0),
+            Rose:new(150, 70, 1),
+            Rose:new(30, 100, 2),
+            Rose:new(220, 15, 3),
         },
     }
 
