@@ -3,13 +3,13 @@ Door = table.copy(Body)
 function Door:new(x, y, lever)
     local w = 6
     local h = 4
-    local speed = 0.05
+    local speed = 0.03
     local opensUpTo = 6
     obj = {
     	x = x,  y = y,
         w = w, h = h,
         speed = speed,
-        closeDx = 1.1,
+        closeDx = 1.08,
         tempSpeed = speed,
         xleft = x, yup = y,
         xright = x + 8 * w // 2, ydown = y + 8 * h // 2,
