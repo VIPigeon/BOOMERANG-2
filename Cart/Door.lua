@@ -3,12 +3,14 @@ Door = table.copy(Body)
 function Door:new(x, y, lever)
     local w = 6
     local h = 4
+    local speed = 0.05
     local opensUpTo = 6
     obj = {
     	x = x,  y = y,
         w = w, h = h,
-        speed = 0.01,
-        closeDx = 1.5,
+        speed = speed,
+        closeDx = 1.1,
+        tempSpeed = speed,
         xleft = x, yup = y,
         xright = x + 8 * w // 2, ydown = y + 8 * h // 2,
     	hitboxLeft = Hitbox:new(x, y, x + 8 * w // 2, y + 8 * h),
@@ -86,20 +88,25 @@ function Door:update()
     end
     if not self.lever.status then
         if self.curFrame > 1 then
-            self.curFrame = self.curFrame - self.speed * self.closeDx * Time.dt()
-            self.xleft = self.xleft + self.speed * self.closeDx * Time.dt()
-            self.xright = self.xright - self.speed * self.closeDx * Time.dt()
+            self.curFrame = self.curFrame - self.tempSpeed * Time.dt()
+            self.xleft = self.xleft + self.tempSpeed * Time.dt()
+            self.xright = self.xright - self.tempSpeed * Time.dt()
+            
             self.hitboxLeft:set_xy(self.xleft, self.yup) --= Hitbox:new(self.xleft, self.yup, self.x + 8 * self.w // 2, self.y + 8 * self.h)
             self.hitboxRight:set_xy(self.xright, self.yup) -- = Hitbox:new(self.xright, self.yup, self.x + 8 * self.w // 2, self.y + 8 * self.h)
+
+            self.tempSpeed = self.tempSpeed * self.closeDx
         end
         if self.curFrame <= 1 then
             self.state = false
+            self.tempSpeed = self.speed
         end
     elseif not self.state then
         if self.curFrame < self.maxFrame then
             self.curFrame = self.curFrame + self.speed * Time.dt()
             self.xleft = self.xleft - self.speed * Time.dt()
             self.xright = self.xright + self.speed * Time.dt()
+            
             self.hitboxLeft:set_xy(self.xleft, self.yup) -- = Hitbox:new(self.xleft, self.yup, self.x + 8 * self.w // 2, self.y + 8 * self.h)
             self.hitboxRight:set_xy(self.xright, self.yup) -- = Hitbox:new(self.xright, self.yup, self.x + 8 * self.w // 2, self.y + 8 * self.h)
         end
