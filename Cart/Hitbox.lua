@@ -32,6 +32,7 @@ function Hitbox:collide(hb)
     --         hb.y1 >= self.y2 or self.y1 >= hb.y2 then
     --     return false
     -- end
+    -- trace(self.x1..' '..self.y1..' '..hb.x1..' '..hb.y1)
     if math.floor(hb.x1) > math.floor(self.x2) or
             math.floor(self.x1) > math.floor(hb.x2) or
             math.floor(hb.y1) > math.floor(self.y2) or

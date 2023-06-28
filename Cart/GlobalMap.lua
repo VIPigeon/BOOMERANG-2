@@ -7,6 +7,7 @@ gm.sx = 0 -- start map X 0w0
 gm.sy = 0 -- start map Y >:(
 
 TEST_BLOCK_TYPE = 4
+DOOR_TYPE = {34, 35, 36, 50, 51, 52}
 
 function gm.get_tile_type(x, y)
     -- local tile = mget(math.round(x/8), math.round(y/8))
@@ -15,6 +16,8 @@ function gm.get_tile_type(x, y)
     local tile = mget(x//8, y//8)
     if tile == TEST_BLOCK_TYPE then
         return 'block'
+    elseif table.contains(DOOR_TYPE, tile) then
+        return 'door'
     end
     return 'void'
 end
@@ -75,6 +78,17 @@ end
 
 
 gm.tilemap = Tilemap:new()
+
+
+function gm.shakeEffect()
+    gm.x = gm.x + math.random(-10, 10)
+    gm.y = gm.y + math.random(-10, 10)
+end
+
+
+function gm.InsaneShakeEffect()
+
+end
 
 
 return gm

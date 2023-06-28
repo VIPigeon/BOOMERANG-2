@@ -28,7 +28,7 @@ function Player:new(x, y)
         dx = 0, dy = 0, v = 0.07,
         flip = 0,  -- направление при отрисовке спрайта
         hitbox = Hitbox:new_with_shift(x, y, x+3, y+6, 2, 1),
-        hp = 1,
+        hp = 200,
         born_flag = true,
         boomerang = false
     }

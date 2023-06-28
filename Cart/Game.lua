@@ -26,28 +26,60 @@ function Game:new()
 end
 
 function Game:checkCollisions()
-    if not self.plr.boomerang then
+    if self.plr:is_dead() then
         return
     end
 
-    for i, enemy in ipairs(self.enemies) do
-        if enemy.hitbox:collide(self.plr.boomerang.hitbox) then
-            local damage = math.round(self.plr.boomerang.damage_per_ms * Time.dt())
-            enemy:take_damage(damage)
+    if self.plr.boomerang then
+        for i, enemy in ipairs(self.enemies) do
+            if enemy.hitbox:collide(self.plr.boomerang.hitbox) then
+                local damage = math.round(self.plr.boomerang.damage_per_ms * Time.dt())
+                enemy:take_damage(damage)
 
-            if enemy:is_dead() then
-                enemy:die()
-                table.remove(self.enemies, i)
+                if enemy:is_dead() then
+                    enemy:die()
+                    table.remove(self.enemies, i)
+                end
             end
         end
     end
     
-    for i, lever in ipairs(self.doorlever.levers) do
-        if not lever.isJustTurned and lever.hitbox:collide(self.plr.boomerang.hitbox) then
-            lever:turn()
-            lever.isJustTurned = true
-        elseif lever.isJustTurned and not lever.hitbox:collide(self.plr.boomerang.hitbox) then
-            lever.isJustTurned = false
+
+    for i, door in ipairs(self.doorlever.doors) do
+        local damage = 1
+
+        --trace(door:checkCollision(self.plr))
+
+        if door:checkCollision(self.plr) then
+            --trace(1)
+
+            -- TODO gm.shakeEffect()
+
+            self.plr:take_damage(damage)
+            if self.plr:is_dead() then
+                self.plr:death()
+            end
+        end
+
+        for i, enemy in ipairs(self.enemies) do
+            if door:checkCollision(enemy) then
+                enemy:take_damage(damage)
+                if enemy:is_dead() then
+                    enemy:die()
+                    table.remove(self.enemies, i)
+                end
+            end
+        end
+    end
+
+    if self.plr.boomerang then
+        for i, lever in ipairs(self.doorlever.levers) do
+            if not lever.isJustTurned and lever.hitbox:collide(self.plr.boomerang.hitbox) then
+                lever:turn()
+                lever.isJustTurned = true
+            elseif lever.isJustTurned and not lever.hitbox:collide(self.plr.boomerang.hitbox) then
+                lever.isJustTurned = false
+            end
         end
     end
 end
@@ -103,7 +135,19 @@ end
 function Game:update()
     Time.update()
 
+        
+
     self:draw()
+
+    if self.plr:is_dead() then
+        self.plr:death_update()
+    else
+        self.plr:update()
+    end
+
+        --gmCrutchX = gm.x --For ShakeAffect
+        --gmCrutchY = gm.y
+
     self:checkCollisions()
 
     for _, door in ipairs(self.doorlever.doors) do
@@ -111,9 +155,12 @@ function Game:update()
     end
 
     self.metronome:update()
-    self.plr:update()
+
     self.camera:tryMove(self.plr.x, self.plr.y)
     self.camera:update()
+
+    --gm.x = gmCrutchX
+    --gm.y = gmCrutchY
 end
 
 

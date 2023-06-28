@@ -7,12 +7,12 @@ function Door:new(x, y, lever)
     obj = {
     	x = x,  y = y,
         w = w, h = h,
-        Speed = 1.0,
-        closeDx = 1.0,
+        speed = 0.01,
+        closeDx = 1.5,
         xleft = x, yup = y,
         xright = x + 8 * w // 2, ydown = y + 8 * h // 2,
-    	hitboxLeft = Hitbox:new(xleft, yleft, x + 8 * w // 2, y + 8 * h // 2),
-        hitboxRight = Hitbox:new(xright, yright, x + 8 * w // 2, y + 8 * h // 2),
+    	hitboxLeft = Hitbox:new(x, y, x + 8 * w // 2, y + 8 * h),
+        hitboxRight = Hitbox:new(x + 8 * w // 2, y, x + 8 * w, y + 8 * h),
         lever = lever,
         state = false,
         curFrame = 1,
@@ -48,9 +48,23 @@ function Door:draw()
     spr(34, xright + 8 * w // 6, ydown, C0, 1, 3, 0, 2, 2)
     spr(52, xright, ydown, C0, 1, 3, 0, 1, 1)
     spr(36, xright, ydown + 8 * (h // 2 - 1), C0, 1, 3, 0, 1, 1)
+    --self.hitboxLeft:draw(1)
+    --self.hitboxRight:draw(1)
 end
 
 function Door:anime()
+    return 'Nyan'
+end
+
+function Door:checkCollision(entity)
+    --trace(self.hitboxLeft.x1..' '..self.hitboxRight.x1..' '..entity.hitbox.x1)
+    if self.hitboxLeft:collide(entity.hitbox) then
+        entity.x = self.xleft + 8 * self.w // 2 + entity.hitbox.shiftX
+        return true
+    elseif self.hitboxRight:collide(entity.hitbox) then
+        entity.x = self.xright - (entity.hitbox.x2 - entity.hitbox.x1) - entity.hitbox.shiftX
+        return true
+    end        
 end
 
 function Door:update()
@@ -60,27 +74,29 @@ function Door:update()
     end
     if not self.lever.status then
         if self.curFrame > 1 then
-            self.curFrame = self.curFrame - 1
-            self.xleft = self.xleft + 1
-            self.xright = self.xright - 1
+            self.curFrame = self.curFrame - self.speed * self.closeDx * Time.dt()
+            self.xleft = self.xleft + self.speed * self.closeDx * Time.dt()
+            self.xright = self.xright - self.speed * self.closeDx * Time.dt()
+            self.hitboxLeft:set_xy(self.xleft, self.yup) --= Hitbox:new(self.xleft, self.yup, self.x + 8 * self.w // 2, self.y + 8 * self.h)
+            self.hitboxRight:set_xy(self.xright, self.yup) -- = Hitbox:new(self.xright, self.yup, self.x + 8 * self.w // 2, self.y + 8 * self.h)
         end
-        if self.curFrame == 1 then
+        if self.curFrame <= 1 then
             self.state = false
         end
     elseif not self.state then
         if self.curFrame < self.maxFrame then
-            self.curFrame = self.curFrame + 1
-            self.xleft = self.xleft - 1
-            self.xright = self.xright + 1
+            self.curFrame = self.curFrame + self.speed * Time.dt()
+            self.xleft = self.xleft - self.speed * Time.dt()
+            self.xright = self.xright + self.speed * Time.dt()
+            self.hitboxLeft:set_xy(self.xleft, self.yup) -- = Hitbox:new(self.xleft, self.yup, self.x + 8 * self.w // 2, self.y + 8 * self.h)
+            self.hitboxRight:set_xy(self.xright, self.yup) -- = Hitbox:new(self.xright, self.yup, self.x + 8 * self.w // 2, self.y + 8 * self.h)
         end
-        if self.curFrame == self.maxFrame then
+        if self.curFrame >= self.maxFrame then
             self.state = true
         end
     else
         return
     end
-    --self:draw()
-
 
 end
 
