@@ -1,6 +1,13 @@
 Game = {}
 
 function Game:new()
+    local roses = {
+        Rose:new(70, 80, 0),
+        Rose:new(150, 70, 1),
+        Rose:new(30, 100, 2),
+        Rose:new(220, 15, 3),
+    }
+
     obj = {
         mode = 'action',
         plr = Player:new(10,10),
@@ -13,15 +20,11 @@ function Game:new()
             Enemy:new(35, 80),
             Enemy:new(120, 10),
         },
-        roses = {
-            Rose:new(70, 80, 0),
-            Rose:new(150, 70, 1),
-            Rose:new(30, 100, 2),
-            Rose:new(220, 15, 3),
-        },
     }
 
-    for _, rose in ipairs(obj.roses) do
+    for _, rose in ipairs(roses) do
+        table.insert(obj.enemies, rose)
+
         obj.metronome:add_beat_callback(function() rose:on_beat() end)
         rose.metronome = obj.metronome
     end
@@ -107,10 +110,6 @@ function Game:draw()
         enemy:draw()
     end
 
-    for _, rose in ipairs(self.roses) do
-        rose:draw()
-    end
-
     self.plr:draw()
 end
 
@@ -127,10 +126,6 @@ function Game:update()
 
     for _, enemy in ipairs(self.enemies) do
         enemy:update()
-    end
-
-    for _, rose in ipairs(self.roses) do
-        rose:update(rose)
     end
 end
 

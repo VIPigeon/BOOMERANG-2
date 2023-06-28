@@ -6,31 +6,14 @@
 -- Помимо противника, создать отдельный модуль с методами Game, в котором противники подписываются на ивенты. (для удобства, чтобы подписывание объектов на ивенты было изолировано)
 -- Лазер должен появляться четко в ритм. Но появлению лазера предшествует быстрая анимация "вытягивания" розы. Поэтому запускать анимацию вытягивания нужно на опережение.
 
-Rose = table.copy(Body)
+Rose = table.copy(Enemy)
 
 Rose.sprite = Sprite:new({389, 391, 393, 395, 397, 421}, 2)
 
 -- ЧТО??!
-local ROSE_ANIMATION_DURATION_MS = 80
+local ANIMATION_FRAME_DURATION_MS = 16
+local ROSE_ANIMATION_DURATION_MS = ANIMATION_FRAME_DURATION_MS * #Rose.sprite.animation
 local LASER_WIDTH = 3
-
-function Rose:on_beat()
-    self.ticks = self.ticks + 1
-
-    if not self.shooting then
-        if self.ticks == self.ticksBeforeShot then
-            self:shoot()
-            self.shooting = true
-            self.ticks = 0
-        end
-    else
-        if self.ticks == self.ticksShooting then
-            self.sprite:set_frame(1)
-            self.shooting = false
-            self.ticks = 0
-        end
-    end
-end
 
 function Rose:new(x, y, direction)
     -- direction:
@@ -66,6 +49,11 @@ function Rose:new(x, y, direction)
         laserbeginy = y + 7
     end
 
+    local hitboxx1 = math.min(laserbeginx - 6, laserbeginx + 6)
+    local hitboxy1 = math.min(laserbeginy - 6, laserbeginy + 6)
+    local hitboxx2 = math.max(laserbeginx - 6, laserbeginx + 6)
+    local hitboxy2 = math.max(laserbeginy - 6, laserbeginy + 6)
+
     obj = {
         sprite = Rose.sprite:copy(),
         x = x,
@@ -73,7 +61,7 @@ function Rose:new(x, y, direction)
         flip = flip,
         rotate = rotate,
         
-        hitbox = Hitbox:new(x, y, x + 8, y + 8),
+        hitbox = Hitbox:new(hitboxx1, hitboxy1, hitboxx2, hitboxy2),
         laserbeginx = laserbeginx,
         laserbeginy = laserbeginy,
         laserdx = laserdx,
@@ -81,8 +69,7 @@ function Rose:new(x, y, direction)
         laserHitbox = Hitbox:new(x + 7, y + 11 - 20, x + 7 + 3, y + 11),
         direction = direction,
 
-        hp = 200,
-        isDead = false,
+        hp = 50,
 
         shooting = false,
         ticks = 0,
@@ -93,6 +80,24 @@ function Rose:new(x, y, direction)
     setmetatable(obj, self)
     self.__index = self
     return obj
+end
+
+function Rose:on_beat()
+    self.ticks = self.ticks + 1
+
+    if not self.shooting then
+        if self.ticks == self.ticksBeforeShot then
+            self:shoot()
+            self.shooting = true
+            self.ticks = 0
+        end
+    else
+        if self.ticks == self.ticksShooting then
+            self.sprite:set_frame(1)
+            self.shooting = false
+            self.ticks = 0
+        end
+    end
 end
 
 function Rose:update()
