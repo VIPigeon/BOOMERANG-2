@@ -27,7 +27,7 @@ function Body:is_dead()
 end
 
 function Body:take_damage(damage)
-    trace("HP: " .. self.hp)
+    -- trace("HP: " .. self.hp)
 
     self.hp = math.fence(self.hp - damage, 0, self.hp)
 
@@ -44,6 +44,12 @@ function Body:will_collide_after(dx, dy)
 
     local will_collide = not self.hitbox:mapCheck()
 
+    for i, door in ipairs(game.doorlever.doors) do
+        if door:actually_checkCollision(self) then
+            trace('door')
+            will_collide = true
+        end
+    end
     self:set_position(oldX, oldY)
 
     return will_collide

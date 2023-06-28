@@ -67,6 +67,18 @@ function Door:checkCollision(entity)
     end        
 end
 
+function Door:actually_checkCollision(entity)
+    --trace(self.hitboxLeft.x1..' '..self.hitboxRight.x1..' '..entity.hitbox.x1)
+    if self.hitboxLeft:collide(entity.hitbox) then
+        -- entity.x = self.xleft + 8 * self.w // 2 + entity.hitbox.shiftX
+        return true
+    elseif self.hitboxRight:collide(entity.hitbox) then
+        -- entity.x = self.xright - (entity.hitbox.x2 - entity.hitbox.x1) - entity.hitbox.shiftX
+        return true
+    end        
+    return false
+end
+
 function Door:update()
     --trace(self.lever.status)
     if not self.lever.status and not self.state then

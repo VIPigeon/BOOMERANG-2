@@ -44,7 +44,7 @@ function Game:checkCollisions()
         end
     end
     
-
+    -- trace(1)
     for i, door in ipairs(self.doorlever.doors) do
         local damage = 1
 
