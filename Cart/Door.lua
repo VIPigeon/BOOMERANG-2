@@ -21,11 +21,14 @@ function Door:new(x, y, lever)
         maxFrame = 8 // 2 * w - opensUpTo
     }
 
-    -- чистая магия!
     setmetatable(obj, self)
     self.__index = self;
     return obj
 end
+
+local UPPER_LEFT_TILE = 204
+local UPPER_RIGHT_TILE = 206
+local BOTTOM_RIGHT_TILE = 222
 
 function Door:draw()
     local xleft = math.floor(self.xleft - gm.x*8 + gm.sx)
@@ -34,22 +37,23 @@ function Door:draw()
     local ydown = self.ydown - gm.y*8 + gm.sy
     local w = self.w
     local h = self.h
+
     --LeftUpSide
-    spr(34, xleft, yup, C0, 1, 0, 0, 2, 2)
-    spr(36, xleft + 8 * w // 3, yup, C0, 1, 0, 0, 1, 1)
-    spr(52, xleft + 8 * w // 3, yup + 8 * (h // 2 - 1), C0, 1, 0, 0, 1, 1)
+    spr(UPPER_LEFT_TILE, xleft, yup, C0, 1, 0, 0, 2, 2)
+    spr(UPPER_RIGHT_TILE, xleft + 8 * w // 3, yup, C0, 1, 0, 0, 1, 1)
+    spr(BOTTOM_RIGHT_TILE, xleft + 8 * w // 3, yup + 8 * (h // 2 - 1), C0, 1, 0, 0, 1, 1)
     --LeftLowSide
-    spr(34, xleft, ydown, C0, 1, 2, 0, 2, 2)
-    spr(52, xleft + 8 * w // 3, ydown, C0, 1, 2, 0, 1, 1)
-    spr(36, xleft + 8 * w // 3, ydown + 8 * (h // 2 - 1), C0, 1, 2, 0, 1, 1)
+    spr(UPPER_LEFT_TILE, xleft, ydown, C0, 1, 2, 0, 2, 2)
+    spr(BOTTOM_RIGHT_TILE, xleft + 8 * w // 3, ydown, C0, 1, 2, 0, 1, 1)
+    spr(UPPER_RIGHT_TILE, xleft + 8 * w // 3, ydown + 8 * (h // 2 - 1), C0, 1, 2, 0, 1, 1)
     --RightUpSide
-    spr(34, xright + 8 * w // 6, yup, C0, 1, 1, 0, 2, 2)
-    spr(36, xright, yup, C0, 1, 1, 0, 1, 1)
-    spr(52, xright, yup + 8 * (h // 2 - 1), C0, 1, 1, 0, 1, 1)
+    spr(UPPER_LEFT_TILE, xright + 8 * w // 6, yup, C0, 1, 1, 0, 2, 2)
+    spr(UPPER_RIGHT_TILE, xright, yup, C0, 1, 1, 0, 1, 1)
+    spr(BOTTOM_RIGHT_TILE, xright, yup + 8 * (h // 2 - 1), C0, 1, 1, 0, 1, 1)
     --RightLowSide
-    spr(34, xright + 8 * w // 6, ydown, C0, 1, 3, 0, 2, 2)
-    spr(52, xright, ydown, C0, 1, 3, 0, 1, 1)
-    spr(36, xright, ydown + 8 * (h // 2 - 1), C0, 1, 3, 0, 1, 1)
+    spr(UPPER_LEFT_TILE, xright + 8 * w // 6, ydown, C0, 1, 3, 0, 2, 2)
+    spr(BOTTOM_RIGHT_TILE, xright, ydown, C0, 1, 3, 0, 1, 1)
+    spr(UPPER_RIGHT_TILE, xright, ydown + 8 * (h // 2 - 1), C0, 1, 3, 0, 1, 1)
     --self.hitboxLeft:draw(1)
     --self.hitboxRight:draw(1)
 end
@@ -66,7 +70,7 @@ function Door:checkCollision(entity)
     elseif self.hitboxRight:collide(entity.hitbox) then
         entity.x = self.xright - (entity.hitbox.x2 - entity.hitbox.x1) - entity.hitbox.shiftX
         return true
-    end        
+    end
 end
 
 function Door:actually_checkCollision(entity)
@@ -77,7 +81,7 @@ function Door:actually_checkCollision(entity)
     elseif self.hitboxRight:collide(entity.hitbox) then
         -- entity.x = self.xright - (entity.hitbox.x2 - entity.hitbox.x1) - entity.hitbox.shiftX
         return true
-    end        
+    end
     return false
 end
 
@@ -122,10 +126,8 @@ end
 function Door:changeState()
 	if self.state then
         self.state = false
-        
     else
         self.state = true
-        
     end
 end
 

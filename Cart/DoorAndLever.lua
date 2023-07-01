@@ -98,6 +98,7 @@ function DoorAndLever:new()
     DoorAndLever.findWires()
     local doors = {}
     local levers = {}
+
     for i, pair in ipairs(doorsAndLevers) do
         mset(pair.lever.x, pair.lever.y, 0)
 
@@ -109,6 +110,10 @@ function DoorAndLever:new()
         mset(doorx + 1, doory, 0)
         mset(doorx, doory + 1, 0)
         mset(doorx + 1, doory + 1, 0)
+
+        -- Сдвиг, потому что калитка ОГРОМНАЯ ༼ つ ◕_◕ ༽つ
+        doorx = doorx
+        doory = doory - 2
 
         -- Дверь смотрит на то, включен ли рычаг
         -- и сама себя переключает (?? (￣﹃￣))

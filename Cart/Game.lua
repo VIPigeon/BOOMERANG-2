@@ -147,8 +147,6 @@ end
 function Game:update()
     Time.update()
 
-        
-
     self:draw()
 
     if self.plr:is_dead() then
