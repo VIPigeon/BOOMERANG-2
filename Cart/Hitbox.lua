@@ -44,18 +44,18 @@ end
 
 
 function Hitbox:mapCheck()
-    return gm.get_tile_type(self.x1, self.y1) == 'void'
-        and gm.get_tile_type(self.x1, self.y2) == 'void'
-        and gm.get_tile_type(self.x2, self.y1) == 'void'
-        and gm.get_tile_type(self.x2, self.y2) == 'void'
+    return gm.get_tile_type(self.x1, self.y1) == TileType.Void
+        and gm.get_tile_type(self.x1, self.y2) == TileType.Void
+        and gm.get_tile_type(self.x2, self.y1) == TileType.Void
+        and gm.get_tile_type(self.x2, self.y2) == TileType.Void
 end
 
 
 function Hitbox:set_xy(x, y)
     x = x + self.shiftX
     y = y + self.shiftY
-    dx = x - self.x1
-    dy = y - self.y1
+    local dx = x - self.x1
+    local dy = y - self.y1
     self.x1 = x; self.y1 = y
     self.x2 = self.x2 + dx
     self.y2 = self.y2 + dy

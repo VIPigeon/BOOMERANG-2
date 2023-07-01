@@ -1,7 +1,13 @@
 Game = {}
 
-
 function Game:new()
+    local roses = {
+        Rose:new(70, 80, 0),
+        Rose:new(150, 70, 1),
+        Rose:new(30, 100, 2),
+        Rose:new(220, 15, 3),
+    }
+
     obj = {
         mode = 'action',
         plr = Player:new(10,10),
@@ -13,8 +19,15 @@ function Game:new()
             Enemy:new(200, 100),
             Enemy:new(35, 80),
             Enemy:new(120, 10),
-        }
+        },
     }
+
+    for _, rose in ipairs(roses) do
+        table.insert(obj.enemies, rose)
+
+        obj.metronome:add_beat_callback(function() rose:on_beat() end)
+        rose.metronome = obj.metronome
+    end
 
     obj.camera:move()
     Game.initialize_decoration_animations(obj.metronome)
@@ -44,15 +57,10 @@ function Game:checkCollisions()
         end
     end
     
-    -- trace(1)
     for i, door in ipairs(self.doorlever.doors) do
         local damage = 1
 
-        --trace(door:checkCollision(self.plr))
-
         if door:checkCollision(self.plr) then
-            --trace(1)
-
             -- TODO gm.shakeEffect()
 
             self.plr:take_damage(damage)
@@ -121,11 +129,15 @@ function Game:draw()
 
     map(gm.x, gm.y , 30, 17, gm.sx, gm.sy, C0)
 
-    for i, lever in ipairs(self.doorlever.levers) do
+    for _, lever in ipairs(self.doorlever.levers) do
         lever:draw()
     end
 
-    for i, enemy in ipairs(self.enemies) do
+    for _, door in ipairs(self.doorlever.doors) do
+        door:draw()
+    end
+
+    for _, enemy in ipairs(self.enemies) do
         enemy:draw()
     end
 
@@ -145,9 +157,6 @@ function Game:update()
         self.plr:update()
     end
 
-        --gmCrutchX = gm.x --For ShakeAffect
-        --gmCrutchY = gm.y
-
     self:checkCollisions()
 
     for _, door in ipairs(self.doorlever.doors) do
@@ -159,9 +168,9 @@ function Game:update()
     self.camera:tryMove(self.plr.x, self.plr.y)
     self.camera:update()
 
-    --gm.x = gmCrutchX
-    --gm.y = gmCrutchY
+    for _, enemy in ipairs(self.enemies) do
+        enemy:update()
+    end
 end
-
 
 return Game
