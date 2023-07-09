@@ -26,9 +26,12 @@ function Door:new(x, y, lever)
     return obj
 end
 
-local UPPER_LEFT_TILE = 204
-local UPPER_RIGHT_TILE = 206
-local BOTTOM_RIGHT_TILE = 222
+-- local UPPER_LEFT_TILE = 204
+-- local UPPER_RIGHT_TILE = 206
+-- local BOTTOM_RIGHT_TILE = 222
+local UPPER_LEFT_TILE = data.door.upper_left_tile
+local UPPER_RIGHT_TILE = data.door.upper_right_tile
+local BOTTOM_RIGHT_TILE = data.door.bottom_right_tile
 
 function Door:draw()
     local xleft = math.floor(self.xleft - gm.x*8 + gm.sx)

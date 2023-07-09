@@ -1,16 +1,16 @@
 
-function plr_death_anim()
-    res = {}
-    for i=272, 278 do
-        for _=1, 8 do
-            table.insert(res, i)
-        end
-    end
-    for _=1, 4 do
-        table.insert(res, 279)
-    end
-    return res
-end
+-- function plr_death_anim()
+--     res = {}
+--     for i=272, 278 do
+--         for _=1, 8 do
+--             table.insert(res, i)
+--         end
+--     end
+--     for _=1, 4 do
+--         table.insert(res, 279)
+--     end
+--     return res
+-- end
 
 Player = table.copy(Body)
 Player.stay_a = Sprite:new({257}, 1)
@@ -57,14 +57,14 @@ function Player:tryMove(kNormal)
     end
 end
 
-KEY_W = 23
-KEY_A = 01
-KEY_S = 19
-KEY_D = 04
-KEY_UP = 58
-KEY_DOWN = 59
-KEY_LEFT = 60
-KEY_RIGHT = 61
+-- KEY_W = 23
+-- KEY_A = 01
+-- KEY_S = 19
+-- KEY_D = 04
+-- KEY_UP = 58
+-- KEY_DOWN = 59
+-- KEY_LEFT = 60
+-- KEY_RIGHT = 61
 
 
 function Player:update()
