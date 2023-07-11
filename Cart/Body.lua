@@ -68,8 +68,11 @@ function Body:move(dx, dy)
     local newX = self.x + dx * Time.dt()
     local newY = self.y + dy * Time.dt()
 
-    self.x = math.fence(newX, 0, 240 - 8)
-    self.y = math.fence(newY, 0, 136 - 8)
+    self.x = newX
+    self.y = newY
+
+    --self.x = math.fence(newX, 0, 240 - 8)
+    --self.y = math.fence(newY, 0, 136 - 8)
 
     self.hitbox:set_xy(self.x, self.y)
 end
