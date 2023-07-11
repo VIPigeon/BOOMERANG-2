@@ -1,6 +1,6 @@
 Player = table.copy(Body)
 Player.stayFront = Sprite:new(data.Player.tiles.stayFrontTiles, 1)
-Player.runFront = Sprite:new(anim.gen60(runFrontTiles), 1)
+Player.runFront = Sprite:new(anim.gen60(data.Player.tiles.runFrontTiles), 1)
 Player.deathFront = Sprite:new(anim.gen60(data.Player.tiles.deathTiles), 1)
 Player.bornFront = Sprite:new(anim.gen60(data.Player.tiles.bornTiles), 1)
 Player.hatFront = Sprite:new(anim.gen60(data.Player.tiles.hatTiles), 1)
