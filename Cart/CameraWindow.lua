@@ -86,8 +86,6 @@ function CameraWindow:drawDebug()
     rectb(x - gm.x * 8 + gm.sx, y - gm.y * 8 + gm.sy, w, h, 1)
 end
 
-CAMERA_SPEED = 0.1
-
 function CameraWindow:update()
     if math.abs(self.x - self.targetX) < 0.1 and math.abs(self.y - self.targetY) < 0.1 then
         return

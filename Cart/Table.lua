@@ -1,4 +1,3 @@
-
 function table.copy(t)
   local t2 = {}
   for k,v in pairs(t) do
@@ -14,6 +13,12 @@ function table.equals(t1, t2)
         end
     end
     return true
+end
+
+function table.concatTable(destination, source)
+    for _, element in ipairs(source) do
+        table.insert(destination, element)
+    end
 end
 
 function table.contains_table(t, element)

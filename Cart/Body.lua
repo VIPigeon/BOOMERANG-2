@@ -43,7 +43,7 @@ function Body:will_collide_after(dx, dy)
 
     local will_collide = not self.hitbox:mapCheck()
 
-    for i, door in ipairs(game.doorlever.doors) do
+    for _, door in ipairs(game.doorlever.doors) do
         if door:actually_checkCollision(self) then
             trace('door')
             will_collide = true
