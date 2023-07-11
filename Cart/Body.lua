@@ -42,21 +42,14 @@ function Body:will_collide_after(dx, dy)
     self:move(dx, dy)
 
     local will_collide = not self.hitbox:mapCheck()
-
-    for _, door in ipairs(game.doors) do
-        if door:actually_checkCollision(self) then
-            trace('door')
-            will_collide = true
-        end
-    end
     self:set_position(oldX, oldY)
 
     return will_collide
 end
 
 function Body:move_unclamped(dx, dy)
-    local newX = self.x + dx * Time.dt()
-    local newY = self.y + dy * Time.dt()
+    local newX = self.x + dx
+    local newY = self.y + dy
 
     self.x = newX
     self.y = newY
@@ -65,8 +58,8 @@ function Body:move_unclamped(dx, dy)
 end
 
 function Body:move(dx, dy)
-    local newX = self.x + dx * Time.dt()
-    local newY = self.y + dy * Time.dt()
+    local newX = self.x + dx
+    local newY = self.y + dy
 
     self.x = math.fence(newX, 0, 240 - 8)
     self.y = math.fence(newY, 0, 136 - 8)
@@ -100,6 +93,5 @@ function Body:born_update()
     self.sprite:next_frame()
     return true
 end
-
 
 return Body

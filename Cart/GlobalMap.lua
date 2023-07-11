@@ -6,22 +6,10 @@ gm.sx = 0 -- start map X 0w0
 gm.sy = 0 -- start map Y >:(
 
 TEST_BLOCK_TYPE = 4
-DOOR_TYPE = {34, 35, 36, 50, 51, 52}
-
-function gm.isTurnedOnWire(tileX, tileY)
-end
-
-function gm.isTurnedOffWire(tileX, tileY)
-end
 
 TileType = {
     Void = 0,
     Block = 1,
-    TurnedOffWire = 2,
-    TurnedOnWire = 3,
-    Door = 4,
-    Lever = 5,
-    Decoration = 6,
 }
 
 function gm.get_tile_type(x, y)
@@ -39,14 +27,6 @@ function gm.get_tile_type8(x, y)  -- x, y даются как координат
 
     if tileId == TEST_BLOCK_TYPE then
         return TileType.Block
-    elseif MC.turnedOffWires[tileId] ~= nil then
-        return TileType.TurnedOffWire
-    elseif MC.turnedOnWires[tileId] ~= nil then
-        return TileType.TurnedOnWire
-    elseif MC.doorIds[tileId] ~= nil then
-        return TileType.Door
-    elseif MC.leverIds[tileId] ~= nil then
-        return TileType.Lever
     else
         return TileType.Void
     end
@@ -75,10 +55,6 @@ function gm.is_ghost(tile)
             tile == 144 or tile == 128 or tile == 192 or tile == 108 or tile == 110
 end
 
--- function gm.get_coords(x, y)
---     return {x = math.round(x // 240), y = math.round(y // 136)}
--- end
-
 function gm.in_one_screen(obj1, obj2)
     local x1 = obj1.x
     local y1 = obj1.y
@@ -86,17 +62,6 @@ function gm.in_one_screen(obj1, obj2)
     local y2 = obj2.y
     return math.round(x1 // 240) == math.round(x2 // 240) and
             math.round(y1 // 136) == math.round(y2 // 136)
-end
-
-gm.tilemap = Tilemap:new()
-
-function gm.shakeEffect()
-    gm.x = gm.x + math.random(-10, 10)
-    gm.y = gm.y + math.random(-10, 10)
-end
-
-function gm.InsaneShakeEffect()
-
 end
 
 return gm
