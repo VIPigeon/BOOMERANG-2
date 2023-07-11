@@ -13,7 +13,19 @@ KEY_LEFT = 60
 KEY_RIGHT = 61
 
 
-data.Player = {}
+data.Player = {
+    movementNormalizerStraight = 1,
+    movementNormalizerDiagonal = 1 / math.sqrt(2)
+}
+data.Player.tiles = {
+    stayFrontTiles = {257},
+    stayBackTiles = {465},
+    runFrontTiles = {256, 257, 258, 259, 256, 257, 258, 259, 256, 257, 258, 259},
+    runBackTiles = {464, 465, 466, 467, 464, 465, 466, 467, 464, 465, 466, 467},
+    deathTiles = {272, 273, 274, 275, 276, 277, 278, 279, 279, 279, 279},
+    bornTiles = table.reversed({272, 273, 274, 275, 276, 277, 278, 279, 279, 279, 279}),
+    hatTiles = {279}
+}
 
 function plr_death_anim()
     res = {}
