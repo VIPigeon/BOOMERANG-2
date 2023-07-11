@@ -1,16 +1,17 @@
 Player = table.copy(Body)
-Player.stayFront = Sprite:new(data.Player.tiles.stayFrontTiles, 1)
-Player.runFront = Sprite:new(anim.gen60(data.Player.tiles.runFrontTiles), 1)
-Player.deathFront = Sprite:new(anim.gen60(data.Player.tiles.deathTiles), 1)
-Player.bornFront = Sprite:new(anim.gen60(data.Player.tiles.bornTiles), 1)
-Player.hatFront = Sprite:new(anim.gen60(data.Player.tiles.hatTiles), 1)
 
-Player.stayBack = Sprite:new(data.Player.tiles.stayBackTiles, 1)
-Player.runBack = Sprite:new(anim.gen60(data.Player.tiles.runBackTiles), 1)
+Player.stayFront = data.Player.sprites.stayFront
+Player.stayBack = data.Player.sprites.stayBack
+Player.runFront = data.Player.sprites.runFront
+Player.runBack = data.Player.sprites.runBack
+
+Player.death = data.Player.sprites.death
+Player.born = data.Player.sprites.born
+Player.hat = data.Player.sprites.hat
 
 function Player:new(x, y)
     obj = {
-        sprite = Player.bornFront:copy(),
+        sprite = Player.born:copy(),
         startX = x, startY = y,
         verticalFlip = false,
         x = x, y = y,
@@ -18,9 +19,6 @@ function Player:new(x, y)
         dx = 0, dy = 0, speed = 0.07,
         flip = 0,  -- направление при отрисовке спрайта
         hitbox = Hitbox:new_with_shift(x, y, x+3, y+6, 2, 1),
-        hp = 1,
-        bornFlag = true,
-        boomerang = false
     }
     -- чистая магия!
     setmetatable(obj, self)
@@ -54,14 +52,6 @@ end
 
 
 function Player:update()
-
-    if self.bornFlag then
-        if not self:born_update() then  -- если рождение закончилось
-            self.sprite = Player.stayFront:copy()
-            self.bornFlag = false
-        end
-        return
-    end
 
     wasMoving = false
     if math.abs(self.dx) + math.abs(self.dy) ~= 0 then  -- was moving
@@ -120,22 +110,11 @@ function Player:update()
 
     self.sprite:next_frame()
 
-    movementNormalizer = data.Player.movementNormalizerStraight
+    local movementNormalizer = data.Player.movementNormalizerStraight
     if self.dx * self.dy ~= 0 then
        movementNormalizer = data.Player.movementNormalizerDiagonal
     end
     self:_tryMove(movementNormalizer)
 end
-
-function Player:set_start_stats()
-    self.hp = 1
-    self.boomerang = false
-    self.x = self.startX
-    self.y = self.startY
-    self.sprite = Player.bornFront:copy()
-    self.bornFlag = true
-    self.hitbox = Hitbox:new_with_shift(self.startX, self.startY, self.startX + 3, self.startY + 6, 2, 1)
-end
-
 
 return Player

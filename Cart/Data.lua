@@ -17,37 +17,28 @@ data.Player = {
     movementNormalizerStraight = 1,
     movementNormalizerDiagonal = 1 / math.sqrt(2)
 }
-data.Player.tiles = {
-    stayFrontTiles = {257},
-    stayBackTiles = {465},
-    runFrontTiles = {256, 257, 258, 259, 256, 257, 258, 259, 256, 257, 258, 259},
-    runBackTiles = {464, 465, 466, 467, 464, 465, 466, 467, 464, 465, 466, 467},
-    deathTiles = {272, 273, 274, 275, 276, 277, 278, 279, 279, 279, 279},
-    bornTiles = table.reversed({272, 273, 274, 275, 276, 277, 278, 279, 279, 279, 279}),
-    hatTiles = {279}
-}
 
 function plr_death_anim()
     res = {}
-    for i=272, 278 do
-        for _=1, 8 do
+    for i = 272, 278 do
+        for _ = 1, 8 do
             table.insert(res, i)
         end
     end
-    for _=1, 4 do
+    for _ = 1, 4 do
         table.insert(res, 279)
     end
     return res
 end
 
 data.Player.sprites = {
-    stay_front =Sprite:new({257}, 1),
-    run_front = Sprite:new(anim.gen60({256, 257, 258, 259, 256, 257, 258, 259, 256, 257, 258, 259}), 1),
+    stayFront =Sprite:new({257}, 1),
+    runFront = Sprite:new(anim.gen60({256, 257, 258, 259, 256, 257, 258, 259, 256, 257, 258, 259}), 1),
     death = Sprite:new(anim.gen60(plr_death_anim()), 1),
     born = Sprite:new(table.reversed(anim.gen60(plr_death_anim())), 1),
     hat = Sprite:new(anim.gen60({279}), 1),
-    stay_back = Sprite:new({465}, 1),
-    run_back = Sprite:new(anim.gen60({464, 465, 466, 467, 464, 465, 466, 467, 464, 465, 466, 467}), 1),
+    stayBack = Sprite:new({465}, 1),
+    runBack = Sprite:new(anim.gen60({464, 465, 466, 467, 464, 465, 466, 467, 464, 465, 466, 467}), 1),
 }
 
 
