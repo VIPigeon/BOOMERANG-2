@@ -67,7 +67,8 @@ game.camera = camera
 game.metronome = metronome
 game.player = player
 game.enemies = enemies
-game.doorlever = doorlever
+game.doors = doorlever.doors
+game.levers = doorlever.levers
 
 function game.draw()
     map(gm.x, gm.y , 30, 17, gm.sx, gm.sy, C0)
