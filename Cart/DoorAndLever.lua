@@ -50,7 +50,7 @@ local leverIds = {
 function DoorAndLever.findWires()
     for x = 0, 239 do
         for y = 0, 135 do
-            local tileType = gm.get_tile_type8(x, y)
+            local tileType = gm.getTileType8(x, y)
             if tileType == TileType.TurnedOnWire then
                 DoorAndLever.walkWire(x, y)
 
@@ -65,7 +65,7 @@ function DoorAndLever.findWires()
 end
 
 function DoorAndLever.walkWire(x, y)
-    local tileType = gm.get_tile_type8(x, y)
+    local tileType = gm.getTileType8(x, y)
 
     if tileType == TileType.Door then
         doorLeverPair.door = { x=x, y=y, id=mget(x, y) }

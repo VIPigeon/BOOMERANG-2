@@ -35,7 +35,7 @@ function Body:take_damage(damage)
     end
 end
 
-function Body:will_collide_after(dx, dy)
+function Body:willCollideAfter(dx, dy)
     local oldX = self.x
     local oldY = self.y
 
@@ -45,7 +45,7 @@ function Body:will_collide_after(dx, dy)
 
     for i, door in ipairs(game.doorlever.doors) do
         if door:actually_checkCollision(self) then
-            trace('door')
+            --trace('door')
             will_collide = true
         end
     end

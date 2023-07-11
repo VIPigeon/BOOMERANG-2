@@ -65,7 +65,7 @@ data.Door.tiles = {
 }
 
 
-data.solid_tiles = {
+data.solidTiles = {
     1, 2, 3,
     208, 209, 210,
     224, 225, 226,

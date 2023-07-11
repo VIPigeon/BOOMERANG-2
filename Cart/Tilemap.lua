@@ -9,7 +9,7 @@ function Tilemap:new()
     for x = 1, 240 do
         local buf = {}
         for y = 1, 136 do
-            table.insert(buf, gm.get_tile_type8(x - 1, y - 1))
+            table.insert(buf, gm.getTileType8(x - 1, y - 1))
         end
         table.insert(obj, table.copy(buf))
     end
@@ -17,7 +17,7 @@ function Tilemap:new()
     for x = 1, 240 do
         local buf = {}
         for y = 1, 136 do
-            table.insert(buf, gm.get_tile_type8(x - 1, y - 1))
+            table.insert(buf, gm.getTileType8(x - 1, y - 1))
         end
         table.insert(obj.mirror, table.copy(buf))
     end
@@ -32,7 +32,7 @@ function Tilemap:clear()
     -- чистит карту в рамках экрана
     for x = gm.x + 1, gm.x + 30 do
         for y = gm.y + 1, gm.y + 17 do
-            self[x][y] = gm.get_tile_type8(x - 1, y - 1)
+            self[x][y] = gm.getTileType8(x - 1, y - 1)
         end
     end
 end
@@ -111,7 +111,7 @@ function Tilemap:print_with_path(enemy)
     for x = 1, 240 do
         local buf = {}
         for y = 1, 136 do
-            table.insert(buf, gm.get_tile_type8(x - 1, y - 1))
+            table.insert(buf, gm.getTileType8(x - 1, y - 1))
         end
         table.insert(self.mirror, table.copy(buf))
     end

@@ -31,11 +31,11 @@ function Player:_tryMove(movementNormalizer)
     local dx = self.dx * self.speed * movementNormalizer
     local dy = self.dy * self.speed * movementNormalizer
 
-    if self:will_collide_after(dx, dy) then
-        if not self:will_collide_after(dx, 0) then
+    if self:willCollideAfter(dx, dy) then
+        if not self:willCollideAfter(dx, 0) then
             self:move(dx, 0)
         end
-        if not self:will_collide_after(0, dy) then
+        if not self:willCollideAfter(0, dy) then
             self:move(0, dy)
         end
     else

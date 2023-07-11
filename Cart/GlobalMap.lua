@@ -6,7 +6,6 @@ gm.sx = 0 -- start map X 0w0
 gm.sy = 0 -- start map Y >:(
 
 TEST_BLOCK_TYPE = 4
-DOOR_TYPE = {34, 35, 36, 50, 51, 52}
 
 function gm.isTurnedOnWire(tileX, tileY)
 end
@@ -16,7 +15,7 @@ end
 
 TileType = {
     Void = 0,
-    Block = 1,
+    Solid = 1,
     TurnedOffWire = 2,
     TurnedOnWire = 3,
     Door = 4,
@@ -24,32 +23,23 @@ TileType = {
     Decoration = 6,
 }
 
-function gm.get_tile_type(x, y)
+function gm.getTileType(x, y)
     x = x % (240 * 8)
     y = y % (136 * 8)
 
     x = x // 8
     y = y // 8
 
-    return gm.get_tile_type8(x, y)
+    return gm.getTileType8(x, y)
 end
 
-function gm.get_tile_type8(x, y)  -- x, y даются как координаты тайла на глобальной карте
+function gm.getTileType8(x, y)  -- x, y даются как координаты тайла на глобальной карте
     local tileId = mget(x, y)
 
-    if tileId == TEST_BLOCK_TYPE then
-        return TileType.Block
-    elseif MC.turnedOffWires[tileId] ~= nil then
-        return TileType.TurnedOffWire
-    elseif MC.turnedOnWires[tileId] ~= nil then
-        return TileType.TurnedOnWire
-    elseif MC.doorIds[tileId] ~= nil then
-        return TileType.Door
-    elseif MC.leverIds[tileId] ~= nil then
-        return TileType.Lever
-    else
-        return TileType.Void
+    if table.contains(data.solidTiles, tileId) then
+        return TileType.Solid
     end
+    return TileType.Void
 end
 
 function gm.check(x, y)
