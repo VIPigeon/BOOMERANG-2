@@ -16,49 +16,19 @@ function Player:new(x, y)
         verticalFlip = false,
         x = x, y = y,
         lastDx = 1, lastDy = 0,
-        dx = 0, dy = 0, speed = 0.07,
+        dx = 0, dy = 0, speed = data.Player.speed,
         flip = 0,  -- направление при отрисовке спрайта
         hitbox = Hitbox:new_with_shift(x, y, x+3, y+6, 2, 1),
+        boomerang = false,
     }
     -- чистая магия!
     setmetatable(obj, self)
     self.__index = self; return obj
 end
 
-function Player:_tryMove(movementNormalizer)
-    local dx = self.dx * self.speed * movementNormalizer
-    local dy = self.dy * self.speed * movementNormalizer
+function Player:_willMoveCheck()
+    self.dx = 0; self.dy = 0 -- chill bro~~
 
-    if self:willCollideAfter(dx, dy) then
-        if not self:willCollideAfter(dx, 0) then
-            self:move(dx, 0)
-        end
-        if not self:willCollideAfter(0, dy) then
-            self:move(0, dy)
-        end
-    else
-        self:move(dx, dy)
-    end
-end
-
--- KEY_W = 23
--- KEY_A = 01
--- KEY_S = 19
--- KEY_D = 04
--- KEY_UP = 58
--- KEY_DOWN = 59
--- KEY_LEFT = 60
--- KEY_RIGHT = 61
-
-
-function Player:update()
-
-    wasMoving = false
-    if math.abs(self.dx) + math.abs(self.dy) ~= 0 then  -- was moving
-        wasMoving = true
-    end
-
-    self.dx = 0; self.dy = 0
     if key(KEY_W) then
         self.dy = self.dy - 1
     end
@@ -71,8 +41,15 @@ function Player:update()
     if key(KEY_D) then
         self.dx = self.dx + 1
     end
+end
 
-    if math.abs(self.dx) + math.abs(self.dy) ~= 0 then  -- is moving
+function Player:_verticalFlipCalculator()
+    local wasMoving = false
+    if math.abs(self.dx) + math.abs(self.dy) ~= 0 then  -- was moving~
+        wasMoving = true
+    end
+
+    if math.abs(self.dx) + math.abs(self.dy) ~= 0 then  -- is moving~
         self.lastDx = self.dx;
         self.lastDy = self.dy
 
@@ -101,20 +78,89 @@ function Player:update()
             self.sprite = Player.stayFront:copy()
         end
     end
+end
 
+function Player:_horizontalFlipCalculator()
     if self.dx == -1 then
         self.flip = 1
     elseif self.dx == 1 then
         self.flip = 0
-    end    
+    end
+end
 
-    self.sprite:next_frame()
+function Player:_tryMove(movementNormalizer)
+    local dx = self.dx * self.speed * movementNormalizer
+    local dy = self.dy * self.speed * movementNormalizer
 
+    if self:willCollideAfter(dx, dy) then
+        if not self:willCollideAfter(dx, 0) then
+            self:move(dx, 0)
+        end
+        if not self:willCollideAfter(0, dy) then
+            self:move(0, dy)
+        end
+    else
+        self:move(dx, dy)
+    end
+end
+
+function Player:_movementNormalizerGen()
     local movementNormalizer = data.Player.movementNormalizerStraight
     if self.dx * self.dy ~= 0 then
        movementNormalizer = data.Player.movementNormalizerDiagonal
     end
-    self:_tryMove(movementNormalizer)
+    return movementNormalizer
+end
+
+function Player:_shoot()
+    self.shooted = true
+
+    if key(KEY_UP) then
+        self.boomerang = Boomerang:new(self.x, self.y, 0, -1)
+        return
+    end
+    if key(KEY_DOWN) then
+        self.boomerang = Boomerang:new(self.x, self.y, 0, 1)
+        return
+    end
+    if key(KEY_LEFT) then
+        self.boomerang = Boomerang:new(self.x, self.y, -1, 0)
+        return
+    end
+    if key(KEY_RIGHT) then
+        self.boomerang = Boomerang:new(self.x, self.y, 1, 0)
+        return
+    end
+
+    self.shooted = false
+end
+
+function Player:boomerangHandle()
+    if not self.boomerang then
+        self:_shoot() -- *dead*
+    end
+    if self.boomerang then
+        self.boomerang:focus(self.x, self.y)
+        self.boomerang:update()
+        if self.boomerang.hitbox:collide(self.hitbox) and
+                self.boomerang.speed < self.speed then
+            self.boomerang = false
+        end
+    end
+end
+
+function Player:update()
+    self:_willMoveCheck() -- wanna move?~
+
+    self:_verticalFlipCalculator() -- will flip?
+
+    self:_horizontalFlipCalculator() -- will flip??
+
+    self.sprite:next_frame()
+
+    self:_tryMove(self:_movementNormalizerGen()) -- MOVED‼
+
+    self:boomerangHandle()
 end
 
 return Player

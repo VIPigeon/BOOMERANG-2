@@ -15,7 +15,8 @@ KEY_RIGHT = 61
 
 data.Player = {
     movementNormalizerStraight = 1,
-    movementNormalizerDiagonal = 1 / math.sqrt(2)
+    movementNormalizerDiagonal = 1 / math.sqrt(2),
+    speed = 0.07
 }
 
 function plr_death_anim()
@@ -42,7 +43,13 @@ data.Player.sprites = {
 }
 
 
-data.Boomerang = {}
+data.Boomerang = {
+    flightNormalizerStraight = 1,
+    flightNormalizerDiagonal = 1 / math.sqrt(2),
+    speed = 0.1,
+    decelerationConstant = 80, -- in context: CurentSpeed -= (StartSpeed / this)
+    damagePerMillisecond = 0.1
+}
 data.Boomerang.sprites = {
     spinning = Sprite:new(anim.gen60({264, 265, 266, 264, 265, 266, 264, 265, 266, 264, 265, 266}), 1),
 }

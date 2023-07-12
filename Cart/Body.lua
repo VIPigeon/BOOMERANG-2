@@ -54,7 +54,7 @@ function Body:willCollideAfter(dx, dy)
     return will_collide
 end
 
-function Body:move_unclamped(dx, dy)
+function Body:moveUnclamped(dx, dy)
     local newX = self.x + dx * Time.dt()
     local newY = self.y + dy * Time.dt()
 

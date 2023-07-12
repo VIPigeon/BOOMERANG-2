@@ -46,7 +46,7 @@ function Game:checkCollisions()
     if self.plr.boomerang then
         for i, enemy in ipairs(self.enemies) do
             if enemy.hitbox:collide(self.plr.boomerang.hitbox) then
-                local damage = math.round(self.plr.boomerang.damage_per_ms * Time.dt())
+                local damage = math.round(self.plr.boomerang.dpMs * Time.dt())
                 enemy:take_damage(damage)
 
                 if enemy:is_dead() then
