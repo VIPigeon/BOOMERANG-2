@@ -24,6 +24,12 @@ function Boomerang:new(x, y, dx, dy)
     self.__index = self; return obj-- body
 end
 
+function Boomerang:init(x, y, dx, dy)
+    self.x = x; self.y = y
+    self.dx = dx; self.dy = dy
+    self.speed = data.Boomerang.speed
+end
+
 function Boomerang:focus()
     self.px = game.plr.x; self.py = game.plr.y
 end
