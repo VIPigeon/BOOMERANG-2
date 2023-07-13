@@ -19,7 +19,8 @@ function Player:new(x, y)
         dx = 0, dy = 0, speed = data.Player.speed,
         flip = 0,  -- направление при отрисовке спрайта
         hitbox = Hitbox:new_with_shift(x, y, x+3, y+6, 2, 1),
-        boomerang = false,
+        boomerang = nil,
+        boomerangActive = false,
     }
     -- чистая магия!
     setmetatable(obj, self)
@@ -113,39 +114,36 @@ function Player:_movementNormalizerGen()
 end
 
 function Player:_shoot()
-    self.shooted = true
+    self.boomerangActive = true
 
     if key(KEY_UP) then
-        self.boomerang = Boomerang:new(self.x, self.y, 0, -1)
+        self.boomerang.x = self.x; self.boomerang.y = self.y
+        self.boomerang.dx = 0; self.boomerang.dy = -1
+        trace(self.boomerang.x)
         return
     end
     if key(KEY_DOWN) then
-        self.boomerang = Boomerang:new(self.x, self.y, 0, 1)
+        self.boomerang.x = self.x; self.boomerang.y = self.y
+        self.boomerang.dx = 0; self.boomerang.dy = 1
         return
     end
     if key(KEY_LEFT) then
-        self.boomerang = Boomerang:new(self.x, self.y, -1, 0)
+        self.boomerang.x = self.x; self.boomerang.y = self.y
+        self.boomerang.dx = -1; self.boomerang.dy = 0
         return
     end
     if key(KEY_RIGHT) then
-        self.boomerang = Boomerang:new(self.x, self.y, 1, 0)
+        self.boomerang.x = self.x; self.boomerang.y = self.y
+        self.boomerang.dx = 1; self.boomerang.dy = 0
         return
     end
 
-    self.shooted = false
+    self.boomerangActive = false
 end
 
 function Player:boomerangHandle()
-    if not self.boomerang then
+    if not self.boomerangActive then
         self:_shoot() -- *dead*
-    end
-    if self.boomerang then
-        self.boomerang:focus(self.x, self.y)
-        self.boomerang:update()
-        if self.boomerang.hitbox:collide(self.hitbox) and
-                self.boomerang.speed < self.speed then
-            self.boomerang = false
-        end
     end
 end
 
@@ -160,7 +158,7 @@ function Player:update()
 
     self:_tryMove(self:_movementNormalizerGen()) -- MOVED‼
 
-    self:boomerangHandle()
+    self:boomerangHandle() -- Boomer go brrrrr
 end
 
 return Player

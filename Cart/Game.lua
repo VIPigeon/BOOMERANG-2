@@ -8,9 +8,12 @@ function Game:new()
         Rose:new(220, 15, 3),
     }
 
+    local boom = Boomerang:new(0,0,0,0)
+
     obj = {
         mode = 'action',
         plr = Player:new(10,10),
+        boomer = boom,
         doorlever = DoorAndLever:new(),
 		camera = CameraWindow:new(-30, -20, 30, 20),
         metronome = Metronome:new(60),
@@ -28,6 +31,8 @@ function Game:new()
         obj.metronome:add_beat_callback(function() rose:on_beat() end)
         rose.metronome = obj.metronome
     end
+
+    obj['plr'].boomerang = boom
 
     obj.camera:move()
     Game.initialize_decoration_animations(obj.metronome)
@@ -155,6 +160,10 @@ function Game:update()
         self.plr:update()
     end
 
+    if self.plr.boomerangActive then
+        self.boomer:update()
+    end
+    
     self:checkCollisions()
 
     for _, door in ipairs(self.doorlever.doors) do

@@ -24,16 +24,22 @@ function Boomerang:new(x, y, dx, dy)
     self.__index = self; return obj-- body
 end
 
-function Boomerang:focus(x, y)
-    self.px = x; self.py = y
+function Boomerang:focus()
+    self.px = game.plr.x; self.py = game.plr.y
 end
 
 function Boomerang:update()
     self.sprite:next_frame()
     self.speed = self.speed - self.decelerationThing
     if self.speed < 0 then
+        self:focus()
+        if self.hitbox:collide(game.plr.hitbox) and
+                self.speed < game.plr.speed then
+            game.plr.boomerangActive = false
+            return 
+        end
         self:_reverseUpdate()
-        return
+        return 
     end
 
     local dx = self.speed * self.dx * self.flightNormalizer
