@@ -150,7 +150,6 @@ function Player:update()
 
     if self.boomerang then
         self.boomerang:focus(self.x, self.y)
-        self.boomerang:update()
         if self.boomerang.hitbox:collide(self.hitbox) and
                 self.boomerang.v < self.v then
             self.boomerang = false
