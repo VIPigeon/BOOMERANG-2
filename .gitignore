@@ -1,5 +1,6 @@
 # Scripts
 *.ps1
+*.sh
 
 # Config
 *.json

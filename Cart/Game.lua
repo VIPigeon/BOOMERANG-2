@@ -39,8 +39,8 @@ local function createBoomerang()
     return Boomerang:new(PLAYER_START_X, PLAYER_START_Y, 0, 0)
 end
 
-local function createPlayer()
-    return Player:new(PLAYER_START_X, PLAYER_START_Y)
+local function createPlayer(boomerang)
+    return Player:new(PLAYER_START_X, PLAYER_START_Y, boomerang)
 end
 
 local function createBullets()
@@ -60,7 +60,7 @@ local levers = createLevers()
 local doors = createDoors()
 local enemies = createEnemies()
 local boomerang = createBoomerang()
-local player = createPlayer()
+local player = createPlayer(boomerang)
 local bullets = createBullets()
 
 table.insert(game.updatables, metronome)

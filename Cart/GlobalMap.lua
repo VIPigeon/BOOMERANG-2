@@ -5,31 +5,28 @@ gm.y = 0  -- glabal map Y
 gm.sx = 0 -- start map X 0w0
 gm.sy = 0 -- start map Y >:(
 
-TEST_BLOCK_TYPE = 4
-
 TileType = {
     Void = 0,
     Block = 1,
 }
 
-function gm.get_tile_type(x, y)
+function gm.getTileType(x, y)
     x = x % (240 * 8)
     y = y % (136 * 8)
 
     x = x // 8
     y = y // 8
 
-    return gm.get_tile_type8(x, y)
+    return gm.getTileType8(x, y)
 end
 
-function gm.get_tile_type8(x, y)  -- x, y даются как координаты тайла на глобальной карте
+function gm.getTileType8(x, y)  -- x, y даются как координаты тайла на глобальной карте
     local tileId = mget(x, y)
 
-    if tileId == TEST_BLOCK_TYPE then
-        return TileType.Block
-    else
-        return TileType.Void
+    if table.contains(data.solidTiles, tileId) then
+        return TileType.Solid
     end
+    return TileType.Void
 end
 
 function gm.check(x, y)

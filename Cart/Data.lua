@@ -34,33 +34,43 @@ CAMERA_WINDOW_WIDTH = 60
 CAMERA_WINDOW_HEIGHT = 40
 CAMERA_SPEED = 0.1
 
-data.Player = {}
+data.Player = {
+    movementNormalizerStraight = 1,
+    movementNormalizerDiagonal = 1 / math.sqrt(2),
+    speed = 0.7
+}
 
 function plr_death_anim()
     res = {}
-    for i=272, 278 do
-        for _=1, 8 do
+    for i = 272, 278 do
+        for _ = 1, 8 do
             table.insert(res, i)
         end
     end
-    for _=1, 4 do
+    for _ = 1, 4 do
         table.insert(res, 279)
     end
     return res
 end
 
 data.Player.sprites = {
-    stay_front =Sprite:new({257}, 1),
-    run_front = Sprite:new(anim.gen60({256, 257, 258, 259, 256, 257, 258, 259, 256, 257, 258, 259}), 1),
+    stayFront =Sprite:new({257}, 1),
+    runFront = Sprite:new(anim.gen60({256, 257, 258, 259, 256, 257, 258, 259, 256, 257, 258, 259}), 1),
     death = Sprite:new(anim.gen60(plr_death_anim()), 1),
     born = Sprite:new(table.reversed(anim.gen60(plr_death_anim())), 1),
     hat = Sprite:new(anim.gen60({279}), 1),
-    stay_back = Sprite:new({465}, 1),
-    run_back = Sprite:new(anim.gen60({464, 465, 466, 467, 464, 465, 466, 467, 464, 465, 466, 467}), 1),
+    stayBack = Sprite:new({465}, 1),
+    runBack = Sprite:new(anim.gen60({464, 465, 466, 467, 464, 465, 466, 467, 464, 465, 466, 467}), 1),
 }
 
 
-data.Boomerang = {}
+data.Boomerang = {
+    flightNormalizerStraight = 1,
+    flightNormalizerDiagonal = 1 / math.sqrt(2),
+    speed = 0.1,
+    decelerationConstant = 80, -- in context: CurentSpeed -= (StartSpeed / this)
+    damagePerMillisecond = 0.1
+}
 data.Boomerang.sprites = {
     spinning = Sprite:new(anim.gen60({264, 265, 266, 264, 265, 266, 264, 265, 266, 264, 265, 266}), 1),
 }
@@ -74,7 +84,7 @@ data.Door.tiles = {
 }
 
 
-data.solid_tiles = {
+data.solidTiles = {
     1, 2, 3,
     208, 209, 210,
     224, 225, 226,

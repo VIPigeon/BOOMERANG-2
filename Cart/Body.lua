@@ -1,8 +1,4 @@
-
---  базовый класс
-
 Body = {}
-
 
 function Body:new(sprite, x, y)
     obj = {
@@ -14,7 +10,7 @@ function Body:new(sprite, x, y)
         isDead = false,  -- в этой игре не нужно понятие здоровья
         born_flag = true
     }
-    -- чистая магия!
+
     setmetatable(obj, self)
     self.__index = self; return obj
 end
@@ -35,21 +31,22 @@ function Body:take_damage(damage)
     end
 end
 
-function Body:will_collide_after(dx, dy)
+function Body:willCollideAfter(dx, dy)
     local oldX = self.x
     local oldY = self.y
 
     self:move(dx, dy)
 
     local will_collide = not self.hitbox:mapCheck()
+
     self:set_position(oldX, oldY)
 
     return will_collide
 end
 
-function Body:move_unclamped(dx, dy)
-    local newX = self.x + dx
-    local newY = self.y + dy
+function Body:moveUnclamped(dx, dy)
+    local newX = self.x + dx * Time.dt()
+    local newY = self.y + dy * Time.dt()
 
     self.x = newX
     self.y = newY
@@ -61,8 +58,11 @@ function Body:move(dx, dy)
     local newX = self.x + dx
     local newY = self.y + dy
 
-    self.x = math.fence(newX, 0, 240 - 8)
-    self.y = math.fence(newY, 0, 136 - 8)
+    self.x = newX
+    self.y = newY
+
+    --self.x = math.fence(newX, 0, 240 - 8)
+    --self.y = math.fence(newY, 0, 136 - 8)
 
     self.hitbox:set_xy(self.x, self.y)
 end

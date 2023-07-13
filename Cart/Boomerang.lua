@@ -1,66 +1,86 @@
 Boomerang = table.copy(Body)
-BOOMERANG_A = Sprite:new(anim.gen60({264, 265, 266, 264, 265, 266, 264, 265, 266, 264, 265, 266}), 1)
+
+boomerangSpinningSprite = data.Boomerang.sprites.spinning
 
 function Boomerang:new(x, y, dx, dy)
     obj = {  -- dx, dy in [-1, 1]
-        sprite = BOOMERANG_A:copy(),
+        sprite = boomerangSpinningSprite:copy(),
         x = x, y = y,
         dx = dx, dy = dy,
-        v = 0.1, k = 1,
+        speed = data.Boomerang.speed,
+        flightNormalizer = data.Boomerang.flightNormalizerStraight,
         px = 0, py = 0,
-        damage_per_ms = 0.1,
-        hitbox = Hitbox:new_with_shift(x+2, y+2, x+6, y+6, 2, 2)
+        dpMs = data.Boomerang.damagePerMillisecond,
+        hitbox = Hitbox:new_with_shift(x+2, y+2, x+6, y+6, 2, 2),
+        --flightEnded = false
     }
-    obj['flip'] = -math.fence(dx, -1, 0)
+
     if obj['dx'] * obj['dy'] ~= 0 then
-        obj['k'] = 1 / math.sqrt(2)
+        obj['flightNormalizer'] = data.Boomerang.flightNormalizerDiagonal
     end
-    obj['dv'] = obj['v'] / 80
-    -- чистая магия!
+    obj['decelerationThing'] = obj['speed'] / data.Boomerang.decelerationConstant
+
     setmetatable(obj, self)
-    self.__index = self; return obj-- body
+    self.__index = self
+    return obj
+end
+
+function Boomerang:init(x, y, dx, dy)
+    self.x = x; self.y = y
+    self.dx = dx; self.dy = dy
+    self.speed = data.Boomerang.speed
+end
+
+function Boomerang:focus()
+    self.px = game.player.x
+    self.py = game.player.y
 end
 
 function Boomerang:update()
     self.sprite:next_frame()
-    self.v = self.v - self.dv
-    if self.v < 0 then
-        self:reverse_update()
+    self.speed = self.speed - self.decelerationThing
+    if self.speed < 0 then
+        self:focus()
+        if self.hitbox:collide(game.player.hitbox) and
+                self.speed < game.player.speed then
+            game.player.boomerangActive = false
+            return
+        end
+        self:_reverseUpdate()
         return
     end
 
-    local dx = self.v * self.dx * self.k
-    local dy = self.v * self.dy * self.k
+    local dx = self.speed * self.dx * self.flightNormalizer
+    local dy = self.speed * self.dy * self.flightNormalizer
 
-    self:move_unclamped(dx, dy)
+    self:moveUnclamped(dx, dy)
     self:draw()
 end
 
-function Boomerang:focus(x, y)
-    self.px = x; self.py = y
-end
-
-function Boomerang:reverse_update()
-    fx = self.px; fy = self.py
-    x = self.x; y = self.y
+function Boomerang:_reverseUpdate()
+    local fx = self.px
+    local fy = self.py
+    local x = self.x
+    local y = self.y
     if fx == x then
         fx = fx + 0.0000001
     end
     d = math.abs(fy - y) / math.abs(fx - x)
-    dx = self.v / math.sqrt(1 + d*d)
-    dy = dx * d
+    dx = self.speed / math.sqrt(1 + d*d)
+    dy = dx*d -- xdd~~~
 
-    kx = 1; ky = 1
+    local kx = 1
+    local ky = 1
     if fx < x then
         kx = -1
     end
     if fy < y then
         ky = -1
     end
-    
+
     local ddx = -1 * kx * dx
     local ddy = -1 * ky * dy
-    self:move_unclamped(ddx, ddy)
+    self:moveUnclamped(ddx, ddy)
     self:draw()
 end
 

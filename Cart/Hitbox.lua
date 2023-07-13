@@ -44,10 +44,10 @@ end
 
 
 function Hitbox:mapCheck()
-    return gm.get_tile_type(self.x1, self.y1) == TileType.Void
-        and gm.get_tile_type(self.x1, self.y2) == TileType.Void
-        and gm.get_tile_type(self.x2, self.y1) == TileType.Void
-        and gm.get_tile_type(self.x2, self.y2) == TileType.Void
+    return gm.getTileType(self.x1, self.y1) == TileType.Void
+        and gm.getTileType(self.x1, self.y2) == TileType.Void
+        and gm.getTileType(self.x2, self.y1) == TileType.Void
+        and gm.getTileType(self.x2, self.y2) == TileType.Void
 end
 
 
