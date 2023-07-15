@@ -12,6 +12,7 @@ function Boomerang:new(x, y, dx, dy)
         px = 0, py = 0,
         dpMs = data.Boomerang.damagePerMillisecond,
         hitbox = Hitbox:new_with_shift(x+2, y+2, x+6, y+6, 2, 2),
+        active = false
         --flightEnded = false
     }
 
@@ -43,7 +44,8 @@ function Boomerang:update()
         self:focus()
         if self.hitbox:collide(game.player.hitbox) and
                 self.speed < game.player.speed then
-            game.player.boomerangActive = false
+            -- game.player.boomerangActive = false
+            self.active = false
             return
         end
         self:_reverseUpdate()
@@ -54,7 +56,7 @@ function Boomerang:update()
     local dy = self.speed * self.dy * self.flightNormalizer
 
     self:moveUnclamped(dx, dy)
-    self:draw()
+    -- self:draw()
 end
 
 function Boomerang:_reverseUpdate()
@@ -78,10 +80,18 @@ function Boomerang:_reverseUpdate()
         ky = -1
     end
 
-    local ddx = -1 * kx * dx
+    local ddx = -1 * kx * dx  -- вторая производная хули
     local ddy = -1 * ky * dy
     self:moveUnclamped(ddx, ddy)
-    self:draw()
+    -- self:draw()
+end
+
+
+function Boomerang:draw()
+    if not self.active then
+        return
+    end
+    self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
 end
 
 

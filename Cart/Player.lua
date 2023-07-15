@@ -24,7 +24,7 @@ function Player:new(x, y, boomerang)
         flip = 0,  -- направление при отрисовке спрайта
         hitbox = Hitbox:new_with_shift(x, y, x+3, y+6, 2, 1),
         boomerang = boomerang,
-        boomerangActive = false,
+        -- boomerangActive = false,
     }
 
     setmetatable(obj, self)
@@ -119,7 +119,7 @@ function Player:_movementNormalizerGen()
 end
 
 function Player:_shoot()
-    self.boomerangActive = true
+    self.boomerang.active = true
 
     if key(KEY_UP) then
         self.boomerang:init(self.x, self.y, 0, -1)
@@ -138,11 +138,11 @@ function Player:_shoot()
         return
     end
 
-    self.boomerangActive = false
+    self.boomerang.active = false
 end
 
 function Player:boomerangHandle()
-    if not self.boomerangActive then
+    if not self.boomerang.active then
         self:_shoot() -- *dead*
     end
 end
