@@ -82,6 +82,7 @@ table.concatTable(game.drawables, doors)
 
 game.mode = 'action'
 game.player = player
+game.metronome = metronome
 
 function game.draw()
     map(gm.x, gm.y , 30, 17, gm.sx, gm.sy, C0)
