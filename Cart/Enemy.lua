@@ -15,7 +15,4 @@ function Enemy:new(x, y)
 end
 
 function Enemy:update()
-    if game.metronome.on_beat then
-        trace('BEAT! I am shooting!')
-    end
 end

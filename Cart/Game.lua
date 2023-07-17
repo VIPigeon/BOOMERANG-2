@@ -12,6 +12,21 @@ local function createCheckpoints()
     return checkpoints
 end
 
+local function createCamera(player)
+    local cameraRect = Rect:new(
+        CAMERA_WINDOW_START_Y,
+        CAMERA_WINDOW_START_X,
+        CAMERA_WINDOW_WIDTH,
+        CAMERA_WINDOW_HEIGHT
+    )
+
+    camera = CameraWindow:new(
+        cameraRect,
+        player
+    )
+    return camera
+end
+
 local function createLevers()
     levers = {
         Lever:new(50, 10),
@@ -61,11 +76,13 @@ local doors = createDoors()
 local enemies = createEnemies()
 local boomerang = createBoomerang()
 local player = createPlayer(boomerang)
+local camera = createCamera(player)
 local bullets = createBullets()
 
 table.insert(game.updatables, metronome)
 table.concatTable(game.updatables, checkpoints)
 table.insert(game.updatables, player)
+table.insert(game.updatables, camera)
 table.insert(game.updatables, boomerang)
 table.concatTable(game.updatables, enemies)
 table.concatTable(game.updatables, levers)
@@ -80,9 +97,10 @@ table.insert(game.drawables, boomerang)
 table.concatTable(game.drawables, bullets)
 table.concatTable(game.drawables, doors)
 
-game.mode = 'action'
-game.player = player
+game.mode = 'action' -- Зачем это? :|
 game.metronome = metronome
+game.player = player
+game.camera = camera
 
 function game.draw()
     map(gm.x, gm.y , 30, 17, gm.sx, gm.sy, C0)
