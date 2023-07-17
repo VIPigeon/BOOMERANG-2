@@ -55,7 +55,7 @@ function DoorAndLever.findWires()
                 DoorAndLever.walkWire(x, y)
 
                 if doorLeverPair.door == nil or doorLeverPair.lever == nil then
-                    trace("ERROR!! Couldn't find lever or door for wire at " .. x .. " " .. y)
+                    trace("ERROR‼ Couldn't find lever or door for wire at " .. x .. " " .. y)
                 else
                     table.insert(doorsAndLevers, doorLeverPair)
                 end
@@ -129,6 +129,7 @@ function DoorAndLever:new()
         levers = levers
     }
 
+    -- магия пропала (￣︿￣)   
     setmetatable(obj, self)
     self.__index = self;
     return obj

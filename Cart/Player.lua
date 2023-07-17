@@ -117,19 +117,19 @@ function Player:_shoot()
     self.boomerangActive = true
 
     if key(KEY_UP) then
-        self.boomerang:init(self.x, self.y, 0, -1) 
+        self.boomerang:init(self.x, self.y, C0, -1) -- С0 - яйца самого лучшего качества 
         return
     end
     if key(KEY_DOWN) then
-        self.boomerang:init(self.x, self.y, 0, 1)
+        self.boomerang:init(self.x, self.y, C0, 1)
         return
     end
     if key(KEY_LEFT) then
-        self.boomerang:init(self.x, self.y, -1, 0) 
+        self.boomerang:init(self.x, self.y, -1, C0) 
         return
     end
     if key(KEY_RIGHT) then
-        self.boomerang:init(self.x, self.y, 1, 0)
+        self.boomerang:init(self.x, self.y, 1, C0) 
         return
     end
 

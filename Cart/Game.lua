@@ -18,10 +18,10 @@ function Game:new()
 		camera = CameraWindow:new(-30, -20, 30, 20),
         metronome = Metronome:new(60),
         enemies = {
-            Enemy:new(15, 15),
-            Enemy:new(200, 100),
-            Enemy:new(35, 80),
-            Enemy:new(120, 10),
+            --Enemy:new(15, 15),
+            --Enemy:new(200, 100),
+            --Enemy:new(35, 80),
+            --Enemy:new(120, 10),
         },
     }
 
@@ -37,30 +37,38 @@ function Game:new()
     obj.camera:move()
     Game.initialize_decoration_animations(obj.metronome)
 
+    for x = 0, 239 do
+        for y = 0, 135 do
+            if mget(x, y) == data.Enemy.defaultEnemyFlagTile then
+                mset(x, y, C0)
+                table.insert(Enemy:new(x,y), obj['enemies'])
+            end
+        end
+    end
+    
+    --Game.generateEnemies()
+
     -- чистая магия!
     setmetatable(obj, self)
     self.__index = self;
     return obj
 end
 
-function Game:checkCollisions()
-    if self.plr:is_dead() then
-        return
-    end
+function Game.generateEnemies()
+    
+end
 
-    if self.plr.boomerang then
-        for i, enemy in ipairs(self.enemies) do
-            if enemy.hitbox:collide(self.plr.boomerang.hitbox) then
-                local damage = math.round(self.plr.boomerang.dpMs * Time.dt())
-                enemy:take_damage(damage)
-
-                if enemy:is_dead() then
-                    enemy:die()
-                    table.remove(self.enemies, i)
-                end
-            end
+function Game:enemiesUpdate()
+    for i, enemy in ipairs(self.enemies) do
+        if enemy:isDeadCheck() then
+            table.remove(self.enemies, i)
+        else
+            enemy:update()
         end
     end
+end
+
+function Game:checkCollisions()
     
     for i, door in ipairs(self.doorlever.doors) do
         local damage = 1
@@ -128,22 +136,24 @@ function Game.initialize_decoration_animations(metronome)
 end
 
 function Game:draw()
-    for i, door in ipairs(self.doorlever.doors) do
-        door:draw()
-    end
+    --for i, door in ipairs(self.doorlever.doors) do
+    --   door:draw()
+    --end
 
     map(gm.x, gm.y , 30, 17, gm.sx, gm.sy, C0)
 
-    for _, lever in ipairs(self.doorlever.levers) do
-        lever:draw()
-    end
+    --for _, lever in ipairs(self.doorlever.levers) do
+    --    lever:draw()
+    --end
 
-    for _, door in ipairs(self.doorlever.doors) do
-        door:draw()
-    end
+    --for _, door in ipairs(self.doorlever.doors) do
+    --    door:draw()
+    --end
 
-    for _, enemy in ipairs(self.enemies) do
-        enemy:draw()
+    if self.enemies ~= nil then
+        for _, enemy in ipairs(self.enemies) do
+            enemy:draw()
+        end
     end
 
     self.plr:draw()
@@ -154,16 +164,12 @@ function Game:update()
 
     self:draw()
 
-    if self.plr:is_dead() then
-        self.plr:death_update()
-    else
-        self.plr:update()
-    end
+    self.plr:update()
 
     if self.plr.boomerangActive then
         self.boomer:update()
     end
-    
+
     self:checkCollisions()
 
     for _, door in ipairs(self.doorlever.doors) do
@@ -175,9 +181,7 @@ function Game:update()
     self.camera:tryMove(self.plr.x, self.plr.y)
     self.camera:update()
 
-    for _, enemy in ipairs(self.enemies) do
-        enemy:update()
-    end
+    self:enemiesUpdate()
 end
 
 return Game
