@@ -40,8 +40,8 @@ function Rect:centerY()
     return self.y + self.halfHeight
 end
 
-function Rect:isObjectRight(object)
-    return self:right() < object.x
+function Rect:isObjectRight(object, objectWidth)
+    return self:right() < object.x + objectWidth
 end
 
 function Rect:isObjectLeft(object)
@@ -52,20 +52,36 @@ function Rect:isObjectAbove(object)
     return self.y > object.y
 end
 
-function Rect:isObjectBelow(object)
-    return self:down() < object.y
+function Rect:isObjectBelow(object, objectHeight)
+    return self:down() < object.y + objectHeight
 end
 
-function Rect:isObjectInside(object)
+function Rect:isObjectInside(object, objectWidth, objectHeight)
     return not self:isObjectAbove(object) and
-           not self:isObjectBelow(object) and
+           not self:isObjectBelow(object, objectHeight) and
            not self:isObjectLeft(object) and
-           not self:isObjectRight(object)
+           not self:isObjectRight(object, objectWidth)
 end
 
 function Rect:move(dx, dy)
     self.x = self.x + dx
     self.y = self.y + dy
+end
+
+function Rect:moveLeftTo(x)
+    self.x = x
+end
+
+function Rect:moveRightTo(x)
+    self.x = x - self.w
+end
+
+function Rect:moveUpTo(y)
+    self.y = y
+end
+
+function Rect:moveDownTo(y)
+    self.y = y - self.h
 end
 
 function Rect:moveCenterTo(x, y)
@@ -82,4 +98,3 @@ function Rect:drawDebug()
         1
     )
 end
-

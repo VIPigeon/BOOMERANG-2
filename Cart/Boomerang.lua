@@ -30,6 +30,7 @@ function Boomerang:init(x, y, dx, dy)
     self.x = x; self.y = y
     self.dx = dx; self.dy = dy
     self.speed = data.Boomerang.speed
+    game.camera:shake(0.5)
 end
 
 function Boomerang:focus()
@@ -44,7 +45,7 @@ function Boomerang:update()
         self:focus()
         if self.hitbox:collide(game.player.hitbox) and
                 self.speed < game.player.speed then
-            -- game.player.boomerangActive = false
+            game.camera:shakeStop()
             self.active = false
             return
         end
@@ -56,7 +57,6 @@ function Boomerang:update()
     local dy = self.speed * self.dy * self.flightNormalizer
 
     self:moveUnclamped(dx, dy)
-    -- self:draw()
 end
 
 function Boomerang:_reverseUpdate()
@@ -80,10 +80,9 @@ function Boomerang:_reverseUpdate()
         ky = -1
     end
 
-    local ddx = -1 * kx * dx  -- вторая производная хули
+    local ddx = -1 * kx * dx  -- вторая производная хули ?!??!?!?!
     local ddy = -1 * ky * dy
     self:moveUnclamped(ddx, ddy)
-    -- self:draw()
 end
 
 

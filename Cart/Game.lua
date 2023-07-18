@@ -22,7 +22,9 @@ local function createCamera(player)
 
     camera = CameraWindow:new(
         cameraRect,
-        player
+        player,
+        8,
+        8
     )
     return camera
 end
