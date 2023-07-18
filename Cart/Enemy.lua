@@ -1,12 +1,16 @@
 Enemy = table.copy(Body)
 
-Enemy.defaultSprite = Sprite:new({403}, 1)
-
 function Enemy:new(x, y)
-    obj = {
+    local obj = {
+        sprite = data.Enemy.sprites.defaultSprite,
         x = x,
         y = y,
-        sprite = Enemy.defaultSprite:copy(),
+        flip = 0,
+
+        hitbox = Hitbox:new(x, y, x + 8, y + 8),
+
+        hp = data.Enemy.defaultHP,
+        isEnemy = true,
     }
 
     setmetatable(obj, self)
@@ -15,4 +19,26 @@ function Enemy:new(x, y)
 end
 
 function Enemy:update()
+    if game.boomer.hitbox:collide(self.hitbox) then
+        local damage = game.boomer.dpMs * Time.dt()
+        self:takeDamage(damage)
+    end
+
+    if self:isDeadCheck() then
+        self:die()
+    end
+end
+
+function Enemy:die()
+    trace("I AM DEAD!!!")
+    table.removeElement(game.updatables, self)
+    table.removeElement(game.drawables, self)
+end
+
+function Enemy:isDeadCheck()
+    return self.hp == 0
+end
+
+function Enemy:takeDamage(damage)
+    self.hp = math.fence(self.hp - damage, 0, self.hp)
 end

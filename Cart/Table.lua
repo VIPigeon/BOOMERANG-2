@@ -39,6 +39,18 @@ function table.contains(t, element)
     return false
 end
 
+function table.removeElement(t, element)
+    ind = 0
+    for i, value in ipairs(t) do
+        if value == element then
+            ind = i
+            break
+        end
+    end
+
+    table.remove(t, ind)
+end
+
 function table.reversed(t)
     res = {}
     for i = #t, 1, -1 do

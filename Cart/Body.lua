@@ -1,7 +1,7 @@
 Body = {}
 
 function Body:new(sprite, x, y)
-    obj = {
+    local obj = {
         sprite = sprite,
         hitbox = 'nil',
         flip = 0,
@@ -13,22 +13,6 @@ function Body:new(sprite, x, y)
 
     setmetatable(obj, self)
     self.__index = self; return obj
-end
-
-function Body:die()
-    trace("I AM DEAD!!!")
-end
-
-function Body:is_dead()
-    return self.hp == 0
-end
-
-function Body:take_damage(damage)
-    self.hp = math.fence(self.hp - damage, 0, self.hp)
-
-    if self:is_dead() then
-        self.isDead = true
-    end
 end
 
 function Body:willCollideAfter(dx, dy)

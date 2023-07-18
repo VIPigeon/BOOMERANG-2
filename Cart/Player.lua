@@ -6,12 +6,11 @@ Player.runFront = data.Player.sprites.runFront
 Player.runBack = data.Player.sprites.runBack
 
 Player.death = data.Player.sprites.death
-Player.born = data.Player.sprites.born
 Player.hat = data.Player.sprites.hat
 
 function Player:new(x, y, boomerang)
-    obj = {
-        sprite = Player.born:copy(),
+    local obj = {
+        sprite = Player.stayFront:copy(),
         startX = x,
         startY = y,
         verticalFlip = false,
@@ -24,7 +23,8 @@ function Player:new(x, y, boomerang)
         flip = 0,  -- направление при отрисовке спрайта
         hitbox = Hitbox:new_with_shift(x, y, x+3, y+6, 2, 1),
         boomerang = boomerang,
-        -- boomerangActive = false,
+        boomerangActive = false,
+        status = 'alive',
     }
 
     setmetatable(obj, self)
@@ -95,6 +95,7 @@ function Player:_horizontalFlipCalculator()
 end
 
 function Player:_tryMove(movementNormalizer)
+
     local dx = self.dx * self.speed * movementNormalizer
     local dy = self.dy * self.speed * movementNormalizer
 
@@ -122,19 +123,19 @@ function Player:_shoot()
     self.boomerang.active = true
 
     if key(KEY_UP) then
-        self.boomerang:init(self.x, self.y, 0, -1)
+        self.boomerang:init(self.x, self.y, C0, -1) -- С0 - яйца самого лучшего качества 
         return
     end
     if key(KEY_DOWN) then
-        self.boomerang:init(self.x, self.y, 0, 1)
+        self.boomerang:init(self.x, self.y, C0, 1)
         return
     end
     if key(KEY_LEFT) then
-        self.boomerang:init(self.x, self.y, -1, 0)
+        self.boomerang:init(self.x, self.y, -1, C0)
         return
     end
     if key(KEY_RIGHT) then
-        self.boomerang:init(self.x, self.y, 1, 0)
+        self.boomerang:init(self.x, self.y, 1, C0)
         return
     end
 

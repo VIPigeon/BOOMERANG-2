@@ -32,24 +32,31 @@ end
 local function createLevers()
     levers = {
         Lever:new(50, 10),
-        Lever:new(40, 40),
+        Lever:new(60, 60),
     }
     return levers
 end
 
 local function createDoors()
     doors = {
-        Door:new(6, 8),
     }
     return doors
 end
 
 local function createEnemies()
-    enemies = {
-        Enemy:new(25, 25),
-        Enemy:new(40, 30),
-    }
-    return enemies
+    enemem = {}
+
+    for x = 0, MAP_WIDTH do
+        for y = 0, MAP_HEIGHT do
+            if mget(x, y) == data.Enemy.defaultEnemyFlagTile then
+                mset(x, y, C0)
+                local enemy = Enemy:new(x * 8, y * 8)
+                table.insert(enemem, enemy)
+            end
+        end
+    end
+
+    return enemem
 end
 
 local function createBoomerang()
@@ -62,8 +69,6 @@ end
 
 local function createBullets()
     bullets = {
-        Bullet:new(0, 0),
-        Bullet:new(20, 20),
     }
     return bullets
 end
@@ -102,6 +107,7 @@ table.concatTable(game.drawables, doors)
 game.mode = 'action' -- Зачем это? :|
 game.metronome = metronome
 game.player = player
+game.boomer = boomerang
 game.camera = camera
 
 function game.draw()
