@@ -7,7 +7,7 @@
 CameraWindow = {}
 
 function CameraWindow:new(deadZoneRect, target, targetWidth, targetHeight)
-    obj = {
+    local obj = {
         area = deadZoneRect,
         target = target,
         targetWidth = targetWidth,

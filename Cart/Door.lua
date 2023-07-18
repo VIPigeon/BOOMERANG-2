@@ -3,7 +3,7 @@ Door = table.copy(Body)
 Door.defaultSprite = Sprite:new({41}, 2)
 
 function Door:new(x, y)
-    obj = {
+    local obj = {
         x = x,
         y = y,
         sprite = Door.defaultSprite:copy(),

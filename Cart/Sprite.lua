@@ -3,7 +3,7 @@ Sprite = {}
 
 
 function Sprite:new(animation, size)
-    obj = {
+    local obj = {
         animation = animation,
         frame = 1,  -- номер кадра
         size = size  -- размер спрайта

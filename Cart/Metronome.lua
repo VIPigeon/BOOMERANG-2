@@ -15,7 +15,7 @@ Metronome = {}
 -- Milliseconds = (60 * 1000) / BPM
 --
 function Metronome:new(bpm)
-    obj = {
+    local obj = {
         time = 0,
         ms_per_beat = (60 * 1000) / bpm,
         on_beat = false,

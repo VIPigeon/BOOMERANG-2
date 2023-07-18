@@ -2,7 +2,7 @@ Rect = {}
 
 -- (x y): left top coordinates
 function Rect:new(x, y, w, h)
-    obj = {
+    local obj = {
         x = x,
         y = y,
         w = w,

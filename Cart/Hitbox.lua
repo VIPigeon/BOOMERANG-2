@@ -15,7 +15,7 @@ end
 
 
 function Hitbox:new_with_shift(x1, y1, x2, y2, shiftX, shiftY)
-   obj = {
+   local obj = {
         x1 = x1, y1 = y1,
         x2 = x2, y2 = y2,
         shiftX = shiftX,

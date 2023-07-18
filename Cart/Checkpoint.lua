@@ -1,7 +1,7 @@
 Checkpoint = {}
 
 function Checkpoint:new()
-    obj = {}
+    local obj = {}
 
     setmetatable(obj, self)
     self.__index = self
