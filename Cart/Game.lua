@@ -10,7 +10,7 @@ function Game:new()
 
     local boom = Boomerang:new(0,0,0,0)
 
-    obj = {
+    object = {
         mode = 'action',
         plr = Player:new(10,10),
         boomer = boom,
@@ -18,40 +18,52 @@ function Game:new()
 		camera = CameraWindow:new(-30, -20, 30, 20),
         metronome = Metronome:new(60),
         enemies = {
-            --Enemy:new(15, 15),
+            Enemy:new(15, 15),
             --Enemy:new(200, 100),
             --Enemy:new(35, 80),
             --Enemy:new(120, 10),
         },
     }
 
-    for _, rose in ipairs(roses) do
-        table.insert(obj.enemies, rose)
+    trace(object)
 
-        obj.metronome:add_beat_callback(function() rose:on_beat() end)
-        rose.metronome = obj.metronome
-    end
-
-    obj['plr'].boomerang = boom
-
-    obj.camera:move()
-    Game.initialize_decoration_animations(obj.metronome)
-
+    local enemem = {}
     for x = 0, 239 do
         for y = 0, 135 do
             if mget(x, y) == data.Enemy.defaultEnemyFlagTile then
                 mset(x, y, C0)
-                table.insert(Enemy:new(x,y), obj['enemies'])
+                local enemy = Enemy:new(x * 8, y * 8)
+                table.insert(enemem, enemy)
             end
         end
     end
+
+    object.enemies = enemem
+
+    trace(object)
+
+    for _, rose in ipairs(roses) do
+        table.insert(object.enemies, rose)
+
+        object.metronome:add_beat_callback(function() rose:on_beat() end)
+        rose.metronome = object.metronome
+    end
+
+    trace(obj)
+
+    object['plr'].boomerang = boom
+
+    object.camera:move()
+    Game.initialize_decoration_animations(object.metronome)
+
+    
     
     --Game.generateEnemies()
 
     -- чистая магия!
-    setmetatable(obj, self)
+    setmetatable(object, self)
     self.__index = self;
-    return obj
+    return object
 end
 
 function Game.generateEnemies()
@@ -136,19 +148,19 @@ function Game.initialize_decoration_animations(metronome)
 end
 
 function Game:draw()
-    --for i, door in ipairs(self.doorlever.doors) do
-    --   door:draw()
-    --end
+    for i, door in ipairs(self.doorlever.doors) do
+       door:draw()
+    end
 
     map(gm.x, gm.y , 30, 17, gm.sx, gm.sy, C0)
 
-    --for _, lever in ipairs(self.doorlever.levers) do
-    --    lever:draw()
-    --end
+    for _, lever in ipairs(self.doorlever.levers) do
+        lever:draw()
+    end
 
-    --for _, door in ipairs(self.doorlever.doors) do
-    --    door:draw()
-    --end
+    for _, door in ipairs(self.doorlever.doors) do
+        door:draw()
+    end
 
     if self.enemies ~= nil then
         for _, enemy in ipairs(self.enemies) do
