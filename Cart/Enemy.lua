@@ -6,7 +6,7 @@ local start_y = 0
 Enemy.spriteDefault = data.Enemy.spriteDefault
 
 function Enemy:new(x, y)
-    obj = {
+    local obj = {
         sprite = data.Enemy.sprites.defaultSprite,
         x = x,
         y = y,

@@ -36,7 +36,6 @@ data.Player.sprites = {
     stayFront =Sprite:new({257}, 1),
     runFront = Sprite:new(anim.gen60({256, 257, 258, 259, 256, 257, 258, 259, 256, 257, 258, 259}), 1),
     death = Sprite:new(anim.gen60(plr_death_anim()), 1),
-    born = Sprite:new(table.reversed(anim.gen60(plr_death_anim())), 1),
     hat = Sprite:new(anim.gen60({279}), 1),
     stayBack = Sprite:new({465}, 1),
     runBack = Sprite:new(anim.gen60({464, 465, 466, 467, 464, 465, 466, 467, 464, 465, 466, 467}), 1),

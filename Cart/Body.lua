@@ -5,7 +5,7 @@ Body = {}
 
 
 function Body:new(sprite, x, y)
-    obj = {
+    local obj = {
         sprite = sprite,
         hitbox = 'nil',
         flip = 0,

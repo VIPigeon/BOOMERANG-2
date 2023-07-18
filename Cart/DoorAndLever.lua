@@ -124,7 +124,7 @@ function DoorAndLever:new()
         table.insert(levers, lever)
     end
 
-    obj = {
+    local obj = {
         doors = doors,
         levers = levers
     }

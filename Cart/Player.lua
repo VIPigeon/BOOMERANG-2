@@ -6,12 +6,11 @@ Player.runFront = data.Player.sprites.runFront
 Player.runBack = data.Player.sprites.runBack
 
 Player.death = data.Player.sprites.death
-Player.born = data.Player.sprites.born
 Player.hat = data.Player.sprites.hat
 
 function Player:new(x, y)
-    obj = {
-        sprite = Player.born:copy(),
+    local obj = {
+        sprite = Player.stayFront:copy(),
         startX = x, startY = y,
         verticalFlip = false,
         x = x, y = y,
@@ -21,6 +20,7 @@ function Player:new(x, y)
         hitbox = Hitbox:new_with_shift(x, y, x+3, y+6, 2, 1),
         boomerang = nil,
         boomerangActive = false,
+        status = 'alive',
     }
     -- чистая магия!
     setmetatable(obj, self)
@@ -90,6 +90,7 @@ function Player:_horizontalFlipCalculator()
 end
 
 function Player:_tryMove(movementNormalizer)
+
     local dx = self.dx * self.speed * movementNormalizer
     local dy = self.dy * self.speed * movementNormalizer
 

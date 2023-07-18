@@ -10,7 +10,7 @@ function Game:new()
 
     local boom = Boomerang:new(0,0,0,0)
 
-    object = {
+    local object = {
         mode = 'action',
         plr = Player:new(10,10),
         boomer = boom,
@@ -42,21 +42,19 @@ function Game:new()
 
     trace(object)
 
-    for _, rose in ipairs(roses) do
-        table.insert(object.enemies, rose)
+    --for _, rose in ipairs(roses) do
+    --   table.insert(object.enemies, rose)
+    --
+    --   object.metronome:add_beat_callback(function() rose:on_beat() end)
+    --   set.metronome = object.metronome
+    --end
 
-        object.metronome:add_beat_callback(function() rose:on_beat() end)
-        rose.metronome = object.metronome
-    end
-
-    trace(obj)
+    trace(object)
 
     object['plr'].boomerang = boom
 
     object.camera:move()
     Game.initialize_decoration_animations(object.metronome)
-
-    
     
     --Game.generateEnemies()
 

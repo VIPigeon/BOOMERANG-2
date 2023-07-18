@@ -2,7 +2,7 @@ Boomerang = table.copy(Body)
 boomerangSpinningSprite = data.Boomerang.sprites.spinning
 
 function Boomerang:new(x, y, dx, dy)
-    obj = {  -- dx, dy in [-1, 1]
+    local obj = {  -- dx, dy in [-1, 1]
         sprite = boomerangSpinningSprite:copy(),
         x = x, y = y,
         dx = dx, dy = dy,
