@@ -5,10 +5,17 @@ local function createMetronome()
 end
 
 local function createCheckpoints()
-    checkpoints = {
-        Checkpoint:new(),
-        Checkpoint:new(),
-    }
+    checkpoints = {}
+
+    for x = 0, MAP_WIDTH do
+        for y = 0, MAP_HEIGHT do
+            if mget(x, y) == data.Checkpoint.flagTile then
+                local checkpoint = Checkpoint:new(x * 8, y * 8)
+                table.insert(checkpoints, checkpoint)
+            end
+        end
+    end
+
     return checkpoints
 end
 

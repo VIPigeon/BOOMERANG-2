@@ -86,6 +86,15 @@ data.Door.tiles = {
 }
 
 
+data.Checkpoint =  {
+    width = 8,
+    height = 8,
+    flagTile = 211,
+    innerTurnedOffSprite = Sprite:new({0}, 1),
+    innerTurnedOnSprite = Sprite:new({248}, 1),
+}
+
+
 data.solidTiles = {
     1, 2, 3,
     208, 209, 210,

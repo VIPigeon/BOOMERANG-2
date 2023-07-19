@@ -4,13 +4,17 @@ Hitbox = {}
 
 function Hitbox:new(x1, y1, x2, y2)
     local obj = {
-        x1 = x1, y1 = y1,
-        x2 = x2, y2 = y2,
-        shiftX = 0, shiftY = 0
+        x1 = x1,
+        y1 = y1,
+        x2 = x2,
+        y2 = y2,
+        shiftX = 0,
+        shiftY = 0
     }
-    -- чистая магия!
+
     setmetatable(obj, self)
-    self.__index = self; return obj
+    self.__index = self
+    return obj
 end
 
 
