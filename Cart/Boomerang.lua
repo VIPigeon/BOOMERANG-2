@@ -39,7 +39,7 @@ function Boomerang:focus()
 end
 
 function Boomerang:update()
-    self.sprite:next_frame()
+    self.sprite:nextFrame()
     self.speed = self.speed - self.decelerationThing
     if self.speed < 0 then
         self:focus()

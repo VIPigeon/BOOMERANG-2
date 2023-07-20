@@ -13,25 +13,23 @@ function Sprite:new(animation, size)
     self.__index = self; return obj
 end
 
-function Sprite:get_frame(frame)
+function Sprite:getFrame()
     return self.frame
 end
 
-function Sprite:set_frame(frame)
+function Sprite:setFrame(frame)
     self.frame = frame
 end
 
-function Sprite:next_frame()
+function Sprite:nextFrame()
     self.frame = self.frame % #self.animation + 1
 end
-
 
 function Sprite:draw(x, y, flip, rotate)
     spr(self.animation[self.frame], x, y, C0, 1, flip, rotate, self.size, self.size)
 end
 
-
-function Sprite:animation_end()
+function Sprite:animationEnd()
     return self.frame == #self.animation
 end
 

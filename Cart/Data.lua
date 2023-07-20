@@ -86,6 +86,16 @@ data.Door.tiles = {
     bottom_right = 222,
 }
 
+local turnOnAnimationFrames = {}
+for i = 213, 217 do
+    table.insert(turnOnAnimationFrames, i)
+end
+for i = 213 + 16, 217 + 16 do
+    table.insert(turnOnAnimationFrames, i)
+end
+for i = 213 + 32, 217 + 32 - 1 do
+    table.insert(turnOnAnimationFrames, i)
+end
 
 data.Checkpoint =  {
     width = 8,
@@ -94,6 +104,7 @@ data.Checkpoint =  {
     turnedOffSprite = Sprite:new({0}, 1),
     turnedOnSprite = Sprite:new({248}, 1),
     justUsedSprite = Sprite:new({249}, 1),
+    turnOnAnimation = Sprite:new(anim.gen(turnOnAnimationFrames, 3), 1),
 }
 
 

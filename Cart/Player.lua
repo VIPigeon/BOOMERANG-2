@@ -60,8 +60,8 @@ function Player:_verticalFlipCalculator()
         self.lastDx = self.dx;
         self.lastDy = self.dy
 
-        frame = self.sprite:get_frame()
-        self.sprite:set_frame(frame)
+        frame = self.sprite:getFrame()
+        self.sprite:setFrame(frame)
 
         if self.dy < 0 and not self.verticalFlip then
             self.verticalFlip = true
@@ -165,7 +165,7 @@ function Player:update()
 
     self:_horizontalFlipCalculator() -- will flip??
 
-    self.sprite:next_frame()
+    self.sprite:nextFrame()
 
     self:_tryMove(self:_movementNormalizerGen()) -- MOVED‼
 

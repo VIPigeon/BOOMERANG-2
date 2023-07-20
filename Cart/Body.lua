@@ -70,11 +70,11 @@ end
 
 function Body:born_update()
     self:draw()
-    if self.sprite:animation_end() then
+    if self.sprite:animationEnd() then
         self.born_flag = false
         return false
     end
-    self.sprite:next_frame()
+    self.sprite:nextFrame()
     return true
 end
 
