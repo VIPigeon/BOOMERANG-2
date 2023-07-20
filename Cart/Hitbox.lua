@@ -3,7 +3,7 @@ Hitbox = {}
 
 
 function Hitbox:new(x1, y1, x2, y2)
-    obj = {
+    local obj = {
         x1 = x1, y1 = y1,
         x2 = x2, y2 = y2,
         shiftX = 0, shiftY = 0
@@ -15,7 +15,7 @@ end
 
 
 function Hitbox:new_with_shift(x1, y1, x2, y2, shiftX, shiftY)
-   obj = {
+   local obj = {
         x1 = x1, y1 = y1,
         x2 = x2, y2 = y2,
         shiftX = shiftX,
@@ -44,10 +44,10 @@ end
 
 
 function Hitbox:mapCheck()
-    return gm.get_tile_type(self.x1, self.y1) == TileType.Void
-        and gm.get_tile_type(self.x1, self.y2) == TileType.Void
-        and gm.get_tile_type(self.x2, self.y1) == TileType.Void
-        and gm.get_tile_type(self.x2, self.y2) == TileType.Void
+    return gm.getTileType(self.x1, self.y1) == TileType.Void
+        and gm.getTileType(self.x1, self.y2) == TileType.Void
+        and gm.getTileType(self.x2, self.y1) == TileType.Void
+        and gm.getTileType(self.x2, self.y2) == TileType.Void
 end
 
 

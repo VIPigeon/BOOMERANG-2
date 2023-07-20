@@ -1,5 +1,6 @@
 data = {}
 
+GAME_BPM = 60
 
 C0 = 0
 
@@ -12,34 +13,66 @@ KEY_DOWN = 59
 KEY_LEFT = 60
 KEY_RIGHT = 61
 
+MAP_WIDTH = 239
+MAP_HEIGHT = 135
 
-data.Player = {}
+PLAYER_START_Y = 10
+PLAYER_START_X = 10
+
+DECORATION_IDS = {
+    100,
+    101,
+    102,
+    103,
+    104
+}
+DECORATION_ANIMATION_OFFSET = 16
+
+CAMERA_WINDOW_WIDTH = 40
+CAMERA_WINDOW_HEIGHT = 20
+CAMERA_WINDOW_START_X = PLAYER_START_X - CAMERA_WINDOW_WIDTH / 2
+CAMERA_WINDOW_START_Y = PLAYER_START_Y - CAMERA_WINDOW_HEIGHT / 2
+CAMERA_SPEED = 0.3
+
+MAP_WIDTH = 239
+MAP_HEIGHT = 135
+
+data.Player = {
+    movementNormalizerStraight = 1,
+    movementNormalizerDiagonal = 1 / math.sqrt(2),
+    speed = 0.7
+}
 
 function plr_death_anim()
     res = {}
-    for i=272, 278 do
-        for _=1, 8 do
+    for i = 272, 278 do
+        for _ = 1, 8 do
             table.insert(res, i)
         end
     end
-    for _=1, 4 do
+    for _ = 1, 4 do
         table.insert(res, 279)
     end
     return res
 end
 
 data.Player.sprites = {
-    stay_front =Sprite:new({257}, 1),
-    run_front = Sprite:new(anim.gen60({256, 257, 258, 259, 256, 257, 258, 259, 256, 257, 258, 259}), 1),
+    stayFront =Sprite:new({257}, 1),
+    runFront = Sprite:new(anim.gen60({256, 257, 258, 259, 256, 257, 258, 259, 256, 257, 258, 259}), 1),
     death = Sprite:new(anim.gen60(plr_death_anim()), 1),
-    born = Sprite:new(table.reversed(anim.gen60(plr_death_anim())), 1),
     hat = Sprite:new(anim.gen60({279}), 1),
-    stay_back = Sprite:new({465}, 1),
-    run_back = Sprite:new(anim.gen60({464, 465, 466, 467, 464, 465, 466, 467, 464, 465, 466, 467}), 1),
+    stayBack = Sprite:new({465}, 1),
+    runBack = Sprite:new(anim.gen60({464, 465, 466, 467, 464, 465, 466, 467, 464, 465, 466, 467}), 1),
 }
 
 
-data.Boomerang = {}
+data.Boomerang = {
+    flightNormalizerStraight = 1,
+    flightNormalizerDiagonal = 1 / math.sqrt(2),
+    speed = 0.1,
+    decelerationConstant = 80, -- in context: CurentSpeed -= (StartSpeed / this)
+    damagePerMillisecond = 0.1,
+}
 data.Boomerang.sprites = {
     spinning = Sprite:new(anim.gen60({264, 265, 266, 264, 265, 266, 264, 265, 266, 264, 265, 266}), 1),
 }
@@ -53,7 +86,7 @@ data.Door.tiles = {
 }
 
 
-data.solid_tiles = {
+data.solidTiles = {
     1, 2, 3,
     208, 209, 210,
     224, 225, 226,
@@ -67,6 +100,14 @@ data.Lever.sprites = {
     off = Sprite:new({2},1),
 }
 
+
+data.Enemy = {
+    defaultHP = 50,
+    defaultEnemyFlagTile = 33,
+}
+data.Enemy.sprites = {
+    defaultSprite = Sprite:new({403}, 1),
+}
 
 data.Rose = {}
 data.Rose.sprites = {

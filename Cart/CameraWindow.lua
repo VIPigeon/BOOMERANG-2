@@ -1,104 +1,113 @@
+-- Добавить CameraWindow в kawaiiRefactoring.
+-- 
+--  Камера является полем game
+--  Камера обновляется сразу после Player
+--  Добавить функцию тряски экрана. Для демонстрации сделать так, чтобы она вызывалась по нажатию пробела
+
 CameraWindow = {}
 
-function CameraWindow:new(x1, y1, x2, y2)
-    obj = {
-        x = 0,
-        y = 0,
-        x1 = x1,
-        y1 = y1,
-        x2 = x2,
-        y2 = y2,
-        targetX = 0,
-        targetY = 0,
+function CameraWindow:new(deadZoneRect, target, targetWidth, targetHeight)
+    local obj = {
+        area = deadZoneRect,
+        target = target,
+        targetWidth = targetWidth,
+        targetHeight = targetHeight,
+
+        shakeMagnitude = 1,
+        status = 'normal',
     }
 
     setmetatable(obj, self)
-    self.__index = self; return obj
+    self.__index = self
+    return obj
 end
 
-function CameraWindow:left()
-    return self.x + self.x1
+function CameraWindow:moveCamera()
+    local centerX = math.floor(self.area:centerX())
+    local centerY = math.floor(self.area:centerY())
+    local tileX = math.floor(self.area:centerX() / 8)
+    local tileY = math.floor(self.area:centerY() / 8)
+
+    gm.x = tileX - math.floor(120 / 8)
+    gm.sx = 8 * (tileX) - centerX
+
+    gm.y = tileY - math.floor(68 / 8)
+    gm.sy = 8 * (tileY) - centerY
 end
 
-function CameraWindow:right()
-    return self.x + self.x2
-end
+function CameraWindow:centerOnTarget()
+    local dx = self.target.x + self.targetWidth  / 2 - self.area:centerX()
+    local dy = self.target.y + self.targetHeight / 2 - self.area:centerY()
 
-function CameraWindow:top()
-    return self.y + self.y1
-end
-
-function CameraWindow:bottom()
-    return self.y + self.y2
-end
-
-function CameraWindow:tryMove(x, y)
-    dx = math.min(x - self:left(), self:right() - x)
-    dy = math.min(y - self:top(), self:bottom() - y)
-
-    if dx < 0 or dy < 0 then
-        self:startFollow(x, y)
-    end
-end
-
-function CameraWindow:startFollow(x, y)
-    if x - self:right() > 0 then
-        self.targetX = x - self.x2
-    elseif self:left() - x > 0 then
-        self.targetX = x - self.x1
-    else
-        self.targetX = self.x
-    end
-
-    if y - self:bottom() > 0 then
-        self.targetY = y - self.y2
-    elseif self:top() - y > 0 then
-        self.targetY = y - self.y1
-    else
-        self.targetY = self.y
-    end
-
-    if not isMoving then
-        isMoving = true
-    end
-end
-
-function CameraWindow:trace()
-    trace("Camera position: " .. '(' .. gm.x .. ', ' .. gm.y .. ') tiles, (' .. gm.sx .. ', ' .. gm.sy .. ') px')
-end
-
-function CameraWindow:move()
-    gm.x = math.floor(self.x / 8)
-    gm.sx = (gm.x - 1) * 8 - math.floor(self.x)
-    gm.x = gm.x - math.floor(120 / 8)
-
-    gm.y = math.floor(self.y / 8)
-    gm.sy = (gm.y - 1) * 8 - math.floor(self.y)
-    gm.y = gm.y - math.floor(68 / 8)
-end
-
-function CameraWindow:drawDebug()
-    local x = self.x + self.x1
-    local y = self.y + self.y1
-    local w = self.x2 - self.x1
-    local h = self.y2 - self.y1
-
-    rectb(x - gm.x * 8 + gm.sx, y - gm.y * 8 + gm.sy, w, h, 1)
-end
-
-CAMERA_SPEED = 0.1
-
-function CameraWindow:update()
-    if math.abs(self.x - self.targetX) < 0.1 and math.abs(self.y - self.targetY) < 0.1 then
+    -- Чтобы не камера не дергалась, когда уже достигла игрока
+    if math.abs(dx) < 1 and math.abs(dy) < 1 then
         return
     end
 
-    local dx = (self.targetX - self.x) * CAMERA_SPEED
-    local dy = (self.targetY - self.y) * CAMERA_SPEED
+    local length = math.sqrt(dx * dx + dy * dy)
 
-    self.x = self.x + dx
-    self.y = self.y + dy
-    self:move()
+    dx = dx / length
+    dy = dy / length
+
+    self.area:move(dx * CAMERA_SPEED, dy * CAMERA_SPEED)
+end
+
+function CameraWindow:getDirectionToTarget()
+    local dx, dy = 0, 0
+
+    if self.area:isObjectRight(self.target, self.targetWidth) then
+        dx = 1
+    elseif self.area:isObjectLeft(self.target) then
+        dx = -1
+    end
+
+    if self.area:isObjectBelow(self.target, self.targetHeight) then
+        dy = 1
+    elseif self.area:isObjectAbove(self.target) then
+        dy = -1
+    end
+
+    return dx, dy
+end
+
+function CameraWindow:shake(magnitude)
+    self.status = 'shake'
+    self.shakeMagnitude = magnitude
+end
+
+function CameraWindow:shakeStop()
+    self.status = 'normal'
+end
+
+function CameraWindow:update()
+    local dx, dy = self:getDirectionToTarget()
+
+    if self.area:isObjectInside(self.target, self.targetWidth, self.targetHeight) then
+        self:centerOnTarget()
+        -- Ура, я использовал goto!!!
+        goto move
+    end
+
+    if dx < 0 then
+        self.area:moveLeftTo(self.target.x)
+    elseif dx > 0 then
+        self.area:moveRightTo(self.target.x + self.targetWidth)
+    end
+
+    if dy < 0 then
+        self.area:moveUpTo(self.target.y)
+    elseif dy > 0 then
+        self.area:moveDownTo(self.target.y + self.targetHeight)
+    end
+
+    ::move::
+    if self.status == 'shake' then
+        self.area:move(
+            self.shakeMagnitude * math.random(-1, 1),
+            self.shakeMagnitude * math.random(-1, 1)
+        )
+    end
+    self:moveCamera()
 end
 
 return CameraWindow

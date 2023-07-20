@@ -13,4 +13,4 @@ function Time.dt()
     return delta_time
 end
 
-return Time
+return time

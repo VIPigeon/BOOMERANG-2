@@ -1,5 +1,8 @@
 Metronome = {}
 
+--
+-- ms_per_beat explanation :D
+--
 -- BPM = Beats / Minute
 -- Minute = Beats / BPM
 --
@@ -10,34 +13,33 @@ Metronome = {}
 -- 60 * 1000 * Minute = (60 * 1000) / BPM
 --
 -- Milliseconds = (60 * 1000) / BPM
+--
 function Metronome:new(bpm)
-    obj = {
+    local obj = {
         time = 0,
         ms_per_beat = (60 * 1000) / bpm,
-        callbacks = {},
+        on_beat = false,
     }
 
     setmetatable(obj, self)
     self.__index = self; return obj
 end
 
-function Metronome:add_beat_callback(callback)
-    table.insert(self.callbacks, callback)
-end
-
-function Metronome:ms_before_next_beat()
+function Metronome:msBeforeNextBeat()
     return self.ms_per_beat - (self.time % self.ms_per_beat)
 end
 
-function Metronome:on_beat()
-    for _, callback in ipairs(self.callbacks) do
-        callback()
-    end
+function Metronome:_onBeat()
+    self.on_beat = true
 end
 
 function Metronome:update()
+    if self.on_beat then
+        self.on_beat = false
+    end
+
     if self.time >= self.ms_per_beat then
-        self:on_beat()
+        self:_onBeat()
         self.time = 0
     end
 
