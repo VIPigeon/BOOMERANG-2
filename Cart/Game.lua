@@ -21,8 +21,8 @@ end
 
 local function createCamera(player)
     local cameraRect = Rect:new(
-        CAMERA_WINDOW_START_Y,
-        CAMERA_WINDOW_START_X,
+        player.x - 16,
+        player.y - 6,
         CAMERA_WINDOW_WIDTH,
         CAMERA_WINDOW_HEIGHT
     )
@@ -33,6 +33,7 @@ local function createCamera(player)
         8,
         8
     )
+
     return camera
 end
 
