@@ -1,10 +1,3 @@
--- Добавить CameraWindow в kawaiiRefactoring.
--- 
---  Камера является полем game
---  Камера обновляется сразу после Player
---  Добавить функцию тряски экрана. Для демонстрации сделать так, 
---  чтобы она вызывалась по нажатию пробела
-
 CameraWindow = {}
 
 function CameraWindow:new(deadZoneRect, target, targetWidth, targetHeight)

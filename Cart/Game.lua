@@ -38,16 +38,58 @@ local function createCamera(player)
 end
 
 local function createLevers()
-    levers = {
-        Lever:new(50, 10),
-        Lever:new(60, 60),
-    }
+    local levers = {}
+    local leverTiles = {}
+
+    for x = 0, 239 do
+        for y = 0, 135 do
+            local tileType = gm.getTileId(x, y)
+            if table.contains(data.mapConstants.leverIds, tileType) then
+                mset(x, y, 0)
+                table.insert(leverTiles, {x=x, y=y})
+                local lwr = Lever:new(x * 8, y * 8)
+
+                local doorWiresLever = DoorMechanic.findConnection(x - 1, y - 1) -- подыщем провода и коорды двери
+
+                lwr.wires = doorWiresLever.wires
+                lwr.door = doorWiresLever.door -- временные координаты, в создании дверей заменится на настоящую дверь
+
+                table.insert(levers, lwr)
+            end
+        end
+    end
+
     return levers
 end
 
-local function createDoors()
-    doors = {
-    }
+local function createDoors(levers)
+    local doors = {}
+    local doorTiles = {}
+
+    for x = 0, 239 do
+        for y = 0, 135 do
+            local tileType = gm.getTileId(x, y)
+            if tileType == data.mapConstants.doorIds[41] then 
+                mset(x, y, 0)
+                table.insert(doorTiles, {x=x, y=y})
+                local door = Door:new(x * 8, y * 8)
+                table.insert(doors, door)
+
+                for i, lever in ipairs(levers) do -- подыскиваем рычаг для двери
+                    if lever.door.x == x and lever.door.y == y then
+                        lever.door = door
+                        break
+                    end
+                end
+                --trace('cannot find lever for door((((((((((((((((((((')
+            end
+        end
+    end
+
+    for _, tile in ipairs(doorTiles) do
+        mset(tile.x, tile.y, 41)
+    end
+
     return doors
 end
 
@@ -122,6 +164,9 @@ function game.load()
     return checkpoint
 end
 
+local levers = createLevers()
+local doors = createDoors(levers)
+
 function game.restart()
     local spawnpoint = game.load()
 
@@ -129,8 +174,6 @@ function game.restart()
     game.updatables = {}
 
     local metronome = createMetronome()
-    local levers = createLevers()
-    local doors = createDoors()
     local enemies = createEnemies()
     local boomerang = createBoomerang(spawnpoint.x, spawnpoint.y)
     local player = createPlayer(spawnpoint.x, spawnpoint.y - 1, boomerang)
