@@ -28,7 +28,8 @@ function Player:new(x, y, boomerang)
     }
 
     setmetatable(obj, self)
-    self.__index = self; return obj
+    self.__index = self
+    return obj
 end
 
 function Player:_willMoveCheck()
@@ -142,6 +143,10 @@ function Player:_shoot()
     self.boomerang.active = false
 end
 
+function Player:_die()
+    game.restart()
+end
+
 function Player:boomerangHandle()
     if not self.boomerang.active then
         self:_shoot() -- *dead*
@@ -149,6 +154,11 @@ function Player:boomerangHandle()
 end
 
 function Player:update()
+    if keyp(KEY_R) then
+        -- Bruh
+        self:_die()
+    end
+
     self:_willMoveCheck() -- wanna move?~
 
     self:_verticalFlipCalculator() -- will flip?

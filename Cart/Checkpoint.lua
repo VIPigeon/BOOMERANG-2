@@ -1,17 +1,29 @@
+-- Система чекпоинтов работает по принципу очереди, реализованной через односвязный список: каждый чекпоинт хранит ссылку на тот, что был включен перед ним
+-- В game имеется доступ только к последнему включенному чекпоинту. Когда игрок умирает, он возрождается на нем, а в game записывается следующий в очереди
+-- Всего есть три состояния чекпоинта: выключенный, включенный и "только что использованный". Чекпоинт в последнем состоянии всегда не больше одного, и его нельзя включить
+-- Только что использованный чекпоинт имеет другой спрайт -- #249
+-- Стартовый чекпоинт -- особый. На нем игрок может возрождаться сколько угодно раз (этот чекпоинт все еще никак не отображается)
+
 Checkpoint = table.copy(Body)
+
+local status = {
+    disabled = 0,
+    enabled = 1,
+    justUsed = 2,
+}
 
 function Checkpoint:new(x, y)
     local obj = {
         x = x + 1,
         y = y + 1,
-        sprite = data.Checkpoint.innerTurnedOffSprite:copy(),
+        sprite = data.Checkpoint.turnedOffSprite:copy(),
         hitbox = Hitbox:new(
             x,
             y,
             x + data.Checkpoint.width,
             y + data.Checkpoint.height
         ),
-        enabled = false,
+        status = status.disabled,
     }
 
     setmetatable(obj, self)
@@ -19,8 +31,25 @@ function Checkpoint:new(x, y)
     return obj
 end
 
+function Checkpoint:enable()
+    self.sprite = data.Checkpoint.turnedOnSprite:copy()
+    self.status = status.enabled
+end
+
+function Checkpoint:disable()
+    self.sprite = data.Checkpoint.turnedOffSprite:copy()
+    self.status = status.disabled
+end
+
+function Checkpoint:use()
+    self.sprite = data.Checkpoint.justUsedSprite:copy()
+    self.status = status.justUsed
+end
+
 function Checkpoint:update()
-    if not self.enabled and self.hitbox:collide(game.boomer.hitbox) then
-        self.sprite = data.Checkpoint.innerTurnedOnSprite:copy()
+    if self.status == status.disabled and self.hitbox:collide(game.boomer.hitbox) then
+        self.sprite = data.Checkpoint.turnedOnSprite:copy()
+        self.status = status.enabled
+        game.save(self)
     end
 end

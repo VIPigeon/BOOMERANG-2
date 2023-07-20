@@ -66,12 +66,12 @@ local function createEnemies()
     return enemem
 end
 
-local function createBoomerang()
-    return Boomerang:new(PLAYER_START_X, PLAYER_START_Y, 0, 0)
+local function createBoomerang(x, y)
+    return Boomerang:new(x, y, 0, 0)
 end
 
-local function createPlayer(boomerang)
-    return Player:new(PLAYER_START_X, PLAYER_START_Y, boomerang)
+local function createPlayer(x, y, boomerang)
+    return Player:new(x, y, boomerang)
 end
 
 local function createBullets()
@@ -80,42 +80,81 @@ local function createBullets()
     return bullets
 end
 
-game.drawables = {}
-game.updatables = {}
-
-local metronome = createMetronome()
 local checkpoints = createCheckpoints()
-local levers = createLevers()
-local doors = createDoors()
-local enemies = createEnemies()
-local boomerang = createBoomerang()
-local player = createPlayer(boomerang)
-local camera = createCamera(player)
-local bullets = createBullets()
+game.startingCheckpoint = {x = PLAYER_START_X, y = PLAYER_START_Y}
+game.checkpoints = checkpoints
+game.lastUsedCheckpoint = nil
+game.checkpointStack = Stack:new()
 
-table.insert(game.updatables, metronome)
-table.concatTable(game.updatables, checkpoints)
-table.insert(game.updatables, player)
-table.insert(game.updatables, camera)
-table.insert(game.updatables, boomerang)
-table.concatTable(game.updatables, enemies)
-table.concatTable(game.updatables, levers)
-table.concatTable(game.updatables, doors)
-table.concatTable(game.updatables, bullets)
+function game.save(checkpoint)
+    if game.lastUsedCheckpoint ~= nil then
+        game.lastUsedCheckpoint:enable()
+        game.checkpointStack:push(game.lastUsedCheckpoint)
+        game.lastUsedCheckpoint = nil
+    end
 
-table.concatTable(game.drawables, checkpoints)
-table.concatTable(game.drawables, levers)
-table.concatTable(game.drawables, enemies)
-table.insert(game.drawables, player)
-table.insert(game.drawables, boomerang)
-table.concatTable(game.drawables, bullets)
-table.concatTable(game.drawables, doors)
+    game.checkpointStack:push(checkpoint)
+end
 
-game.mode = 'action' -- Зачем это? :|
-game.metronome = metronome
-game.player = player
-game.boomer = boomerang
-game.camera = camera
+function game.load()
+    if game.lastUsedCheckpoint ~= nil then
+        game.lastUsedCheckpoint:disable()
+        game.lastUsedCheckpoint = nil
+    end
+
+    if game.checkpointStack:count() == 0 then
+        return game.startingCheckpoint
+    end
+
+    local checkpoint = game.checkpointStack:pop()
+    checkpoint:use()
+
+    game.lastUsedCheckpoint = checkpoint
+
+    return checkpoint
+end
+
+function game.restart()
+    local spawnpoint = game.load()
+
+    game.drawables = {}
+    game.updatables = {}
+
+    local metronome = createMetronome()
+    local levers = createLevers()
+    local doors = createDoors()
+    local enemies = createEnemies()
+    local boomerang = createBoomerang(spawnpoint.x, spawnpoint.y)
+    local player = createPlayer(spawnpoint.x, spawnpoint.y - 1, boomerang)
+    local camera = createCamera(player)
+    local bullets = createBullets()
+
+    table.insert(game.updatables, metronome)
+    table.concatTable(game.updatables, checkpoints)
+    table.insert(game.updatables, player)
+    table.insert(game.updatables, camera)
+    table.insert(game.updatables, boomerang)
+    table.concatTable(game.updatables, enemies)
+    table.concatTable(game.updatables, levers)
+    table.concatTable(game.updatables, doors)
+    table.concatTable(game.updatables, bullets)
+
+    table.concatTable(game.drawables, checkpoints)
+    table.concatTable(game.drawables, levers)
+    table.concatTable(game.drawables, enemies)
+    table.insert(game.drawables, player)
+    table.insert(game.drawables, boomerang)
+    table.concatTable(game.drawables, bullets)
+    table.concatTable(game.drawables, doors)
+
+    game.mode = 'action' -- Зачем это? :|
+    game.metronome = metronome
+    game.player = player
+    game.boomer = boomerang
+    game.camera = camera
+end
+
+game.restart()
 
 function game.draw()
     map(gm.x, gm.y , 30, 17, gm.sx, gm.sy, C0)

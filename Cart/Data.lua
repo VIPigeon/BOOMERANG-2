@@ -8,6 +8,7 @@ KEY_W = 23
 KEY_A = 01
 KEY_S = 19
 KEY_D = 04
+KEY_R = 18
 KEY_UP = 58
 KEY_DOWN = 59
 KEY_LEFT = 60
@@ -90,8 +91,9 @@ data.Checkpoint =  {
     width = 8,
     height = 8,
     flagTile = 211,
-    innerTurnedOffSprite = Sprite:new({0}, 1),
-    innerTurnedOnSprite = Sprite:new({248}, 1),
+    turnedOffSprite = Sprite:new({0}, 1),
+    turnedOnSprite = Sprite:new({248}, 1),
+    justUsedSprite = Sprite:new({249}, 1),
 }
 
 
