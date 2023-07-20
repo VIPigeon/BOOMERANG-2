@@ -77,6 +77,50 @@ data.Boomerang.sprites = {
     spinning = Sprite:new(anim.gen60({264, 265, 266, 264, 265, 266, 264, 265, 266, 264, 265, 266}), 1),
 }
 
+data.mapConstants = {}
+
+-- (0 o 0) Use a function for this later
+-- Turned off wire id --> Turned on wire id
+data.mapConstants.turnedOffWires = {
+    [146] = 146 + 32,
+    [147] = 147 + 32,
+    [148] = 148 + 32,
+    [146 + 16] = 146 + 16 + 32,
+    [147 + 16] = 147 + 16 + 32,
+    [148 + 16] = 148 + 16 + 32,
+}
+
+-- Turned on wire id --> Turned off wire id
+data.mapConstants.turnedOnWires = {
+    [146 + 32] = 146,
+    [147 + 32] = 147,
+    [148 + 32] = 148,
+    [146 + 16 + 32] = 146 + 16,
+    [147 + 16 + 32] = 147 + 16,
+    [148 + 16 + 32] = 148 + 16,
+}
+
+-- Door tile id --> Offset from left top tile
+data.mapConstants.doorOffsetsIds = {
+    [41] = {x = 0, y = 0},
+    [42] = {x = -1, y = 0},
+    [41 + 16] = {x = 0, y = -1},
+    [42 + 16] = {x = -1, y = -1},
+}
+
+data.mapConstants.doorIds = {
+    [41] = 41,
+    [42] = 42,
+    [41 + 16] = 41 + 16,
+    [42 + 16] = 42 + 16,
+}
+
+
+data.mapConstants.leverIds = {
+    [1] = 1,
+    [2] = 2,
+    [3] = 3,
+}
 
 data.Door = {}
 data.Door.tiles = {

@@ -7,8 +7,12 @@ gm.sy = 0 -- start map Y >:(
 
 TileType = {
     Void = 0,
-    Block = 1,
+    Solid = 1,
 }
+
+function gm.getTileId(x,y)
+    return mget(x, y)
+end
 
 function gm.getTileType(x, y)
     x = x % (240 * 8)

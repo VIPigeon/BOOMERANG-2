@@ -30,19 +30,52 @@ local function createCamera(player)
 end
 
 local function createLevers()
-    levers = {
-    }
+    local levers = {}
+    for x = 0, 239 do
+        for y = 0, 135 do
+            local tileType = gm.getTileId(x, y)
+            if table.contains(data.mapConstants.leverIds, tileType) then
+                mset(x, y, 0)
+                local lwr = Lever:new(x * 8, y * 8)
+                
+                local doorWiresLever = DoorMechanic.findConnection(x - 1, y - 1) -- подыщем провода и коорды двери
+                
+                lwr.wires = doorWiresLever.wires
+                lwr.door = doorWiresLever.door -- временные координаты, в создании дверей заменится на настоящую дверь
+
+                table.insert(levers, lwr)
+            end
+        end
+    end
+
     return levers
 end
 
-local function createDoors()
-    doors = {
-    }
+local function createDoors(levers)
+    local doors = {}
+    for x = 0, 239 do
+        for y = 0, 135 do
+            local tileType = gm.getTileId(x, y)
+            if tileType == data.mapConstants.doorIds[41] then 
+                mset(x, y, 0)
+                local door = Door:new(x * 8, y * 8)
+                table.insert(doors, door)
+                
+                for i, lever in ipairs(levers) do -- подыскиваем рычаг для двери
+                    if lever.door.x == x and lever.door.y == y then
+                        lever.door = door
+                        break
+                    end
+                end
+                --trace('cannot find lever for door((((((((((((((((((((')
+            end
+        end
+    end
     return doors
 end
 
 local function createEnemies()
-    enemem = {}
+    local enemem = {}
 
     for x = 0, MAP_WIDTH do
         for y = 0, MAP_HEIGHT do
@@ -77,7 +110,7 @@ game.updatables = {}
 local metronome = createMetronome()
 local checkpoints = createCheckpoints()
 local levers = createLevers()
-local doors = createDoors()
+local doors = createDoors(levers)
 local enemies = createEnemies()
 local boomerang = createBoomerang()
 local player = createPlayer(boomerang)
