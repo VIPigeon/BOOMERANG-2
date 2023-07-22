@@ -1,5 +1,7 @@
 data = {}
 
+-- 14, 15, 30, 31 - Резервные тайлы (почему бы и нет)
+
 GAME_BPM = 60
 
 C0 = 0
@@ -168,6 +170,7 @@ data.Lever.sprites = {
 
 data.Enemy = {
     defaultHP = 50,
+    anotherEnemyFlagTile = 14,
     defaultEnemyFlagTile = 33,
 }
 data.Enemy.sprites = {

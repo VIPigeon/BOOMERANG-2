@@ -99,7 +99,8 @@ local function createEnemies()
     enemyTiles = {}
     for x = 0, MAP_WIDTH do
         for y = 0, MAP_HEIGHT do
-            if mget(x, y) == data.Enemy.defaultEnemyFlagTile then
+            if mget(x, y) == data.Enemy.defaultEnemyFlagTile or
+               mget(x, y) == data.Enemy.anotherEnemyFlagTile then
                 mset(x, y, C0)
                 table.insert(enemyTiles, {x=x, y=y})
                 local enemy = Enemy:new(x * 8, y * 8)
@@ -110,7 +111,7 @@ local function createEnemies()
 
     -- Если появляется скелет, то это я виноват :p!!!
     for _, tile in ipairs(enemyTiles) do
-        mset(tile.x, tile.y, data.Enemy.defaultEnemyFlagTile)
+        mset(tile.x, tile.y, data.Enemy.anotherEnemyFlagTile)
     end
 
     return enemem
