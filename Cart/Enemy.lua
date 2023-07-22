@@ -33,6 +33,7 @@ function Enemy:die()
     trace("I AM DEAD!!!")
     table.removeElement(game.updatables, self)
     table.removeElement(game.drawables, self)
+    table.removeElement(game.collideables, self)
 end
 
 function Enemy:isDeadCheck()

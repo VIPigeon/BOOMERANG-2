@@ -21,10 +21,15 @@ function Body:willCollideAfter(dx, dy)
 
     self:move(dx, dy)
 
+    for _, collideable in ipairs(game.collideables) do
+        if collideable.hitbox:collide(self.hitbox) then
+            self:set_position(oldX, oldY)
+            return true
+        end
+    end
     local will_collide = not self.hitbox:mapCheck()
 
     self:set_position(oldX, oldY)
-
     return will_collide
 end
 

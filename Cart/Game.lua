@@ -69,13 +69,13 @@ local function createDoors(levers)
     for x = 0, 239 do
         for y = 0, 135 do
             local tileType = gm.getTileId(x, y)
-            if tileType == data.mapConstants.doorIds[41] then 
+            if tileType == data.mapConstants.doorIds[41] then
                 mset(x, y, 0)
                 table.insert(doorTiles, {x=x, y=y})
                 local door = Door:new(x * 8, y * 8)
                 table.insert(doors, door)
 
-                for i, lever in ipairs(levers) do -- подыскиваем рычаг для двери
+                for _, lever in ipairs(levers) do -- подыскиваем рычаг для двери
                     if lever.door.x == x and lever.door.y == y then
                         lever.door = door
                         break
@@ -172,6 +172,7 @@ function game.restart()
 
     game.drawables = {}
     game.updatables = {}
+    game.collideables = {}
 
     local metronome = createMetronome()
     local enemies = createEnemies()
@@ -197,6 +198,8 @@ function game.restart()
     table.insert(game.drawables, boomerang)
     table.concatTable(game.drawables, bullets)
     table.concatTable(game.drawables, doors)
+
+    table.concatTable(game.collideables, enemies)
 
     game.mode = 'action' -- Зачем это? :|
     game.metronome = metronome
