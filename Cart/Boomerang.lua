@@ -5,13 +5,16 @@ boomerangSpinningSprite = data.Boomerang.sprites.spinning
 function Boomerang:new(x, y, dx, dy)
     local obj = {  -- dx, dy in [-1, 1]
         sprite = boomerangSpinningSprite:copy(),
-        x = x, y = y,
-        dx = dx, dy = dy,
+        x = x,
+        y = y,
+        dx = dx,
+        dy = dy,
         speed = data.Boomerang.speed,
         flightNormalizer = data.Boomerang.flightNormalizerStraight,
-        px = 0, py = 0,
+        px = 0,
+        jpy = 0,
         dpMs = data.Boomerang.damagePerMillisecond,
-        hitbox = Hitbox:new_with_shift(x+2, y+2, x+6, y+6, 2, 2),
+        hitbox = Hitbox:new_with_shift(-1000+2, -1000+2, -1000+6, -1000+6, 2, 2),
         active = false
         --flightEnded = false
     }
@@ -39,6 +42,10 @@ function Boomerang:focus()
 end
 
 function Boomerang:update()
+    if not self.active then
+        return
+    end
+
     self.sprite:nextFrame()
 
     self.speed = self.speed - self.decelerationThing
@@ -48,6 +55,7 @@ function Boomerang:update()
                 self.speed < game.player.speed then
             game.camera:shakeStop()
             self.active = false
+            self.hitbox:set_xy(-1000, -1000)
             return
         end
         self:_reverseUpdate()
@@ -88,6 +96,7 @@ end
 
 
 function Boomerang:draw()
+    self.hitbox:draw(1)
     if not self.active then
         return
     end

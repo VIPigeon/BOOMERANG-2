@@ -55,7 +55,8 @@ function Hitbox:set_xy(x, y)
     y = y + self.shiftY
     local dx = x - self.x1
     local dy = y - self.y1
-    self.x1 = x; self.y1 = y
+    self.x1 = x
+    self.y1 = y
     self.x2 = self.x2 + dx
     self.y2 = self.y2 + dy
 end
