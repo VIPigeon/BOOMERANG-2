@@ -122,16 +122,10 @@ function Rose:update()
     end
 end
 
--- Потом это куда-то убрать
-local function is_in_bounds(hitbox)
-    return hitbox.x1 >= 0 and hitbox.x2 <= 240 and
-        hitbox.y1 >= 0 and hitbox.y2 <= 136
-end
-
 function Rose:shoot()
     local laserHitbox = Hitbox:new(self.laserbeginx, self.laserbeginy, self.laserbeginx + 1, self.laserbeginy + 1)
 
-    while laserHitbox:mapCheck() and is_in_bounds(laserHitbox) do
+    while laserHitbox:mapCheck() do
         local newx = laserHitbox.x1 + self.laserdx
         local newy = laserHitbox.y1 + self.laserdy
         laserHitbox:set_xy(newx, newy)
