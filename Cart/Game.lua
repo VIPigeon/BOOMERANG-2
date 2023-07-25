@@ -93,25 +93,40 @@ local function createDoors(levers)
     return doors
 end
 
+enemyRespawnTiles = {}
 local function createEnemies()
-    enemem = {}
-
-    enemyTiles = {}
-    for x = 0, MAP_WIDTH do
-        for y = 0, MAP_HEIGHT do
-            if mget(x, y) == data.Enemy.defaultEnemyFlagTile or
-               mget(x, y) == data.Enemy.anotherEnemyFlagTile then
-                mset(x, y, C0)
-                table.insert(enemyTiles, {x=x, y=y})
-                local enemy = Enemy:new(x * 8, y * 8)
-                table.insert(enemem, enemy)
+    if #enemyRespawnTiles == 0 then
+        for x = 0, MAP_WIDTH do
+            for y = 0, MAP_HEIGHT do
+                if mget(x, y) == data.Enemy.defaultEnemyFlagTile then
+                    table.insert(enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='enemy'})
+                    mset(x, y, C0)
+                end
+            end
+        end
+        for x = 0, MAP_WIDTH do
+            for y = 0, MAP_HEIGHT do
+                if table.contains(data.Rose.spawnTiles, mget(x, y)) then
+                    table.insert(enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='rose'})
+                    mset(x, y, C0)
+                end
             end
         end
     end
 
-    -- Если появляется скелет, то это я виноват :p!!!
-    for _, tile in ipairs(enemyTiles) do
-        mset(tile.x, tile.y, data.Enemy.anotherEnemyFlagTile)
+    function getDirection(spawnTileId)
+        return spawnTileId - data.Rose.spawnTiles[1]
+    end
+
+    enemem = {}
+    for _, respawnTile in ipairs(enemyRespawnTiles) do
+        local enemy
+        if respawnTile.type == 'enemy' then
+            enemy = Enemy:new(8 * respawnTile.x, 8 * respawnTile.y)
+        elseif respawnTile.type == 'rose' then
+            enemy = Rose:new(8 * respawnTile.x, 8 * respawnTile.y, getDirection(respawnTile.tileid))
+        end
+        table.insert(enemem, enemy)
     end
 
     return enemem

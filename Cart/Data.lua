@@ -178,6 +178,8 @@ data.Enemy.sprites = {
 }
 
 data.Rose = {}
+data.Rose.spawnTiles = {150, 151, 152, 153}
+data.Rose.anotherRoseFlagTile = 15
 data.Rose.sprites = {
     transition = Sprite:new({389, 391, 393, 395, 397, 421}, 2)
 }

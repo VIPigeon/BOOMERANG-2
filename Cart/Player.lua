@@ -143,7 +143,7 @@ function Player:_shoot()
     self.boomerang.active = false
 end
 
-function Player:_die()
+function Player:die()
     game.restart()
 end
 
@@ -156,7 +156,7 @@ end
 function Player:update()
     if keyp(KEY_R) then
         -- Smert
-        self:_die()
+        self:die()
     end
 
     self:_willMoveCheck() -- wanna move?~
