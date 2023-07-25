@@ -52,6 +52,10 @@ function math.sq_point_ortsegment_distance(x, y, x1, y1, x2, y2)
 end
 
 
+function math.inRangeNotIncl(num, leftBoarder, rightBoarder)
+    return num > leftBoarder and num < rightBoarder
+end
+
 -- function math.sq_distance( ... )
 --     -- body
 -- end

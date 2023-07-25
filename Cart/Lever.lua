@@ -43,16 +43,12 @@ function Lever:_turn()
 
         self:_toogleWires()
 
-        --self.door:changeState()
-
         return
     elseif self.status == 'on' then
         self.sprite = Lever.spriteOff
         self.status = 'justOff'
 
         self:_toogleWires()
-
-        --self.door:changeState()
 
         return
     end
@@ -68,4 +64,6 @@ function Lever:update()
             self.status = 'on'
         end
     end
+
+    self.door:statusUpdate(self.status)
 end

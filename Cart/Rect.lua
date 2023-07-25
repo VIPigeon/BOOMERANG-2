@@ -98,3 +98,5 @@ function Rect:drawDebug()
         1
     )
 end
+
+return Rect

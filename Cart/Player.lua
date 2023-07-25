@@ -143,6 +143,10 @@ function Player:_shoot()
     self.boomerang.active = false
 end
 
+function Player:die()
+    self:_die()
+end
+
 function Player:_die()
     game.restart()
 end
