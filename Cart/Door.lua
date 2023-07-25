@@ -59,7 +59,11 @@ function Door:_closing()
         self.rectR:move(-self.speed, 0)
         self.hitboxRight:set_xy(self.rectR:left(), self.y)
     end
+<<<<<<< Updated upstream
 
+=======
+    self.speed = self.speed + data.Door.closingAcceleration
+>>>>>>> Stashed changes
 end
 
 function Door:_opening() -- whers ending, i like it more!
