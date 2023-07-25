@@ -63,6 +63,7 @@ function Door:_closing()
 end
 
 function Door:_opening() -- whers ending, i like it more!
+    self.speed = data.Door.speed
     if not (self.hitboxLeft.x2 <= self.x) then
         self.rectL:move(-self.speed, 0)
         self.hitboxLeft:set_xy(self.rectL:left(), self.y)
