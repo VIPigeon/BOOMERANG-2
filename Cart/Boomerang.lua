@@ -96,7 +96,6 @@ end
 
 
 function Boomerang:draw()
-    self.hitbox:draw(1)
     if not self.active then
         return
     end
