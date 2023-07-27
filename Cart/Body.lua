@@ -20,9 +20,15 @@ function Body:willCollideAfter(dx, dy)
     local oldY = self.y
 
     self:move(dx, dy)
-
+    -- если враги будут уметь двигаться, то будет ошибка из-за проверки с самим собой
     for _, collideable in ipairs(game.collideables) do
-        if collideable.hitbox:collide(self.hitbox) then
+        if collideable.hitbox == nil then
+            if collideable.hitboxLeft:collide(self.hitbox) or
+                collideable.hitboxRight:collide(self.hitbox) then
+                    self:set_position(oldX, oldY)
+                    return true
+            end
+        elseif collideable.hitbox:collide(self.hitbox) then
             self:set_position(oldX, oldY)
             return true
         end

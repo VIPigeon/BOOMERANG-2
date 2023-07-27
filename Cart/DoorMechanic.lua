@@ -3,7 +3,7 @@
 DoorMechanic = {}
 
 local doorWiresLever = {
-        door = nil,
+        door = {x = 1000000, y = 1000000, id = 'crutch'},
         lever = nil,
         wires = {},
     }
@@ -15,9 +15,9 @@ function DoorMechanic.findConnection(startX, startY) -- where we start searching
             local tileType = gm.getTileId(x, y)
             if table.contains(data.mapConstants.turnedOnWires, tileType) then
                 DoorMechanic._walkWire(x, y)
-
+                --trace(' * '..doorWiresLever.lever)
                 if doorWiresLever.door == nil or doorWiresLever.lever == nil then
-                    -- trace("ERROR!! Couldn't find lever or door for wire at " .. x .. " " .. y)
+                    --trace("ERROR!! Couldn't find lever or door for wire at " .. x .. " " .. y)
                     return doorWiresLever
                 else
                     return doorWiresLever
@@ -27,28 +27,35 @@ function DoorMechanic.findConnection(startX, startY) -- where we start searching
     end
 end
 
-function DoorMechanic._walkWire(x, y)
+function DoorMechanic._walkWire(x, y) -- _walkWireWhileDoor to be honest
     local tileType = gm.getTileId(x, y)
-
     if table.contains(data.mapConstants.doorIds, tileType) then
-        doorWiresLever.door = { x = x, y = y, id = mget(x, y) }
+        if (x <= doorWiresLever.door.x) and (y <= doorWiresLever.door.y) then
+            doorWiresLever.door = { x = x, y = y, id = mget(x, y) }
+        end
     end
 
     if table.contains(data.mapConstants.leverIds, tileType) then
         doorWiresLever.lever = { x = x, y = y }
     end
 
-    if not table.contains(data.mapConstants.turnedOnWires, tileType) then
+    if not (table.contains(data.mapConstants.turnedOnWires, tileType) or table.contains(data.mapConstants.doorIds, tileType)) then
         return
     end
 
     local turnedOffWire = data.mapConstants.turnedOffWires[mget(x, y)]
-    table.insert(doorWiresLever.wires, {id = turnedOffWire, x = x, y = y })
-    mset(x, y, turnedOffWire)
+    
+    if table.contains(data.mapConstants.turnedOnWires, tileType) then
+        table.insert(doorWiresLever.wires, {id = turnedOffWire, x = x, y = y })
+        mset(x, y, turnedOffWire)
+        DoorMechanic._walkWire(x + 1, y)
+        DoorMechanic._walkWire(x - 1, y)
+        DoorMechanic._walkWire(x, y + 1)
+        DoorMechanic._walkWire(x, y - 1)
+        return
+    end
 
-    DoorMechanic._walkWire(x + 1, y)
     DoorMechanic._walkWire(x - 1, y)
-    DoorMechanic._walkWire(x, y + 1)
     DoorMechanic._walkWire(x, y - 1)
 end
 

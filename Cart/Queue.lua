@@ -12,7 +12,7 @@ function Queue:new()
     return obj
 end
 
-function Queue:count()
+function Queue:count() --additional +1
     return self.head - self.tail + 1
 end
 

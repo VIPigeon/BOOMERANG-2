@@ -66,28 +66,24 @@ local function createDoors(levers)
     local doors = {}
     local doorTiles = {}
 
-    for x = 0, 239 do
+    for x = 0, 139 do
         for y = 0, 135 do
             local tileType = gm.getTileId(x, y)
-            if tileType == data.mapConstants.doorIds[41] then
+            if table.contains(data.mapConstants.doorIds, tileType) then -- what is 204? 2004 maybe?
                 mset(x, y, 0)
-                table.insert(doorTiles, {x=x, y=y})
-                local door = Door:new(x * 8, y * 8)
-                table.insert(doors, door)
 
                 for _, lever in ipairs(levers) do -- подыскиваем рычаг для двери
                     if lever.door.x == x and lever.door.y == y then
+                        local door = Door:new(x * 8, y * 8)
                         lever.door = door
+
+                        table.insert(doorTiles, {x=x, y=y})
+                        table.insert(doors, door)
                         break
                     end
                 end
-                --trace('cannot find lever for door((((((((((((((((((((')
             end
         end
-    end
-
-    for _, tile in ipairs(doorTiles) do
-        mset(tile.x, tile.y, 41)
     end
 
     return doors
@@ -216,12 +212,14 @@ function game.restart()
     table.concatTable(game.drawables, doors)
 
     table.concatTable(game.collideables, enemies)
+    table.concatTable(game.collideables, doors)
 
     game.mode = 'action' -- Зачем это? :|
     game.metronome = metronome
     game.player = player
     game.boomer = boomerang
     game.camera = camera
+    game.enemies = enemies
 end
 
 game.restart()

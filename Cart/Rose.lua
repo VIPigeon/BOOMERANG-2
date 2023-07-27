@@ -156,7 +156,6 @@ function Rose:shoot()
     local x = laserHitbox.x1 - self.laserdx
     local y = laserHitbox.y1 - self.laserdy
     laserHitbox:set_xy(x, y)
-    trace('x: ' .. x .. ', y: ' .. y)
 
     while laserHitbox:mapCheck() do
         local newx = laserHitbox.x1 + (self.laserdx / self.speed)
@@ -164,8 +163,8 @@ function Rose:shoot()
         laserHitbox:set_xy(newx, newy)
     end
 
-    local x = laserHitbox.x1 + self.laserdx / self.speed
-    local y = laserHitbox.y1 + self.laserdy / self.speed
+    local x = laserHitbox.x1 - self.laserdx / self.speed
+    local y = laserHitbox.y1 - self.laserdy / self.speed
 
     local newHitbox
     if self.direction == 0 then

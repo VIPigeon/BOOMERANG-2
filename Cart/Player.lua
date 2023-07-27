@@ -155,7 +155,7 @@ end
 
 function Player:update()
     if keyp(KEY_R) then
-        -- Smert
+        -- Smert :)
         self:die()
     end
 

@@ -112,10 +112,12 @@ data.mapConstants.doorOffsetsIds = {
 }
 
 data.mapConstants.doorIds = {
-    [41] = 41,
-    [42] = 42,
-    [41 + 16] = 41 + 16,
-    [42 + 16] = 42 + 16,
+    [204] = 204,
+    [205] = 205,
+    [206] = 206,
+    [204 + 16] = 204 + 16,
+    [205 + 16] = 205 + 16,
+    [206 + 16] = 206 + 16,
 }
 
 
@@ -125,11 +127,24 @@ data.mapConstants.leverIds = {
     [3] = 3,
 }
 
-data.Door = {}
-data.Door.tiles = {
-    upper_left = 204,
-    upper_right = 206,
-    bottom_right = 222,
+data.Door = {
+    speed = 0.1,
+    closingAcceleration = 0.01,
+    widthTiles = 6,
+    heightTiles = 4,
+    shakeTimeTics = 20,
+}
+data.Door.spriteTiles = {
+    upperLeft = 204,
+    upperMid = 205,
+    upperRight = 206,
+    bottomLeft = 204 + 16,
+    bottomMid = 205 + 16,
+    bottomRight = 206 + 16,
+}
+data.Door.sprite = {
+    leftPart = -1,
+    rightPart = -1,
 }
 
 local turnOnAnimationFrames = {}
@@ -170,7 +185,6 @@ data.Lever.sprites = {
 
 data.Enemy = {
     defaultHP = 50,
-    anotherEnemyFlagTile = 14,
     defaultEnemyFlagTile = 33,
 }
 data.Enemy.sprites = {
