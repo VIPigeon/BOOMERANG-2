@@ -3,8 +3,9 @@ BulletHell = table.copy(Enemy)
 function BulletHell:new(x, y)
     local bullets = {}
     for i = 1, data.BulletHell.bulletCount do
-        bullets[i] = Bullet:new(0, 0)
+        bullets[i] = HellBullet:new()
     end
+
     local object = {
         x = x,
         y = y,
@@ -13,11 +14,12 @@ function BulletHell:new(x, y)
         bulletCount = data.BulletHell.bulletCount,
         bulletSpeed = data.BulletHell.bulletSpeed,
         bulletRotateSpeed = 1,
-        hitbox = HitCircle:new(x, y, data.BulletHell.circleDiameter),
+        hitcircle = HitCircle:new(x, y, data.BulletHell.circleDiameter),
         time = 0,
         reloadTimeMs = 500,
         status = 'idle',
     }
+    object.hitbox = object.hitcircle.hb
 
     BulletHell._moveBullets(object, 0)
 
@@ -42,12 +44,13 @@ function BulletHell:_shoot()
     local bull = self:_createShootBullet()
     bull.x = self.bullets[minId].x
     bull.y = self.bullets[minId].y
+    bull.hitbox:set_xy(bull.x, bull.y)
     bull:vectorUpdateByTarget(game.player.x, game.player.y)
     self.status = 'reload'
 end
 
 function BulletHell:_createShootBullet()
-    local bull = Bullet:new(x, y)
+    local bull = Bullet:new(0, 0)
 
     table.insert(game.drawables, bull)
     table.insert(game.updatables, bull)
@@ -69,7 +72,6 @@ function BulletHell._moveBullets(bullethell, offset)
         local bullet = bullethell.bullets[i]
         bullet.x = bullethell.x + x
         bullet.y = bullethell.y + y
-        bullet.hitbox:set_xy(bullet.x, bullet.y)
     end
 end
 
@@ -87,4 +89,7 @@ function BulletHell:draw()
     end
 
     self.hitbox:draw(14)
+    for i = 1, #self.bullets do
+        self.bullets[i]:draw()
+    end
 end

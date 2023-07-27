@@ -29,13 +29,11 @@ function Bullet:_move()
 end
 
 function Bullet:_destroy()
-    --trace('im destroyed')
     table.removeElement(game.updatables, self)
     table.removeElement(game.drawables, self)
 end
 
 function Bullet:_checkCollision()
-    --trace('collide!!!!')
     if not self.hitbox:mapCheck() then
         self:_destroy()
     end

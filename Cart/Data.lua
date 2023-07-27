@@ -193,6 +193,7 @@ data.Enemy.sprites = {
 
 data.Bullet = {
     defaultSpeed = 0.5,
+    defaultSprite = Sprite:new({373}, 1)
 }
 
 data.Rose = {}

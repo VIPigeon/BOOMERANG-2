@@ -146,22 +146,6 @@ local function createPlayer(x, y, boomerang)
     return Player:new(x, y, boomerang)
 end
 
-local function createBullets(enemies)
-    bullets = {}
-
-    for _, enemie in ipairs(enemies) do
-        if enemie.bullet ~= nil then
-            table.insert(bullets, enemie.bullet)
-        elseif enemie.bullets ~= nil then
-            for _, bullet in ipairs(enemie.bullets) do
-                table.insert(bullets, bullet)
-            end
-        end
-    end
-
-    return bullets
-end
-
 local checkpoints = createCheckpoints()
 game.startingCheckpoint = {x = PLAYER_START_X, y = PLAYER_START_Y}
 game.checkpoints = checkpoints
@@ -206,12 +190,13 @@ function game.restart()
     game.updatables = {}
     game.collideables = {}
 
+    game.bullets = {}
+
     local metronome = createMetronome()
     local enemies = createEnemies()
     local boomerang = createBoomerang(spawnpoint.x, spawnpoint.y)
     local player = createPlayer(spawnpoint.x, spawnpoint.y - 1, boomerang)
     local camera = createCamera(player)
-    local bullets = createBullets(enemies)
 
     table.insert(game.updatables, metronome)
     table.concatTable(game.updatables, checkpoints)
@@ -221,15 +206,15 @@ function game.restart()
     table.concatTable(game.updatables, enemies)
     table.concatTable(game.updatables, levers)
     table.concatTable(game.updatables, doors)
-    table.concatTable(game.updatables, bullets)
+    table.concatTable(game.updatables, game.bullets)
 
     table.concatTable(game.drawables, checkpoints)
     table.concatTable(game.drawables, levers)
     table.concatTable(game.drawables, enemies)
     table.insert(game.drawables, player)
     table.insert(game.drawables, boomerang)
-    table.concatTable(game.drawables, bullets)
     table.concatTable(game.drawables, doors)
+    table.concatTable(game.drawables, game.bullets)
 
     table.concatTable(game.collideables, enemies)
     table.concatTable(game.collideables, doors)
