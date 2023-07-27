@@ -12,7 +12,6 @@ function HitCircle:new(x, y, d)
     self.__index = self; return obj
 end
 
-
 function HitCircle:collide(hb)
     if not self.hb:collide(hb) then
         return false
@@ -46,5 +45,8 @@ function HitCircle:set_xy(x, y)
     self.hb:set_xy(x, y)
 end
 
+function HitCircle:draw()
+    circb(self.x, self.y, self.d/2, 1)
+end
 
 return HitCircle

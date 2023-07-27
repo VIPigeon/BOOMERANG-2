@@ -201,6 +201,7 @@ data.Rose.animation_frame_duration_ms = 16
 data.Rose.rose_animation_duration_ms = data.Rose.animation_frame_duration_ms * #data.Rose.sprites.transition.animation
 
 data.BulletHell = {}
+data.BulletHell.spawnTiles = {49}
 data.BulletHell.sprites = {
     defaultSprite = 999,
 }

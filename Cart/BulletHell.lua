@@ -9,10 +9,12 @@ function BulletHell:new(x, y, circleDiameter, bulletSpreadRadius, bullets)
         bulletCount = #bullets,
         bulletSpeed = 0.5,
         bulletRotateSpeed = 1,
-        hitCircle = HitCircle:new(x, y, circleDiameter),
+        hitbox = HitCircle:new(x, y, circleDiameter),
     }
 
     setmetatable(object, self)
+    self.__index = self
+    return object
 end
 
 function BulletHell:shoot()
@@ -36,6 +38,15 @@ function BulletHell:update()
 end
 
 function BulletHell:draw()
-    -- BulletHell body
-    self.hitCircle:draw()
+    trace('hello')
+    self.hitbox:draw()
+
+    local step = math.pi / self.bulletCount
+    for i = 1, self.bulletCount do
+        local x = self.spread * math.cos(i * step)
+        local y = self.spread * math.sin(i * step)
+        local bullet = self.bullets[i]
+        bullet.x = x
+        bullet.y = y
+    end
 end
