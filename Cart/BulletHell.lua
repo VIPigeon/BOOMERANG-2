@@ -39,20 +39,21 @@ function BulletHell:shoot()
         end
     end
 
-    bullets[minId - 2]:vectorUpdateByTarget(game.player.x, game.player.y)
+    self.bullets[minId - 2]:vectorUpdateByTarget(game.player.x, game.player.y)
+    table.remove(self.bullets, minId - 2)
+    table.insert(self.bullets, Bullet:new(0, 0))
     self.status = 'reload'
 end
 
 function BulletHell:update()
     if game.metronome.on_beat then
         self:shoot()
-        self.status = self.status == 'idle' and 'reload' or 'idle'
     end
 end
 
 function BulletHell._moveBullets(bullethell, offset)
     local step = 2 * math.pi / bullethell.bulletCount
-    for i = 1, bullethell.bulletCount do
+    for i = 1, #bullethell.bullets do
         local x = math.round(bullethell.spread * math.cos((i + offset) * step))
         local y = math.round(bullethell.spread * math.sin((i + offset) * step))
         local bullet = bullethell.bullets[i]
@@ -68,14 +69,14 @@ function BulletHell:draw()
         self:_moveBullets(progress)
 
         self.time = self.time + Time.dt()
-        if progress > self.time then
+        if self.time > self.reloadTimeMs then
             self.status = 'idle'
             self.time = 0
         end
     end
 
     self.hitbox:draw(14)
-    for i = 1, self.bulletCount do
+    for i = 1, #self.bullets do
         self.bullets[i]:draw()
     end
 end

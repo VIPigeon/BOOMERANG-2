@@ -6,7 +6,7 @@ function Bullet:new(x, y)
     local obj = {
         x = x,
         y = y,
-        vector = nil,
+        vector = {x=0, y=0},
         speed = data.Bullet.defaultSpeed,
         sprite = Bullet.defaultSprite:copy(),
     }
@@ -22,7 +22,7 @@ end
 
 function Bullet:_move()
     self.x = self.x + self.vector.x * self.speed
-    self.y = self.y + self.vecotr.y * self.speed
+    self.y = self.y + self.vector.y * self.speed
 end
 
 function Bullet:update()
