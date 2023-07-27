@@ -1,6 +1,6 @@
 Bullet = table.copy(Body)
 
-Bullet.defaultSprite = Sprite:new({162}, 1)
+Bullet.defaultSprite = Sprite:new({373}, 1)
 
 function Bullet:new(x, y)
     local obj = {
@@ -21,10 +21,14 @@ function Bullet:vectorUpdateByTarget(targetCoordX, targetCoordY)
 end
 
 function Bullet:_move()
-    self.x = self.x + vector.x * self.speed
-    self.y = self.y + vecotr.y * self.speed
+    self.x = self.x + self.vector.x * self.speed
+    self.y = self.y + self.vecotr.y * self.speed
 end
 
 function Bullet:update()
     self:_move()
+end
+
+function Bullet:draw()
+    self.sprite:draw(self.x - 1 - gm.x*8 + gm.sx, self.y - 1 - gm.y*8 + gm.sy, self.flip, self.rotate)
 end

@@ -38,15 +38,14 @@ function HitCircle:collide(hb)
     return false
 end
 
-
 function HitCircle:set_xy(x, y)
     self.x = x
     self.y = y
     self.hb:set_xy(x, y)
 end
 
-function HitCircle:draw()
-    circb(self.x, self.y, self.d/2, 1)
+function HitCircle:draw(color)
+    circ(self.x + math.round(self.d/2) - 8*gm.x + gm.sx, self.y + math.round(self.d/2) - 8*gm.y + gm.sy, math.round(self.d/2), color)
 end
 
 return HitCircle

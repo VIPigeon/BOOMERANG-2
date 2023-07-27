@@ -146,7 +146,7 @@ local function createPlayer(x, y, boomerang)
     return Player:new(x, y, boomerang)
 end
 
-local function createBullets()
+local function createBullets(enemies)
     bullets = {}
 
     for _, enemie in ipairs(enemies) do
@@ -211,7 +211,7 @@ function game.restart()
     local boomerang = createBoomerang(spawnpoint.x, spawnpoint.y)
     local player = createPlayer(spawnpoint.x, spawnpoint.y - 1, boomerang)
     local camera = createCamera(player)
-    local bullets = createBullets()
+    local bullets = createBullets(enemies)
 
     table.insert(game.updatables, metronome)
     table.concatTable(game.updatables, checkpoints)
