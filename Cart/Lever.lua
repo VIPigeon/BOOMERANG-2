@@ -42,6 +42,7 @@ function Lever:_turn()
         self.status = 'justOn'
 
         self:_toogleWires()
+        self.door:statusUpdate('on')
 
         return
     elseif self.status == 'on' then
@@ -49,7 +50,8 @@ function Lever:_turn()
         self.status = 'justOff'
 
         self:_toogleWires()
-
+        self.door:statusUpdate('off')
+        
         return
     end
 end
@@ -57,6 +59,7 @@ end
 function Lever:update()
     if self.hitbox:collide(game.boomer.hitbox) then
         self:_turn()
+
     else
         if self.status == 'justOff' then
             self.status = 'off'
@@ -65,5 +68,5 @@ function Lever:update()
         end
     end
 
-    self.door:statusUpdate(self.status)
+    
 end

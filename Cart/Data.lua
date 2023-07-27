@@ -129,9 +129,10 @@ data.mapConstants.leverIds = {
 
 data.Door = {
     speed = 0.1,
-    closingAcceleration = 0.02,
+    closingAcceleration = 0.01,
     widthTiles = 6,
     heightTiles = 4,
+    shakeTimeTics = 20,
 }
 data.Door.spriteTiles = {
     upperLeft = 204,

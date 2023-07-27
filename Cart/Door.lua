@@ -9,7 +9,8 @@ function Door:new(x, y) --калитка только из двух частей
         rectL = rectangleLeft,
         rectR = rectangleRight,
         speed = data.Door.speed,
-        status = 'close',
+        status = 'closedFromStart',
+        shakeTimer = 1,
         hitboxLeft = Hitbox:new(rectangleLeft:left(), rectangleLeft:up(), rectangleLeft:right(), rectangleLeft:down()),
         hitboxRight = Hitbox:new(rectangleRight:left(), rectangleRight:up(), rectangleRight:right(), rectangleRight:down()),
     }
@@ -51,28 +52,60 @@ end
 
 function Door:_closing()
     self:_colliding()
-    if not (self.hitboxLeft.x2 >= self.x + self.rectL.w) then
-        self.rectL:move(self.speed, 0)
+    if math.floor(self.hitboxLeft.x2) < self.x + self.rectL.w then
+        self.rectL:moveLeftTo(self.rectL:left() + self.speed, 0)
         self.hitboxLeft:set_xy(self.rectL:left(), self.y)
+        --trace('cace'..self.hitboxLeft.x2..' '..self.x)
+    elseif math.floor(self.hitboxLeft.x2) > self.x + self.rectL.w then
+        --trace(self.x)
+        self.rectL:moveLeftTo(self.x, 0)
+        self.hitboxLeft:set_xy(self.rectL:left(), self.y)
+        --trace('lol'..self.hitboxLeft.x2..' '..self.x)
     end
-    if not (self.hitboxRight.x1 <= self.x + self.rectR.w) then
+
+    if self.hitboxRight.x1 > self.x + self.rectR.w then
         self.rectR:move(-self.speed, 0)
         self.hitboxRight:set_xy(self.rectR:left(), self.y)
+    elseif self.hitboxRight.x1 < self.x + self.rectR.w then
+        self.rectR:moveRightTo(self.x + 2 * self.rectR.w)
+        self.hitboxRight:set_xy(self.rectR:left(), self.y)
     end
+
+    if not (self.status == 'closedFromStart') then
+        if self.hitboxLeft:collide(self.hitboxRight) then
+            if self.shakeTimer >= data.Door.shakeTimeTics then
+                game.camera:shakeStop()
+            else
+                game.camera:shake(0.7)
+                self.shakeTimer = self.shakeTimer + 1
+            end
+        end
+    end
+
     self.speed = self.speed + data.Door.closingAcceleration
 end
 
 function Door:_opening() -- whers ending, i like it more!
     self.speed = data.Door.speed
-    if not (self.hitboxLeft.x2 <= self.x) then
-        self.rectL:move(-self.speed, 0)
+    self.shakeTimer = 1
+
+    if math.floor(self.hitboxLeft.x2) > self.x then
+        self.rectL:moveLeftTo(self.rectL:left() - self.speed, 0)
         self.hitboxLeft:set_xy(self.rectL:left(), self.y)
-        
+        --trace('cace'..self.hitboxLeft.x2..' '..self.x)
+    elseif math.floor(self.hitboxLeft.x2) < self.x then
+        --trace(self.x)
+        self.rectL:moveRightTo(self.x, 0)
+        self.hitboxLeft:set_xy(self.rectL:left(), self.y)
+        --trace('lol'..self.hitboxLeft.x2..' '..self.x)
     end
-    if not (self.hitboxRight.x1 >= self.x + 2 * self.rectL.w) then
+
+    if self.hitboxRight.x1 < self.x + 2 * self.rectR.w then
         self.rectR:move(self.speed, 0)
         self.hitboxRight:set_xy(self.rectR:left(), self.y)
-        
+    elseif self.hitboxRight.x1 > self.x + 2 * self.rectR.w then
+        self.rectR:moveLeftTo(self.x + 2 * self.rectR.w)
+        self.hitboxRight:set_xy(self.rectR:left(), self.y)
     end
 end
 
@@ -80,10 +113,10 @@ local UpperLeftTileX2 = data.Door.spriteTiles.upperLeft -- отсюда рису
 local UpperRightTile = data.Door.spriteTiles.upperRight
 local BottomRightTile = data.Door.spriteTiles.bottomRight
 
-function Door:draw()
-    local xleft = math.floor(self.rectL:left() - gm.x*8 + gm.sx)
+function Door:drawUpdate()
+    local xleft = (self.rectL:left() - gm.x*8 + gm.sx)
     local yup = self.rectL:up() - gm.y*8 + gm.sy
-    local xright = math.floor(self.rectR:left() - gm.x*8 + gm.sx)
+    local xright = (self.rectR:left() - gm.x*8 + gm.sx)
     local ydownHalf = self.rectR:down() - self.rectR.w / 1.5 - gm.y*8 + gm.sy
     local w = 2 * self.rectL.w
     local h = self.rectL.h
@@ -111,8 +144,12 @@ function Door:draw()
     --self.hitboxRight:draw(2)
 end
 
+function Door:draw()
+    
+end
+
 function Door:update()
-    self:draw()
+    self:drawUpdate()
     if self.status == 'close' then
         self:_closing()
     elseif self.status == 'open'then

@@ -66,20 +66,20 @@ local function createDoors(levers)
     local doors = {}
     local doorTiles = {}
 
-    for x = 0, 239 do
+    for x = 0, 139 do
         for y = 0, 135 do
             local tileType = gm.getTileId(x, y)
-            if tileType == data.mapConstants.doorIds[204] then -- what is 204? 2004 maybe?
-                
+            --trace(x..' '..y..' '..tileType)
+            if table.contains(data.mapConstants.doorIds, tileType) then -- what is 204? 2004 maybe?
                 mset(x, y, 0)
-                trace(mget(x,y))
-                table.insert(doorTiles, {x=x, y=y})
-                local door = Door:new(x * 8, y * 8)
-                table.insert(doors, door)
 
                 for _, lever in ipairs(levers) do -- подыскиваем рычаг для двери
                     if lever.door.x == x and lever.door.y == y then
+                        local door = Door:new(x * 8, y * 8)
                         lever.door = door
+
+                        table.insert(doorTiles, {x=x, y=y})
+                        table.insert(doors, door)
                         break
                     end
                 end
@@ -90,6 +90,10 @@ local function createDoors(levers)
 
     for _, tile in ipairs(doorTiles) do
         --mset(tile.x, tile.y, 204)
+    end
+
+    for _, door in ipairs(doors) do
+        trace(door.x..' '..door.y)
     end
 
     return doors
