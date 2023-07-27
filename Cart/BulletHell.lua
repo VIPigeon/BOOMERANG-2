@@ -1,15 +1,20 @@
 BulletHell = table.copy(Enemy)
 
-function BulletHell:new(x, y, circleDiameter, bulletSpreadRadius, bullets)
+function BulletHell:new(x, y)
+    local bullets = {}
+    for i = 1, bulletCount do
+        bullets[i] = Bullet:new(0, 0)
+    end
     local object = {
         x = x,
         y = y,
-        spread = bulletSpreadRadius,
+        spread = data.BulletHell.bulletSpeadRadius,
         bullets = bullets,
-        bulletCount = #bullets,
-        bulletSpeed = 0.5,
+        bulletCount = data.BulletHell.bulletCount,
+        bulletSpeed = data.BulletHell.bulletSpeed
         bulletRotateSpeed = 1,
-        hitbox = HitCircle:new(x, y, circleDiameter),
+        status = 'idol'
+        hitbox = HitCircle:new(x, y, data.BulletHell.circleDiameter),
     }
 
     setmetatable(object, self)
@@ -28,7 +33,8 @@ function BulletHell:shoot()
         end
     end
 
-    bullets[minId - 2]:shoot()
+    bullets[minId - 2]:vectorUpdateByTarget(game.player.x, game.player.y)
+    self.status = 'reload'
 end
 
 function BulletHell:update()

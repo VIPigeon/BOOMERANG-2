@@ -130,15 +130,7 @@ local function createEnemies()
         elseif respawnTile.type == 'rose' then
             enemy = Rose:new(8 * respawnTile.x, 8 * respawnTile.y, getDirection(respawnTile.tileid))
         elseif respawnTile.type == 'bullethell' then
-            -- TODO: Move to data
-            CIRCLE_DIAMETER = 4
-            BULLET_SPREAD = 4
-            BULLET_COUNT = 8
-            local bullets = {}
-            for i = 1, BULLET_COUNT do
-                bullets[i] = Bullet:new(0, 0)
-            end
-            enemy = BulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, CIRCLE_DIAMETER, BULLET_SPREAD, bullets)
+            enemy = BulletHell:new(8 * respawnTile.x, 8 * respawnTile.y)
         end
         table.insert(enemem, enemy)
     end
@@ -155,8 +147,18 @@ local function createPlayer(x, y, boomerang)
 end
 
 local function createBullets()
-    bullets = {
-    }
+    bullets = {}
+
+    for _, enemie in ipairs(enemies) do
+        if enemie.bullet ~= nil then
+            table.insert(bullets, enemie.bullet)
+        elseif enemie.bullets ~= nil then
+            for _, bullet in ipairs(enemie.bullets) do
+                table.insert(bullets, bullet)
+            end
+        end
+    end
+
     return bullets
 end
 

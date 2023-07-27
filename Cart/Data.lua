@@ -191,6 +191,10 @@ data.Enemy.sprites = {
     defaultSprite = Sprite:new({403}, 1),
 }
 
+data.Bullet = {
+    defaultSpeed = 0.5,
+}
+
 data.Rose = {}
 data.Rose.spawnTiles = {150, 151, 152, 153}
 data.Rose.anotherRoseFlagTile = 15
@@ -200,7 +204,12 @@ data.Rose.sprites = {
 data.Rose.animation_frame_duration_ms = 16
 data.Rose.rose_animation_duration_ms = data.Rose.animation_frame_duration_ms * #data.Rose.sprites.transition.animation
 
-data.BulletHell = {}
+data.BulletHell = {
+    circleDiameter = 4,
+    bulletSpeadRadius = 4,
+    bulletCount = 8,
+    bulletSpeed = 0.6,
+}
 data.BulletHell.spawnTiles = {49}
 data.BulletHell.sprites = {
     defaultSprite = 999,
