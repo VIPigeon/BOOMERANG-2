@@ -19,6 +19,18 @@ function math.round(x)
     return x >= 0 and math.floor(x + 0.5) or math.ceil(x - 0.5)
 end
 
+function math.sqr(x)
+    return x * x
+end
+
+function math.vecLength(vec)
+    return math.sqrt(math.sqr(vec.x) + math.sqr(vec.y))
+end
+
+function math.vecNormalize(vec)
+    local len = math.vecLength(vec)
+    return {x = vec.x / len, y = vec.y / len}
+end
 
 function math.sign(x)
     if x<0 then
@@ -43,12 +55,12 @@ function math.sq_point_ortsegment_distance(x, y, x1, y1, x2, y2)
         return 0
     end
     if x1 <= x and x <= x2 then
-        return math.min(sq_distance(x, y, x1, y1), sq_distance(x, y, x2, y2), sq_distance(x, y, x, y1))
+        return math.min(math.sq_distance(x, y, x1, y1), math.sq_distance(x, y, x2, y2), math.sq_distance(x, y, x, y1))
     end
     if y1 <= y and y <= y2 then
-        return math.min(sq_distance(x, y, x1, y1), sq_distance(x, y, x2, y2), sq_distance(x, y, x1, y))
+        return math.min(math.sq_distance(x, y, x1, y1), math.sq_distance(x, y, x2, y2), math.sq_distance(x, y, x1, y))
     end
-    return math.min(sq_distance(x, y, x1, y1), sq_distance(x, y, x2, y2))
+    return math.min(math.sq_distance(x, y, x1, y1), math.sq_distance(x, y, x2, y2))
 end
 
 

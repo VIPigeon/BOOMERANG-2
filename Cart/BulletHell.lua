@@ -26,7 +26,7 @@ function BulletHell:new(x, y)
     return object
 end
 
-function BulletHell:shoot()
+function BulletHell:_shoot()
     local minDist = 2147483647
     local minId = -1
     for i, bull in ipairs(self.bullets) do
@@ -39,15 +39,25 @@ function BulletHell:shoot()
         end
     end
 
-    self.bullets[minId - 2]:vectorUpdateByTarget(game.player.x, game.player.y)
-    table.remove(self.bullets, minId - 2)
-    table.insert(self.bullets, Bullet:new(0, 0))
+    local bull = self:_createShootBullet()
+    bull.x = self.bullets[minId].x
+    bull.y = self.bullets[minId].y
+    bull:vectorUpdateByTarget(game.player.x, game.player.y)
     self.status = 'reload'
+end
+
+function BulletHell:_createShootBullet()
+    local bull = Bullet:new(x, y)
+
+    table.insert(game.drawables, bull)
+    table.insert(game.updatables, bull)
+
+    return bull
 end
 
 function BulletHell:update()
     if game.metronome.on_beat then
-        self:shoot()
+        self:_shoot()
     end
 end
 
@@ -59,6 +69,7 @@ function BulletHell._moveBullets(bullethell, offset)
         local bullet = bullethell.bullets[i]
         bullet.x = bullethell.x + x
         bullet.y = bullethell.y + y
+        bullet.hitbox:set_xy(bullet.x, bullet.y)
     end
 end
 
@@ -76,7 +87,4 @@ function BulletHell:draw()
     end
 
     self.hitbox:draw(14)
-    for i = 1, #self.bullets do
-        self.bullets[i]:draw()
-    end
 end
