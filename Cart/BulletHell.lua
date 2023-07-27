@@ -14,9 +14,10 @@ function BulletHell:new(x, y)
         bulletCount = data.BulletHell.bulletCount,
         bulletSpeed = data.BulletHell.bulletSpeed,
         bulletRotateSpeed = 1,
+        hp = 100,
         hitcircle = HitCircle:new(x, y, data.BulletHell.circleDiameter),
         time = 0,
-        reloadTimeMs = 500, -- TODO: Move to Data
+        reloadTimeMs = data.BulletHell.reloadTimeMs,
         status = 'idle',
         reloadingBullet = nil,
     }
@@ -43,9 +44,10 @@ function BulletHell:_shoot()
     end
 
     local bull = self:_createShootBullet()
-    self.reloadingBullet = self.bullets[minId]
-    bull.x = self.bullets[minId].x
-    bull.y = self.bullets[minId].y
+    local byTouchId = (minId + data.BulletHell.bulletCount - data.BulletHell.bulletCount // 4) % data.BulletHell.bulletCount + 1
+    self.reloadingBullet = self.bullets[(byTouchId) % 8 + 1]
+    bull.x = self.bullets[byTouchId].x
+    bull.y = self.bullets[byTouchId].y
     bull.hitbox:set_xy(bull.x, bull.y)
     bull:vectorUpdateByTarget(game.player.x, game.player.y)
     self.status = 'reload'
@@ -62,7 +64,18 @@ end
 
 function BulletHell:update()
     if game.metronome.on_beat then
-        self:_shoot()
+        if self.status ~= 'reload' then
+            self:_shoot()
+        end
+    end
+
+    if game.boomer.hitbox:collide(self.hitbox) then
+        local damage = game.boomer.dpMs * Time.dt()
+        self:takeDamage(damage)
+    end
+
+    if self:isDeadCheck() then
+        self:die()
     end
 end
 
@@ -99,7 +112,7 @@ function BulletHell:draw()
         end
     end
 
-    self.hitbox:draw(14)
+    self.hitcircle:draw(14)
     for i = 1, #self.bullets do
         self.bullets[i]:draw()
     end

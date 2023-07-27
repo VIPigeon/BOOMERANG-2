@@ -33,6 +33,12 @@ function Bullet:_destroy()
     table.removeElement(game.drawables, self)
 end
 
+function Bullet:_kill()
+    if self.hitbox:collide(game.player.hitbox) then
+        game.player:die()
+    end
+end
+
 function Bullet:_checkCollision()
     if not self.hitbox:mapCheck() then
         self:_destroy()
@@ -42,6 +48,7 @@ end
 function Bullet:update()
     self:_checkCollision()
     self:_move()
+    self:_kill()
 end
 
 function Bullet:draw()

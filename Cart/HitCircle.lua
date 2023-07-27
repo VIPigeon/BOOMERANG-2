@@ -45,7 +45,7 @@ function HitCircle:set_xy(x, y)
 end
 
 function HitCircle:draw(color)
-    circ(self.x + math.round(self.d/2) - 8*gm.x + gm.sx, self.y + math.round(self.d/2) - 8*gm.y + gm.sy, math.round(self.d/2), color)
+    circ(self.x + 2 - 8*gm.x + gm.sx, self.y + 2 - 8*gm.y + gm.sy, (self.d/2), color)
 end
 
 return HitCircle

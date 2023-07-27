@@ -202,10 +202,10 @@ data.Rose.rose_animation_duration_ms = data.Rose.animation_frame_duration_ms * #
 
 data.BulletHell = {
     circleDiameter = 4,
-    bulletSpeadRadius = 4,
+    bulletSpeadRadius = 8,
     bulletCount = 8,
     bulletSpeed = 0.6,
-    reloadTimeMs = 500,
+    reloadTimeMs = 1000,
 }
 data.BulletHell.spawnTiles = {49}
 data.BulletHell.sprites = {
@@ -215,7 +215,7 @@ data.BulletHell.sprites = {
 data.Bullet = {
     defaultSpeed = 0.5,
     defaultSprite = Sprite:new({373}, 1),
-    reloadAnimation = Sprite:new(anim.gen({373, 374, 375, 376}, 5), 1),
+    reloadAnimation = Sprite:new(anim.gen({373, 0, 374, 375, 376}, data.BulletHell.reloadTimeMs // 125), 1),
 }
 
 return data
