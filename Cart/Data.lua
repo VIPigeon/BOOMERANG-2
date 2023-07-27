@@ -191,11 +191,6 @@ data.Enemy.sprites = {
     defaultSprite = Sprite:new({403}, 1),
 }
 
-data.Bullet = {
-    defaultSpeed = 0.5,
-    defaultSprite = Sprite:new({373}, 1)
-}
-
 data.Rose = {}
 data.Rose.spawnTiles = {150, 151, 152, 153}
 data.Rose.anotherRoseFlagTile = 15
@@ -210,10 +205,17 @@ data.BulletHell = {
     bulletSpeadRadius = 4,
     bulletCount = 8,
     bulletSpeed = 0.6,
+    reloadTimeMs = 500,
 }
 data.BulletHell.spawnTiles = {49}
 data.BulletHell.sprites = {
     defaultSprite = 999,
+}
+
+data.Bullet = {
+    defaultSpeed = 0.5,
+    defaultSprite = Sprite:new({373}, 1),
+    reloadAnimation = Sprite:new(anim.gen({373, 374, 375, 376}, 5), 1),
 }
 
 return data

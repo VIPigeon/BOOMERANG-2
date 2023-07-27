@@ -4,13 +4,17 @@ function HellBullet:new()
     local object = {
         x = 0,
         y = 0,
-        sprite = data.Bullet.defaultSprite,
+        sprite = data.Bullet.reloadAnimation:copy(),
         status = 'idle',
     }
 
     setmetatable(object, self)
     self.__index = self
     return object
+end
+
+function HellBullet:nextFrame()
+    self.sprite:nextFrame()
 end
 
 function HellBullet:draw()

@@ -16,8 +16,9 @@ function BulletHell:new(x, y)
         bulletRotateSpeed = 1,
         hitcircle = HitCircle:new(x, y, data.BulletHell.circleDiameter),
         time = 0,
-        reloadTimeMs = 500,
+        reloadTimeMs = 500, -- TODO: Move to Data
         status = 'idle',
+        reloadingBullet = nil,
     }
     object.hitbox = object.hitcircle.hb
 
@@ -42,6 +43,7 @@ function BulletHell:_shoot()
     end
 
     local bull = self:_createShootBullet()
+    self.reloadingBullet = self.bullets[minId]
     bull.x = self.bullets[minId].x
     bull.y = self.bullets[minId].y
     bull.hitbox:set_xy(bull.x, bull.y)
@@ -80,6 +82,15 @@ function BulletHell:draw()
         local progress = self.time / self.reloadTimeMs
 
         self:_moveBullets(progress)
+
+        if self.reloadingBullet then
+            if self.reloadingBullet.sprite:animationEnd() then
+                self.reloadingBullet:nextFrame()
+                self.reloadingBullet = nil
+            else
+                self.reloadingBullet:nextFrame()
+            end
+        end
 
         self.time = self.time + Time.dt()
         if self.time > self.reloadTimeMs then
