@@ -108,6 +108,14 @@ local function createEnemies()
                 end
             end
         end
+        for x = 0, MAP_WIDTH do
+            for y = 0, MAP_HEIGHT do
+                if table.contains(data.BulletHell.spawnTiles, mget(x, y)) then
+                    table.insert(enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='bullethell'})
+                    mset(x, y, C0)
+                end
+            end
+        end
     end
 
     function getDirection(spawnTileId)
@@ -121,6 +129,16 @@ local function createEnemies()
             enemy = Enemy:new(8 * respawnTile.x, 8 * respawnTile.y)
         elseif respawnTile.type == 'rose' then
             enemy = Rose:new(8 * respawnTile.x, 8 * respawnTile.y, getDirection(respawnTile.tileid))
+        elseif respawnTile.type == 'bullethell' then
+            -- TODO: Move to data
+            CIRCLE_DIAMETER = 4
+            BULLET_SPREAD = 4
+            BULLET_COUNT = 8
+            local bullets = {}
+            for i = 1, BULLET_COUNT do
+                bullets[i] = Bullet:new(0, 0)
+            end
+            enemy = BulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, CIRCLE_DIAMETER, BULLET_SPREAD, bullets)
         end
         table.insert(enemem, enemy)
     end
