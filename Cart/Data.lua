@@ -189,6 +189,7 @@ data.Enemy = {
 }
 data.Enemy.sprites = {
     defaultSprite = Sprite:new({403}, 1),
+    ahegaoDeath = Sprite:new({386, 387, 388, 389, 390}, 1)
 }
 
 data.Rose = {}

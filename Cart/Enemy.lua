@@ -2,7 +2,7 @@ Enemy = table.copy(Body)
 
 function Enemy:new(x, y)
     local obj = {
-        sprite = data.Enemy.sprites.defaultSprite,
+        sprite = data.Enemy.sprites.ahegaoDeath,
         x = x,
         y = y,
         flip = 0,
@@ -22,8 +22,10 @@ function Enemy:update()
     if game.boomer.hitbox:collide(self.hitbox) then
         local damage = game.boomer.dpMs * Time.dt()
         self:takeDamage(damage)
+        self.sprite:setFrame(5)
+    else
+        self.sprite:setFrame(1)
     end
-
     if self:isDeadCheck() then
         self:die()
     end
