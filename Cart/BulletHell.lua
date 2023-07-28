@@ -74,6 +74,10 @@ function BulletHell:update()
     if self:isDeadCheck() then
         self:die()
     end
+
+    for i = 1, #self.bullets do
+        self.bullets[i]:update()
+    end
 end
 
 function BulletHell._moveBullets(bullethell, offset)
@@ -82,8 +86,7 @@ function BulletHell._moveBullets(bullethell, offset)
         local x = math.round(bullethell.spread * math.cos((i + offset) * step))
         local y = math.round(bullethell.spread * math.sin((i + offset) * step))
         local bullet = bullethell.bullets[i]
-        bullet.x = bullethell.x + x
-        bullet.y = bullethell.y + y
+        bullet:setPos(bullethell.x + x, bullethell.y + y)
     end
 end
 
