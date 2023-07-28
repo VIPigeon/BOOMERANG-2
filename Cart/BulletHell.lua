@@ -17,9 +17,8 @@ function BulletHell:new(x, y)
         hp = 100,
         hitcircle = HitCircle:new(x, y, data.BulletHell.circleDiameter),
         time = 0,
-        reloadTimeMs = data.BulletHell.reloadTimeMs,
         status = 'idle',
-        reloadingBullet = nil,
+        reloadingBullets = {},
     }
     object.hitbox = object.hitcircle.hb
 
@@ -45,7 +44,7 @@ function BulletHell:_shoot()
 
     local bull = self:_createShootBullet()
     local byTouchId = (minId + data.BulletHell.bulletCount - data.BulletHell.bulletCount // 4 - 1) % data.BulletHell.bulletCount + 1
-    self.reloadingBullet = self.bullets[(byTouchId) % 8 + 1]
+    table.insert(self.reloadingBullets, self.bullets[(byTouchId - 1) % 8 + 1])
     bull.x = self.bullets[byTouchId].x
     bull.y = self.bullets[byTouchId].y
     bull.hitbox:set_xy(bull.x, bull.y)
@@ -64,9 +63,7 @@ end
 
 function BulletHell:update()
     if game.metronome.on_beat then
-        if self.status ~= 'reload' then
-            self:_shoot()
-        end
+        self:_shoot()
     end
 
     if game.boomer.hitbox:collide(self.hitbox) then
@@ -91,24 +88,24 @@ function BulletHell._moveBullets(bullethell, offset)
 end
 
 function BulletHell:draw()
-    if self.status == 'reload' then
-        local progress = self.time / self.reloadTimeMs
+    if true then
+        local progress = 1 - (game.metronome:msBeforeNextBeat() / game.metronome.ms_per_beat)
 
         self:_moveBullets(progress)
 
-        if self.reloadingBullet then
-            if self.reloadingBullet.sprite:animationEnd() then
-                self.reloadingBullet:nextFrame()
-                self.reloadingBullet = nil
-            else
-                self.reloadingBullet:nextFrame()
+        if #self.reloadingBullets > 0 then
+            deletedBullet = nil
+            for _, bullet in ipairs(self.reloadingBullets) do
+                bullet:nextFrame()
+                if bullet.sprite:animationEnd() then
+                    deletedBullet = bullet
+                end
             end
-        end
 
-        self.time = self.time + Time.dt()
-        if self.time > self.reloadTimeMs then
-            self.status = 'idle'
-            self.time = 0
+            if deletedBullet then
+                deletedBullet:nextFrame()
+                table.removeElement(self.reloadingBullets, deletedBullet)
+            end
         end
     end
 
