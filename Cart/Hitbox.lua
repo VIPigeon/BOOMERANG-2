@@ -8,7 +8,8 @@ function Hitbox:new(x1, y1, x2, y2)
         x2 = x2,
         y2 = y2,
         shiftX = 0,
-        shiftY = 0
+        shiftY = 0,
+        type = 'hitbox',
     }
 
     setmetatable(obj, self)
@@ -32,6 +33,9 @@ end
 
 
 function Hitbox:collide(hb)
+    if hb.type == 'hitcircle' then
+        return hb:collide(self)
+    end
     if math.floor(hb.x1) > math.floor(self.x2) or
         math.floor(self.x1) > math.floor(hb.x2) or
         math.floor(hb.y1) > math.floor(self.y2) or

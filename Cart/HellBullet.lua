@@ -5,6 +5,7 @@ function HellBullet:new()
         x = 0,
         y = 0,
         sprite = data.Bullet.reloadAnimation:copy(),
+        hitbox = Hitbox:new(0, 0, 2, 2),
         status = 'idle',
     }
 
@@ -13,8 +14,20 @@ function HellBullet:new()
     return object
 end
 
+function HellBullet:setPos(x, y)
+    self.x = x
+    self.y = y
+    self.hitbox:set_xy(x, y)
+end
+
 function HellBullet:nextFrame()
     self.sprite:nextFrame()
+end
+
+function HellBullet:update()
+    if self.hitbox:collide(game.player.hitbox) then
+        game.player:die()
+    end
 end
 
 function HellBullet:draw()
