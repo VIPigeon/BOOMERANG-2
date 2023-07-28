@@ -143,7 +143,6 @@ function Rose:update()
 
     if self.status == 'shootEnd' then
         frame = self.sprite:getFrame()
-        trace(frame)
         if frame == 1 then
             self.status = 'idle'
         else

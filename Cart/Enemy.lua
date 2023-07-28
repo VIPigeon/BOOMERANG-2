@@ -2,7 +2,7 @@ Enemy = table.copy(Body)
 
 function Enemy:new(x, y)
     local obj = {
-        sprite = data.Enemy.sprites.ahegaoDeath,
+        sprite = data.Enemy.sprites.defaultSprite,
         x = x,
         y = y,
         flip = 0,

@@ -44,7 +44,7 @@ function BulletHell:_shoot()
     end
 
     local bull = self:_createShootBullet()
-    local byTouchId = (minId + data.BulletHell.bulletCount - data.BulletHell.bulletCount // 4) % data.BulletHell.bulletCount + 1
+    local byTouchId = (minId + data.BulletHell.bulletCount - data.BulletHell.bulletCount // 4 - 1) % data.BulletHell.bulletCount + 1
     self.reloadingBullet = self.bullets[(byTouchId) % 8 + 1]
     bull.x = self.bullets[byTouchId].x
     bull.y = self.bullets[byTouchId].y

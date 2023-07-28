@@ -133,6 +133,7 @@ data.Door = {
     widthTiles = 6,
     heightTiles = 4,
     shakeTimeTics = 20,
+    closedGapInPixels = 4,
 }
 data.Door.spriteTiles = {
     upperLeft = 204,
@@ -189,7 +190,7 @@ data.Enemy = {
 }
 data.Enemy.sprites = {
     defaultSprite = Sprite:new({403}, 1),
-    ahegaoDeath = Sprite:new({386, 387, 388, 389, 390}, 1)
+    --ahegaoDeath = Sprite:new({386, 387, 388, 389, 390}, 1)
 }
 
 data.Rose = {}

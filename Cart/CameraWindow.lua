@@ -69,7 +69,7 @@ function CameraWindow:shake(magnitude)
     self.shakeMagnitude = magnitude
 end
 
-function CameraWindow:shakeStop()
+function CameraWindow:shakeStop() -- TODO fix conflict with many shakes
     self.status = 'normal'
 end
 
