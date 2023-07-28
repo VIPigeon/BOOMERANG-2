@@ -26,7 +26,8 @@ function Hitbox:new_with_shift(x1, y1, x2, y2, shiftX, shiftY)
     }
     -- чистая магия!
     setmetatable(obj, self)
-    self.__index = self; return obj
+    self.__index = self
+    return obj
 end
 
 

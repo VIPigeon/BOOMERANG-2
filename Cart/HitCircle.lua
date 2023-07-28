@@ -9,7 +9,8 @@ function HitCircle:new(x, y, d)
     }
     -- чистая магия!
     setmetatable(obj, self)
-    self.__index = self; return obj
+    self.__index = self
+    return obj
 end
 
 function HitCircle:collide(hb)

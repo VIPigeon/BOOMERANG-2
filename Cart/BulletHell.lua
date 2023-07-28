@@ -15,13 +15,13 @@ function BulletHell:new(x, y)
         bulletSpeed = data.BulletHell.bulletSpeed,
         bulletRotateSpeed = 1,
         hp = 100,
-        hitcircle = HitCircle:new(x, y, data.BulletHell.circleDiameter),
+        hitbox = HitCircle:new(x, y, data.BulletHell.circleDiameter),
         time = 0,
         reloadTimeMs = data.BulletHell.reloadTimeMs,
         status = 'idle',
         reloadingBullet = nil,
     }
-    object.hitbox = object.hitcircle.hb
+    -- object.hitbox = object.hitcircle.hb
 
     BulletHell._moveBullets(object, 0)
 
@@ -69,7 +69,7 @@ function BulletHell:update()
         end
     end
 
-    if game.boomer.hitbox:collide(self.hitbox) then
+    if self.hitbox:collide(game.boomer.hitbox) then
         local damage = game.boomer.dpMs * Time.dt()
         self:takeDamage(damage)
     end
@@ -112,7 +112,7 @@ function BulletHell:draw()
         end
     end
 
-    self.hitcircle:draw(14)
+    self.hitbox:draw(14)
     for i = 1, #self.bullets do
         self.bullets[i]:draw()
     end

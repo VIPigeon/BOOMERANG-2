@@ -22,9 +22,6 @@ function Enemy:update()
     if game.boomer.hitbox:collide(self.hitbox) then
         local damage = game.boomer.dpMs * Time.dt()
         self:takeDamage(damage)
-        self.sprite:setFrame(5)
-    else
-        self.sprite:setFrame(1)
     end
     if self:isDeadCheck() then
         self:die()

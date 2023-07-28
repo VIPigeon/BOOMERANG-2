@@ -79,6 +79,8 @@ function Rose:new(x, y, direction)
 
         hp = 50,
 
+        status = 'idle',
+
         shooting = false,
         ticks = 0,
         ticksBeforeShot = 1,
@@ -93,17 +95,15 @@ end
 function Rose:onBeat()
     self.ticks = self.ticks + 1
 
-    if not self.shooting then
+    if self.status == 'shootBegin' then
         if self.ticks == self.ticksBeforeShot then
-        self.laserHitbox:draw(1)
-            self.shooting = true
+            self.status = 'shooting'
             self:shoot()
             self.ticks = 0
         end
-    else
+    elseif self.status == 'shooting' then
         if self.ticks == self.ticksShooting then
-            self.shooting = false
-            self.sprite:setFrame(1)
+            self.status = 'shootEnd'
             self.ticks = 0
         end
     end
@@ -123,24 +123,40 @@ function Rose:update()
         self:onBeat()
     end
 
-    if self.shooting then
-        self.animation_playing = false
+    if self.status == 'shooting' then
         if self.laserHitbox:collide(game.player.hitbox) then
             game.player:die()
         end
-    elseif game.metronome:msBeforeNextBeat() <= ROSE_ANIMATION_DURATION_MS and not self.animation_playing then
-        self.animation_playing = true
     end
 
-    if self.animation_playing and not self.sprite:animationEnd() then
-        self.sprite:nextFrame()
+    if self.status == 'idle' then
+        if game.metronome:msBeforeNextBeat() <= ROSE_ANIMATION_DURATION_MS and not self.animation_playing then
+            self.status = 'shootBegin'
+        end
+    end
+
+    if self.status == 'shootBegin' then
+        if not self.sprite:animationEnd() then
+            self.sprite:nextFrame()
+        end
+    end
+
+    if self.status == 'shootEnd' then
+        frame = self.sprite:getFrame()
+        trace(frame)
+        if frame == 1 then
+            self.status = 'idle'
+        else
+            self.sprite:setFrame(frame - 1)
+        end
     end
 end
 
 function Rose:draw()
-    if self.shooting then
+    if self.status == 'shooting' then
         self.laserHitbox:draw(1)
     end
+
     self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
 end
 
