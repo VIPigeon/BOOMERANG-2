@@ -5,7 +5,8 @@ function HitCircle:new(x, y, d)
     obj = {
         x = x, y = y,  -- left top pixel
         d = d,  -- diameter
-        hb = Hitbox:new(x, y, x+d, y+d)  -- для упрощения расчетов
+        hb = Hitbox:new(x, y, x+d, y+d),  -- для упрощения расчетов
+        type = 'hitcircle',
     }
     -- чистая магия!
     setmetatable(obj, self)
