@@ -52,29 +52,33 @@ end
 
 function Door:_closing()
     self:_colliding()
-    if math.floor(self.hitboxLeft.x2) < self.x + self.rectL.w then
+
+    local boarderLeft = self.x + self.rectL.w
+    local boarderRight = self.x + self.rectR.w
+
+    if math.floor(self.hitboxLeft.x2) < boarderLeft then
         self.rectL:moveLeftTo(self.rectL:left() + self.speed, 0)
         self.hitboxLeft:set_xy(self.rectL:left(), self.y)
         --trace('cace'..self.hitboxLeft.x2..' '..self.x)
-    elseif math.floor(self.hitboxLeft.x2) > self.x + self.rectL.w then
+    elseif math.floor(self.hitboxLeft.x2) > boarderLeft then
         --trace(self.x)
         self.rectL:moveLeftTo(self.x, 0)
         self.hitboxLeft:set_xy(self.rectL:left(), self.y)
         --trace('lol'..self.hitboxLeft.x2..' '..self.x)
     end
 
-    if self.hitboxRight.x1 > self.x + self.rectR.w then
+    if self.hitboxRight.x1 > boarderRight then
         self.rectR:move(-self.speed, 0)
         self.hitboxRight:set_xy(self.rectR:left(), self.y)
-    elseif self.hitboxRight.x1 < self.x + self.rectR.w then
-        self.rectR:moveRightTo(self.x + 2 * self.rectR.w)
+    elseif self.hitboxRight.x1 < boarderRight then
+        self.rectR:moveLeftTo(boarderRight)
         self.hitboxRight:set_xy(self.rectR:left(), self.y)
     end
 
     if not (self.status == 'closedFromStart') then
         if self.hitboxLeft:collide(self.hitboxRight) then
             if self.shakeTimer >= data.Door.shakeTimeTics then
-                game.camera:shakeStop()
+                game.camera:shakeStop() 
             else
                 game.camera:shake(0.7)
                 self.shakeTimer = self.shakeTimer + 1
@@ -89,22 +93,25 @@ function Door:_opening() -- whers ending, i like it more!
     self.speed = data.Door.speed
     self.shakeTimer = 1
 
-    if math.floor(self.hitboxLeft.x2) > self.x then
-        self.rectL:moveLeftTo(self.rectL:left() - self.speed, 0)
+    local boarderLeft = self.x + data.Door.closedGapInPixels
+    local boarderRight = self.x + 2 * self.rectR.w - data.Door.closedGapInPixels
+
+    if math.floor(self.hitboxLeft.x2) > boarderLeft then
+        self.rectL:move(-self.speed, 0)
         self.hitboxLeft:set_xy(self.rectL:left(), self.y)
         --trace('cace'..self.hitboxLeft.x2..' '..self.x)
-    elseif math.floor(self.hitboxLeft.x2) < self.x then
+    elseif math.floor(self.hitboxLeft.x2) < boarderLeft then
         --trace(self.x)
-        self.rectL:moveRightTo(self.x, 0)
+        self.rectL:moveRightTo(boarderLeft, 0)
         self.hitboxLeft:set_xy(self.rectL:left(), self.y)
         --trace('lol'..self.hitboxLeft.x2..' '..self.x)
     end
 
-    if self.hitboxRight.x1 < self.x + 2 * self.rectR.w then
+    if self.hitboxRight.x1 < boarderRight then
         self.rectR:move(self.speed, 0)
         self.hitboxRight:set_xy(self.rectR:left(), self.y)
-    elseif self.hitboxRight.x1 > self.x + 2 * self.rectR.w then
-        self.rectR:moveLeftTo(self.x + 2 * self.rectR.w)
+    elseif self.hitboxRight.x1 > boarderRight then
+        self.rectR:moveLeftTo(boarderRight)
         self.hitboxRight:set_xy(self.rectR:left(), self.y)
     end
 end
