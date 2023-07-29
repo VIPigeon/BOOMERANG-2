@@ -25,6 +25,7 @@ function Player:new(x, y, boomerang)
         boomerang = boomerang,
         boomerangActive = false,
         status = 'alive',
+        deathDurationMs = data.Player.deathAnimationDurationMs,
     }
 
     setmetatable(obj, self)
@@ -96,7 +97,6 @@ function Player:_horizontalFlipCalculator()
 end
 
 function Player:_tryMove(movementNormalizer)
-
     local dx = self.dx * self.speed * movementNormalizer
     local dy = self.dy * self.speed * movementNormalizer
 
@@ -143,8 +143,45 @@ function Player:_shoot()
     self.boomerang.active = false
 end
 
+function Player:_createDeathEffect()
+    local x = self.x
+    local y = self.y
+
+    local particleCount = math.random(data.Player.deathParticleCountMin, data.Player.deathParticleCountMax)
+    local particleSpeed = data.Player.deathAnimationParticleSpeed
+
+    local function randomSide()
+        return 2 * math.random() - 1
+    end
+
+    particles = {}
+    for i = 1, particleCount do
+        local spawnx = x + randomSide()
+        local spawny = y + randomSide()
+        particles[i] = Particle:new(spawnx, spawny, data.Player.deathParticleSprite)
+
+        local dx = randomSide()
+        local dy = randomSide()
+        particles[i]:setVelocity(particleSpeed * dx, particleSpeed * dy)
+    end
+end
+
 function Player:die()
-    game.restart()
+    if self.status == 'dying' then
+        return
+    end
+
+    self.sprite = Player.death:copy()
+    self.sprite:setFrame(1)
+    self:_createDeathEffect()
+    local time = 0
+    local step = self.deathDurationMs / #Player.death.animation
+    self.deathTimer = function()
+        time = time + Time.dt()
+        self.sprite:setFrame(1 + time / step)
+        return time > self.deathDurationMs
+    end
+    self.status = 'dying'
 end
 
 function Player:boomerangHandle()
@@ -154,9 +191,19 @@ function Player:boomerangHandle()
 end
 
 function Player:update()
+    if self.status == 'dying' then
+        isDead = self.deathTimer()
+        if isDead then
+            self.status = 'alive'
+            game.restart()
+        end
+        return
+    end
+
     if keyp(KEY_R) then
         -- Smert :)
         self:die()
+        return
     end
 
     self:_willMoveCheck() -- wanna move?~

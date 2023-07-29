@@ -21,7 +21,6 @@ function BulletHell:new(x, y, type)
         status = 'idle',
         reloadingBullets = {},
     }
-    -- object.hitbox = object.hitcircle.hb
 
     BulletHell._moveBullets(object, 0)
 

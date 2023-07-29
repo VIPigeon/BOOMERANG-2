@@ -18,7 +18,7 @@ function Sprite:getFrame()
 end
 
 function Sprite:setFrame(frame)
-    self.frame = frame
+    self.frame = math.round(frame)
 end
 
 function Sprite:nextFrame()

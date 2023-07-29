@@ -2,7 +2,7 @@ HitCircle = table.copy(Hitbox)
 
 
 function HitCircle:new(x, y, d)
-    obj = {
+    local obj = {
         x = x, y = y,  -- left top pixel
         d = d,  -- diameter
         hb = Hitbox:new(x, y, x+d, y+d),  -- для упрощения расчетов

@@ -43,7 +43,12 @@ MAP_HEIGHT = 135
 data.Player = {
     movementNormalizerStraight = 1,
     movementNormalizerDiagonal = 1 / math.sqrt(2),
-    speed = 0.7
+    speed = 0.7,
+    deathParticleSprite = Sprite:new({377}, 1),
+    deathAnimationDurationMs = 1000,
+    deathParticleCountMin = 10,
+    deathParticleCountMax = 20,
+    deathAnimationParticleSpeed = 0.4,
 }
 
 function plr_death_anim()
@@ -62,7 +67,7 @@ end
 data.Player.sprites = {
     stayFront =Sprite:new({257}, 1),
     runFront = Sprite:new(anim.gen60({256, 257, 258, 259, 256, 257, 258, 259, 256, 257, 258, 259}), 1),
-    death = Sprite:new(anim.gen60(plr_death_anim()), 1),
+    death = Sprite:new({452, 453, 454}, 1),
     hat = Sprite:new(anim.gen60({279}), 1),
     stayBack = Sprite:new({465}, 1),
     runBack = Sprite:new(anim.gen60({464, 465, 466, 467, 464, 465, 466, 467, 464, 465, 466, 467}), 1),
