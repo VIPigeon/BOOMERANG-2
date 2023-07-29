@@ -11,7 +11,7 @@ function Enemy:new(x, y)
 
         hp = data.Enemy.defaultHP,
         isEnemy = true,
-        status = 'angry',
+        animationStatus = 'no anime',
         hurtAnimations = {
             AnimationOver:new(data.Enemy.animations.hurtingHorizontal), 
             AnimationOver:new(data.Enemy.animations.hurtingVertical)
@@ -42,7 +42,6 @@ function Enemy:update()
 
     self:_statusDependingUpdate()
 
-    
 end
 
 function Enemy:die()
@@ -57,17 +56,17 @@ function Enemy:isDeadCheck()
 end
 
 function Enemy:_statusDependingUpdate()
-    if self.status == 'hurt' then
+    if self.animationStatus == 'hurt' then
         for _, hurtAnime in ipairs(self.hurtAnimations) do -- включим все анимации вреда
             hurtAnime:focus(self.x, self.y)
             hurtAnime:activateSingleTime()
         end
     end
 
-    self.status = 'angry'
+    self.animationStatus = 'no anime'
 end
 
 function Enemy:takeDamage(damage)
-    self.status = 'hurt'
+    self.animationStatus = 'hurt'
     self.hp = math.fence(self.hp - damage, 0, self.hp)
 end
