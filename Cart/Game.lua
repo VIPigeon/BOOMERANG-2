@@ -130,7 +130,8 @@ local function createEnemies()
         elseif respawnTile.type == 'rose' then
             enemy = Rose:new(8 * respawnTile.x, 8 * respawnTile.y, getDirection(respawnTile.tileid))
         elseif respawnTile.type == 'bullethell' then
-            enemy = BulletHell:new(8 * respawnTile.x, 8 * respawnTile.y)
+            local type = respawnTile.tileid - data.BulletHell.spawnTiles[1] + 1
+            enemy = BulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, type)
         end
         table.insert(enemem, enemy)
     end

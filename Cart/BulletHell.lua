@@ -1,21 +1,22 @@
 BulletHell = table.copy(Enemy)
 
-function BulletHell:new(x, y)
+function BulletHell:new(x, y, type)
     local bullets = {}
-    for i = 1, data.BulletHell.bulletCount do
+    for i = 1, data.BulletHell.bulletCount[type] do
         bullets[i] = HellBullet:new()
     end
 
     local object = {
         x = x,
         y = y,
-        spread = data.BulletHell.bulletSpeadRadius,
+        type = type,
+        spread = data.BulletHell.bulletSpeadRadius[type],
         bullets = bullets,
-        bulletCount = data.BulletHell.bulletCount,
-        bulletSpeed = data.BulletHell.bulletSpeed,
-        bulletRotateSpeed = 1,
-        hp = 100,
-        hitbox = HitCircle:new(x, y, data.BulletHell.circleDiameter),
+        bulletCount = data.BulletHell.bulletCount[type],
+        bulletSpeed = data.BulletHell.bulletSpeed[type],
+        bulletRotateSpeed = data.BulletHell.bulletRotateSpeed[type],
+        hp = data.BulletHell.hp[type],
+        hitbox = HitCircle:new(x, y, data.BulletHell.circleDiameter[type]),
         time = 0,
         status = 'idle',
         reloadingBullets = {},
@@ -42,7 +43,7 @@ function BulletHell:_shoot()
     end
 
     local bull = self:_createShootBullet()
-    local byTouchId = (minId + data.BulletHell.bulletCount - data.BulletHell.bulletCount // 4 - 1) % data.BulletHell.bulletCount + 1
+    local byTouchId = (minId + data.BulletHell.bulletCount[self.type] - data.BulletHell.bulletCount[self.type] // 4 - 1) % data.BulletHell.bulletCount[self.type] + 1
     table.insert(self.reloadingBullets, self.bullets[(byTouchId - 1) % 8 + 1])
     bull.x = self.bullets[byTouchId].x
     bull.y = self.bullets[byTouchId].y
@@ -85,7 +86,7 @@ function BulletHell._moveBullets(bullethell, offset)
         local x = math.round(bullethell.spread * math.cos((i + offset) * step))
         local y = math.round(bullethell.spread * math.sin((i + offset) * step))
         local bullet = bullethell.bullets[i]
-        bullet:setPos(bullethell.x + x, bullethell.y + y)
+        bullet:setPos(bullethell.x + x, bullethell.y + y) --не настоящие пули
     end
 end
 
