@@ -15,8 +15,8 @@ function Boomerang:new(x, y, dx, dy)
         jpy = 0,
         dpMs = data.Boomerang.damagePerMillisecond,
         hitbox = Hitbox:new_with_shift(-1000+2, -1000+2, -1000+6, -1000+6, 2, 2),
-        active = false
-        status = 'going brrr'
+        active = false,
+        status = 'going brrr',
     }
 
     if obj['dx'] * obj['dy'] ~= 0 then
@@ -46,7 +46,11 @@ function Boomerang:update()
         return
     end
 
+    self:_hurtAnimHandle()
+
     self.sprite:nextFrame()
+
+    self.status = 'no hurting anime'
 
     self.speed = self.speed - self.decelerationThing
     if self.speed < 0 then
@@ -94,15 +98,20 @@ function Boomerang:_reverseUpdate()
     self:moveUnclamped(ddx, ddy)
 end
 
-function Boomerang:hurtAnimActivate()
-    self.status = 'hurting'
-    if self.status == 'hurting' then
-        self.sprite = data.Boomerang.hurtingHorizontal
-    end
+function Boomerang:hurtAnimActivate() -- активирует травмирующий режим бумера
+    self.status = 'justHurting' -- активируется в  Enemy:take_damage(😄)
 end
 
 function Boomerang:hurtAnimDeactivate()
-    self.status = 'norm'
+    self.status = 'no hurting anime'
+end
+
+function Boomerang:_hurtAnimHandle()
+    if self.status == 'justHurting' then
+        self.sprite = data.Boomerang.sprites.hurtingHorizontal
+    elseif self.status == 'no hurting anime' then
+        self.sprite = data.Boomerang.sprites.spinning
+    end
 end
 
 function Boomerang:draw()

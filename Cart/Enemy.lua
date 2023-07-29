@@ -21,7 +21,6 @@ end
 function Enemy:update()
     if game.boomer.hitbox:collide(self.hitbox) then
         local damage = game.boomer.dpMs * Time.dt()
-        game.boomer:hurtAnimActivate()
         self:takeDamage(damage)
     end
     if self:isDeadCheck() then
@@ -41,5 +40,6 @@ function Enemy:isDeadCheck()
 end
 
 function Enemy:takeDamage(damage)
+    game.boomer:hurtAnimActivate()
     self.hp = math.fence(self.hp - damage, 0, self.hp)
 end
