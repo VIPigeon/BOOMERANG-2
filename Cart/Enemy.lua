@@ -68,9 +68,6 @@ function Enemy:_statusDependingUpdate()
 end
 
 function Enemy:takeDamage(damage)
-<<<<<<< Updated upstream
-=======
     self.status = 'hurt'
->>>>>>> Stashed changes
     self.hp = math.fence(self.hp - damage, 0, self.hp)
 end
