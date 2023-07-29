@@ -15,8 +15,8 @@ function Boomerang:new(x, y, dx, dy)
         jpy = 0,
         dpMs = data.Boomerang.damagePerMillisecond,
         hitbox = Hitbox:new_with_shift(-1000+2, -1000+2, -1000+6, -1000+6, 2, 2),
-        active = false
-        status = 'going brrr'
+        active = false,
+        status = 'going brrr',
     }
 
     if obj['dx'] * obj['dy'] ~= 0 then
