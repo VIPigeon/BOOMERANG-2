@@ -11,11 +11,24 @@ function Enemy:new(x, y)
 
         hp = data.Enemy.defaultHP,
         isEnemy = true,
+        status = 'angry',
+        hurtAnimations = {
+            AnimationOver:new(data.Enemy.animations.hurtingHorizontal), 
+            AnimationOver:new(data.Enemy.animations.hurtingVertical)
+        },
     }
 
     setmetatable(obj, self)
     self.__index = self
     return obj
+end
+
+function Enemy:draw()
+    self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
+
+    for _, hurtAnime in ipairs(self.hurtAnimations) do -- отрисуем все анимации вреда
+        hurtAnime:play()
+    end
 end
 
 function Enemy:update()
@@ -26,6 +39,10 @@ function Enemy:update()
     if self:isDeadCheck() then
         self:die()
     end
+
+    self:_statusDependingUpdate()
+
+    
 end
 
 function Enemy:die()
@@ -39,6 +56,21 @@ function Enemy:isDeadCheck()
     return self.hp == 0
 end
 
+function Enemy:_statusDependingUpdate()
+    if self.status == 'hurt' then
+        for _, hurtAnime in ipairs(self.hurtAnimations) do -- включим все анимации вреда
+            hurtAnime:focus(self.x, self.y)
+            hurtAnime:activateSingleTime()
+        end
+    end
+
+    self.status = 'angry'
+end
+
 function Enemy:takeDamage(damage)
+<<<<<<< Updated upstream
+=======
+    self.status = 'hurt'
+>>>>>>> Stashed changes
     self.hp = math.fence(self.hp - damage, 0, self.hp)
 end

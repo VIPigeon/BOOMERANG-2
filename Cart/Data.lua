@@ -192,6 +192,10 @@ data.Enemy.sprites = {
     defaultSprite = Sprite:new({403}, 1),
     --ahegaoDeath = Sprite:new({386, 387, 388, 389, 390}, 1)
 }
+data.Enemy.animations = {
+    hurtingHorizontal = Sprite:new(anim.gen60({473, 474, 475, 476, 477, 478, 479}), 1),
+    hurtingVertical = Sprite:new(anim.gen60({473 + 16, 474 + 16, 475 + 16, 476 + 16, 477 + 16, 478 + 16, 479 + 16}), 1),
+}
 
 data.Rose = {}
 data.Rose.spawnTiles = {150, 151, 152, 153}

@@ -94,7 +94,10 @@ function Boomerang:_reverseUpdate()
     self:moveUnclamped(ddx, ddy)
 end
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 function Boomerang:draw()
     if not self.active then
         return
