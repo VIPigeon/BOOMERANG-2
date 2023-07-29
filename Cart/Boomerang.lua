@@ -16,7 +16,7 @@ function Boomerang:new(x, y, dx, dy)
         dpMs = data.Boomerang.damagePerMillisecond,
         hitbox = Hitbox:new_with_shift(-1000+2, -1000+2, -1000+6, -1000+6, 2, 2),
         active = false
-        --flightEnded = false
+        status = 'going brrr'
     }
 
     if obj['dx'] * obj['dy'] ~= 0 then
@@ -94,6 +94,16 @@ function Boomerang:_reverseUpdate()
     self:moveUnclamped(ddx, ddy)
 end
 
+function Boomerang:hurtAnimActivate()
+    self.status = 'hurting'
+    if self.status == 'hurting' then
+        self.sprite = data.Boomerang.hurtingHorizontal
+    end
+end
+
+function Boomerang:hurtAnimDeactivate()
+    self.status = 'norm'
+end
 
 function Boomerang:draw()
     if not self.active then
