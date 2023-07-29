@@ -43,6 +43,10 @@ function AnimationOver:_spriteUpdate()
 end
 
 function AnimationOver:play() -- playing the animation
+    -- if math.random(0, 9) > 4 then
+    --     return
+    -- end
+
     if self.status == 'active' then
         self:_draw()
         self:_spriteUpdate()
