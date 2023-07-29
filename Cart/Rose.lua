@@ -77,14 +77,14 @@ function Rose:new(x, y, direction)
         laserHitbox = Hitbox:new(x + 7, y + 11 - 20, x + 7 + 3, y + 11),
         direction = direction,
 
-        hp = 50,
+        hp = data.Rose.startingHealth,
 
         status = 'idle',
 
         shooting = false,
         ticks = 0,
-        ticksBeforeShot = 1,
-        ticksShooting = 2,
+        ticksBeforeShot = data.Rose.metronomeTicksReloading,
+        ticksShooting = data.Rose.metronomeTicksSpentShooting,
     }
 
     setmetatable(obj, self)

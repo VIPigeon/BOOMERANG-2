@@ -200,7 +200,11 @@ data.Enemy.sprites = {
     --ahegaoDeath = Sprite:new({386, 387, 388, 389, 390}, 1)
 }
 
-data.Rose = {}
+data.Rose = {
+    startingHealth = 50,
+    metronomeTicksReloading = 1,
+    metronomeTicksSpentShooting = 1,
+}
 data.Rose.spawnTiles = {150, 151, 152, 153}
 data.Rose.anotherRoseFlagTile = 15
 data.Rose.sprites = {
