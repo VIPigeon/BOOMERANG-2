@@ -48,7 +48,9 @@ function table.removeElement(t, element)
         end
     end
 
-    table.remove(t, ind)
+    if ind > 0 and ind < #t then
+        table.remove(t, ind)
+    end
 end
 
 function table.reversed(t)

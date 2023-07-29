@@ -17,6 +17,10 @@ function Bullet:new(x, y)
     return obj
 end
 
+function Bullet:setVelocity(x, y)
+    self.vector = {x=x, y=y}
+end
+
 function Bullet:vectorUpdateByTarget(targetCoordX, targetCoordY)
     self.vector = {x = targetCoordX - self.x, y = targetCoordY - self.y}
     self.vector = math.vecNormalize(self.vector)

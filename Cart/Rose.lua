@@ -61,7 +61,7 @@ function Rose:new(x, y, direction)
         hitboxy2 = hitboxy1 + 8
     end
 
-    obj = {
+    local obj = {
         sprite = Rose.sprite:copy(),
         x = x,
         y = y,
