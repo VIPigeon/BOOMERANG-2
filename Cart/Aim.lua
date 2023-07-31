@@ -63,6 +63,51 @@ function aim.get_random_point_of_the_screen_border(a,b)
     return {x = 0, y = 135 - ball}
 end
 
+function aim.chasingBFS(path)
+    local steps = {
+        {x=0, y=1},
+        {x=0, y=-1},
+        {x=1, y=0},
+        {x=-1, y=0}
+        {x=1, y=1},
+        {x=1, y=-1},
+        {x=-1, y=1},
+        {x=-1, y=-1}
+    }
+
+    local queue = {}
+
+    while #queue > 0 do
+        local cur = table.remove(queue, 1)
+        for _, step in ipairs(steps) do
+            local x = cur.x + step.x
+            local y = cur.y + step.y
+            if cash[x][y] then
+                goto continue
+            end
+            if gm.tilemap[x][y] == 'void' then
+                -- trace(v.path)
+                local new_path = table.copy(v.path)
+                table.insert(new_path, {x=x, y=y})
+                assert(not cash[x][y], "cash[v.x][v.y] is true")
+                -- trace(v.y)
+                cash[x][y] = true
+                -- trace(new_path)
+                table.insert(queue, {x=x, y=y, path=table.copy(new_path)})
+            end
+            if gm.tilemap[x][y] == 'player' then
+                -- trace(v.path)
+                local res = table.copy(v.path)
+                table.insert(res, {x=x, y=y})
+                -- cash[v.x][v.y] = true
+                -- table.insert(queue, {x=v.x, y=v.y, path=table.copy(new_path)})
+                return res
+            end
+            ::continue::
+        end
+    end
+end
+
 function aim.bfs(path)
     local steps = {
         {x=0, y=1},
