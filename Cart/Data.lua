@@ -199,6 +199,14 @@ data.Enemy.sprites = {
     defaultSprite = Sprite:new({403}, 1),
     --ahegaoDeath = Sprite:new({386, 387, 388, 389, 390}, 1)
 }
+data.Enemy.sprites.hurtEffect = {
+    hurtingHorizontal = Sprite:new(anim.gen({473, 474, 475, 476, 477, 478, 479}, 3), 1),
+    hurtingVertical = Sprite:new(anim.gen({473 + 16, 474 + 16, 475 + 16, 476 + 16, 477 + 16, 478 + 16, 479 + 16}, 3), 1),
+    hurtingNull0 = Sprite:new({0}, 1),
+    hurtingNull1 = Sprite:new({0}, 1),
+    hurtingNull2 = Sprite:new({0}, 1),
+    hurtingNull3 = Sprite:new({0}, 1),
+}
 
 data.Rose = {
     startingHealth = 50,

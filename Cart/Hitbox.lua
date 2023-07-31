@@ -86,5 +86,12 @@ function Hitbox:get_center()
     }
 end
 
+function Hitbox:getWidth()
+    return self.x2 - self.x1
+end
+
+function Hitbox:getHeight()
+    return self.y2 - self.y1
+end
 
 return Hitbox

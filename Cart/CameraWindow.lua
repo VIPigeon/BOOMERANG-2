@@ -73,6 +73,10 @@ function CameraWindow:shakeStop() -- TODO fix conflict with many shakes
     self.status = 'normal'
 end
 
+local function oneOrMinusOne()
+    return math.random(0, 1) == 0 and -1 or 1
+end
+
 function CameraWindow:update()
     local dx, dy = self:getDirectionToTarget()
 
@@ -97,8 +101,8 @@ function CameraWindow:update()
     ::move::
     if self.status == 'shake' then
         self.area:move(
-            self.shakeMagnitude * math.random(-1, 1),
-            self.shakeMagnitude * math.random(-1, 1)
+            self.shakeMagnitude * oneOrMinusOne(),
+            self.shakeMagnitude * oneOrMinusOne()
         )
     end
     self:moveCamera()

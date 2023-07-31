@@ -85,6 +85,8 @@ function Rose:new(x, y, direction)
         ticks = 0,
         ticksBeforeShot = data.Rose.metronomeTicksReloading,
         ticksShooting = data.Rose.metronomeTicksSpentShooting,
+
+        currentAnimations = {},
     }
 
     setmetatable(obj, self)
@@ -149,6 +151,9 @@ function Rose:update()
             self.sprite:setFrame(frame - 1)
         end
     end
+
+    self:_focusAnimations()
+
 end
 
 function Rose:draw()
@@ -157,6 +162,8 @@ function Rose:draw()
     end
 
     self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
+
+    self:_drawAnimations()
 end
 
 function Rose:shoot()

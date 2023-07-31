@@ -18,8 +18,12 @@ function BulletHell:new(x, y, type)
         hp = data.BulletHell.hp[type],
         hitbox = HitCircle:new(x, y, data.BulletHell.circleDiameter[type]),
         time = 0,
+        
         status = 'idle',
+
         reloadingBullets = {},
+
+        currentAnimations = {}
     }
 
     BulletHell._moveBullets(object, 0)
@@ -79,6 +83,9 @@ function BulletHell:update()
     for i = 1, #self.bullets do
         self.bullets[i]:update()
     end
+
+    self:_focusAnimations()
+
 end
 
 function BulletHell._moveBullets(bullethell, offset)
@@ -117,4 +124,6 @@ function BulletHell:draw()
     for i = 1, #self.bullets do
         self.bullets[i]:draw()
     end
+
+    self:_drawAnimations()
 end

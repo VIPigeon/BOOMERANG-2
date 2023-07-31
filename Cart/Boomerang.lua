@@ -33,7 +33,7 @@ function Boomerang:init(x, y, dx, dy)
     self.x = x; self.y = y
     self.dx = dx; self.dy = dy
     self.speed = data.Boomerang.speed
-    game.camera:shake(0.5)
+    game.camera:shake(0.2)
 end
 
 function Boomerang:focus()
@@ -45,8 +45,6 @@ function Boomerang:update()
     if not self.active then
         return
     end
-
-    self:_hurtAnimHandle()
 
     self.sprite:nextFrame()
 
@@ -96,22 +94,6 @@ function Boomerang:_reverseUpdate()
     local ddx = -1 * kx * dx  -- вторая производная хули ?!??!?!?!
     local ddy = -1 * ky * dy
     self:moveUnclamped(ddx, ddy)
-end
-
-function Boomerang:hurtAnimActivate() -- активирует травмирующий режим бумера
-    self.status = 'justHurting' -- активируется в  Enemy:take_damage(😄)
-end
-
-function Boomerang:hurtAnimDeactivate()
-    self.status = 'no hurting anime'
-end
-
-function Boomerang:_hurtAnimHandle()
-    if self.status == 'justHurting' then
-        self.sprite = data.Boomerang.sprites.hurtingHorizontal
-    elseif self.status == 'no hurting anime' then
-        self.sprite = data.Boomerang.sprites.spinning
-    end
 end
 
 function Boomerang:draw()

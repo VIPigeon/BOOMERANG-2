@@ -11,11 +11,39 @@ function Enemy:new(x, y)
 
         hp = data.Enemy.defaultHP,
         isEnemy = true,
+        currentAnimations = {},
     }
 
     setmetatable(obj, self)
     self.__index = self
     return obj
+end
+
+function Enemy:_drawAnimations()
+    for _, anime in ipairs(self.currentAnimations) do
+        anime:play()
+    end
+end
+
+function Enemy:_focusAnimations()
+    local center = self.hitbox:get_center()
+    local width = self.hitbox:getWidth()
+    local height = self.hitbox:getHeight()
+    -- чтобы анимация проигрывалась вокруг противника равномерно
+
+    local x1 = center.x - width
+    local x2 = center.x
+    local y1 = center.y - height
+    local y2 = center.y 
+    for _, anime in ipairs(self.currentAnimations) do
+        anime:focus(x1, y1, x2, y2)
+    end
+end
+
+function Enemy:draw()
+    self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
+
+    self:_drawAnimations()
 end
 
 function Enemy:update()
@@ -26,6 +54,8 @@ function Enemy:update()
     if self:isDeadCheck() then
         self:die()
     end
+
+    self:_focusAnimations()
 end
 
 function Enemy:die()
@@ -40,6 +70,10 @@ function Enemy:isDeadCheck()
 end
 
 function Enemy:takeDamage(damage)
-    game.boomer:hurtAnimActivate()
+    table.insert(self.currentAnimations, 
+        AnimationOver:new(table.chooseRandomElement(data.Enemy.sprites.hurtEffect), 'randomOn', 'activeOnes')
+    )
+    -- это может оказаться неэффективно 🙄
+
     self.hp = math.fence(self.hp - damage, 0, self.hp)
 end
