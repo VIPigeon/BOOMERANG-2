@@ -117,8 +117,18 @@ function Rose:update()
         self:takeDamage(damage)
     end
 
+    if self.status == 'dying' then
+        self.sprite:nextFrame()
+        if self.sprite:animationEnd() then
+            self:die()
+        end
+        return
+    end
+
     if self:isDeadCheck() then
-        self:die()
+        self.sprite = data.Rose.sprites.death:copy()
+        self.status = 'dying'
+        return
     end
 
     if game.metronome.on_beat then

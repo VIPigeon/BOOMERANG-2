@@ -216,7 +216,8 @@ data.Rose = {
 data.Rose.spawnTiles = {150, 151, 152, 153}
 data.Rose.anotherRoseFlagTile = 15
 data.Rose.sprites = {
-    transition = Sprite:new({389, 391, 393, 395, 397, 421}, 2)
+    transition = Sprite:new({389, 391, 393, 395, 397, 421}, 2),
+    death = Sprite:new(anim.gen60({423, 425, 427, 429}), 2),
 }
 data.Rose.animation_frame_duration_ms = 16
 data.Rose.rose_animation_duration_ms = data.Rose.animation_frame_duration_ms * #data.Rose.sprites.transition.animation
