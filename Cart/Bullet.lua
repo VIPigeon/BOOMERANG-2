@@ -7,7 +7,7 @@ function Bullet:new(x, y)
         x = x,
         y = y,
         vector = {x = 0, y = 0},
-        hitbox = Hitbox:new(x, y, x + 2, y + 2),
+        hitbox = Hitbox:new_with_shift(x, y, x + 2, y + 2, 2, 2),
         speed = data.Bullet.defaultSpeed,
         sprite = Bullet.defaultSprite:copy(),
     }
@@ -57,4 +57,5 @@ end
 
 function Bullet:draw()
     self.sprite:draw(self.x - 1 - gm.x*8 + gm.sx, self.y - 1 - gm.y*8 + gm.sy, self.flip, self.rotate)
+    self.hitbox:draw(1)
 end
