@@ -30,6 +30,8 @@ function Boomerang:new(x, y, dx, dy)
 end
 
 function Boomerang:init(x, y, dx, dy)
+    self.path = aim.bfsMapAdapted({x = 9, y = 10})
+
     self.x = x; self.y = y
     self.dx = dx; self.dy = dy
     self.speed = data.Boomerang.speed
@@ -42,13 +44,15 @@ function Boomerang:focus()
 end
 
 function Boomerang:update()
+    if self.path then
+        aim.visualizePath(self.path)
+    end
+
     if not self.active then
         return
     end
 
     self.sprite:nextFrame()
-
-    self.status = 'no hurting anime'
 
     self.speed = self.speed - self.decelerationThing
     if self.speed < 0 then

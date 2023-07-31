@@ -4,8 +4,8 @@ function SnowMan:new(x, y)
     local object = {
         x = x,
         y = y,
-        speed = data.Player.speed,
-        hp = 100,
+        speed = data.SnowMan.speed,
+        hp = data.SnowMan.hp,
         hitbox = Hitbox:new(x, y, x + 16, y + 16),
         
         status = 'idle',

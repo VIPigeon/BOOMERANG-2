@@ -192,7 +192,7 @@ data.Lever.sprites = {
 
 
 data.Enemy = {
-    defaultHP = 50,
+    defaultHP = 5,
     defaultEnemyFlagTile = 33,
 }
 data.Enemy.sprites = {
@@ -239,6 +239,11 @@ data.Bullet = {
     defaultSpeed = 0.5,
     defaultSprite = Sprite:new({373}, 1),
     reloadAnimation = Sprite:new(anim.gen({373, 0, 374, 375, 376}, 4), 1),
+}
+
+data.Snowman = {
+    speed = data.Player.speed + 0.01,
+    hp = 100,
 }
 
 return data
