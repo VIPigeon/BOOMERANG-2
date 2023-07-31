@@ -50,4 +50,23 @@ function HitCircle:draw(color)
     circ(self.x + 2 - 8*gm.x + gm.sx, self.y + 2 - 8*gm.y + gm.sy, (self.d/2), color)
 end
 
+function HitCircle:get_center()
+    local x1 = self.x
+    local x2 = self.x + self.d
+    local y1 = self.y
+    local y2 = self.y + self.d
+    return {
+        x = x1 + (x2 - x1) / 2,
+        y = y1 + (y2 - y1) / 2
+    }
+end
+
+function HitCircle:getWidth()
+    return self.d
+end
+
+function HitCircle:getHeight()
+    return self.d
+end
+
 return HitCircle

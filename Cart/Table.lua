@@ -59,4 +59,25 @@ function table.reversed(t)
     return res
 end
 
+function table.length(t) -- 🤓
+    local counter = 0
+    for _ in pairs(t) do
+        counter = counter + 1
+    end
+    return counter
+end
+
+function table.chooseRandomElement(t)
+    local rand = math.random(table.length(t))
+    local ind = 1
+    local choosen = nil 
+    for _, elem in pairs(t) do
+        if ind == rand then
+            choosen = elem
+        end
+        ind = ind + 1
+    end
+    return choosen
+end
+
 return table

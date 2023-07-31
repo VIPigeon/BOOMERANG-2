@@ -19,14 +19,10 @@ function BulletHell:new(x, y)
         time = 0,
         
         status = 'idle',
-        animationStatus = 'no anime',
 
         reloadingBullets = {},
 
-        hurtAnimations = {
-            AnimationOver:new(data.Enemy.animations.hurtingHorizontal), 
-            AnimationOver:new(data.Enemy.animations.hurtingVertical)
-        },
+        currentAnimations = {}
     }
     -- object.hitbox = object.hitcircle.hb
 
@@ -87,7 +83,8 @@ function BulletHell:update()
         self.bullets[i]:update()
     end
 
-    self:_statusDependingUpdate()
+    self:_focusAnimations()
+
 end
 
 function BulletHell._moveBullets(bullethell, offset)
@@ -127,7 +124,5 @@ function BulletHell:draw()
         self.bullets[i]:draw()
     end
 
-    for _, hurtAnime in ipairs(self.hurtAnimations) do -- отрисуем все анимации вреда
-        hurtAnime:play()
-    end
+    self:_drawAnimations()
 end

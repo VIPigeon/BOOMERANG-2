@@ -80,17 +80,13 @@ function Rose:new(x, y, direction)
         hp = 50,
 
         status = 'idle',
-        animationStatus = 'no anime',
 
         shooting = false,
         ticks = 0,
         ticksBeforeShot = 1,
         ticksShooting = 2,
 
-        hurtAnimations = {
-            AnimationOver:new(data.Enemy.animations.hurtingHorizontal), 
-            AnimationOver:new(data.Enemy.animations.hurtingVertical)
-        },
+        currentAnimations = {},
     }
 
     setmetatable(obj, self)
@@ -156,18 +152,8 @@ function Rose:update()
         end
     end
 
-    self:_statusDependingUpdate()
-end
+    self:_focusAnimations()
 
-function Rose:_statusDependingUpdate()
-    if self.animationStatus == 'hurt' then
-        for _, hurtAnime in ipairs(self.hurtAnimations) do -- включим все анимации вреда
-            hurtAnime:focus(self.x + 8, self.y + 8)
-            hurtAnime:activateSingleTime()
-        end
-    end
-
-    self.animationStatus = 'no anime'
 end
 
 function Rose:draw()
@@ -177,9 +163,7 @@ function Rose:draw()
 
     self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
 
-    for _, hurtAnime in ipairs(self.hurtAnimations) do -- отрисуем все анимации вреда
-        hurtAnime:play()
-    end
+    self:_drawAnimations()
 end
 
 function Rose:shoot()
