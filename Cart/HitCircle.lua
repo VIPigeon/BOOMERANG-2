@@ -46,6 +46,10 @@ function HitCircle:set_xy(x, y)
     self.hb:set_xy(x, y)
 end
 
+function HitCircle:drawOutline(color)
+    circb(self.x + 2 - 8*gm.x + gm.sx, self.y + 2 - 8*gm.y + gm.sy, (self.d/2), color)
+end
+
 function HitCircle:draw(color)
     circ(self.x + 2 - 8*gm.x + gm.sx, self.y + 2 - 8*gm.y + gm.sy, (self.d/2), color)
 end

@@ -14,15 +14,13 @@ function BulletHell:new(x, y, type)
         bullets = bullets,
         bulletCount = data.BulletHell.bulletCount[type],
         bulletSpeed = data.BulletHell.bulletSpeed[type],
+        deathBulletSpeed = data.BulletHell.deathBulletSpeed[type],
         bulletRotateSpeed = data.BulletHell.bulletRotateSpeed[type],
         hp = data.BulletHell.hp[type],
         hitbox = HitCircle:new(x, y, data.BulletHell.circleDiameter[type]),
         time = 0,
-        
-        status = 'idle',
 
         reloadingBullets = {},
-
         currentAnimations = {}
     }
 
@@ -53,7 +51,6 @@ function BulletHell:_shoot()
     bull.y = self.bullets[byTouchId].y
     bull.hitbox:set_xy(bull.x, bull.y)
     bull:vectorUpdateByTarget(game.player.x, game.player.y)
-    self.status = 'reload'
 end
 
 function BulletHell:_createShootBullet()
@@ -66,7 +63,29 @@ function BulletHell:_createShootBullet()
     return bull
 end
 
+function BulletHell:launchBulletsAround()
+    for i = 1, #self.bullets do
+        local bullet = self:_createShootBullet()
+        bullet.x = self.bullets[i].x
+        bullet.y = self.bullets[i].y
+        bullet.hitbox:set_xy(bullet.x, bullet.y)
+
+        local directionX = bullet.x - self.x
+        local directionY = bullet.y - self.y
+
+        local speed = self.deathBulletSpeed
+
+        bullet:setVelocity(speed * directionX, speed * directionY)
+    end
+end
+
 function BulletHell:update()
+    if self:isDeadCheck() then
+        self:launchBulletsAround()
+        self:die()
+        return
+    end
+
     if game.metronome.on_beat then
         self:_shoot()
     end
@@ -76,16 +95,11 @@ function BulletHell:update()
         self:takeDamage(damage)
     end
 
-    if self:isDeadCheck() then
-        self:die()
-    end
-
     for i = 1, #self.bullets do
         self.bullets[i]:update()
     end
 
     self:_focusAnimations()
-
 end
 
 function BulletHell._moveBullets(bullethell, offset)
@@ -121,6 +135,7 @@ function BulletHell:draw()
     end
 
     self.hitbox:draw(14)
+
     for i = 1, #self.bullets do
         self.bullets[i]:draw()
     end

@@ -228,7 +228,8 @@ data.BulletHell = {
     bulletRotateSpeed = {1,1,1},
     bulletCount = {8, 12, 16},
     bulletSpeed = {0.6, 0.7, 0.8},
-    hp = {100, 200, 400}
+    deathBulletSpeed = {0.7, 0.2, 0.1},
+    hp = {1, 1, 1}
 }
 data.BulletHell.spawnTiles = {48, 49, 50}
 data.BulletHell.sprites = {
