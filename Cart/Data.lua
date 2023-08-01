@@ -194,8 +194,13 @@ data.solidTiles = {
     208, 209, 210,
     224, 225, 226,
     240, 241, 242,
+    204, 205, 206,
+    220, 221, 222,
 }
-
+-- table.concatTable(data.solidTiles,) --> (ノ｀Дa почему??)ノ
+-- for i, t in ipairs(data.solidTiles) do
+--     trace(t..' ')
+-- end
 
 data.Lever = {}
 data.Lever.sprites = {
@@ -205,7 +210,7 @@ data.Lever.sprites = {
 
 
 data.Enemy = {
-    defaultHP = 50,
+    defaultHP = 5,
     defaultEnemyFlagTile = 33,
 }
 data.Enemy.sprites = {
@@ -256,5 +261,14 @@ data.Bullet = {
     defaultSprite = Sprite:new({373}, 1),
     reloadAnimation = Sprite:new(anim.gen({373, 0, 374, 375, 376}, 4), 1),
 }
+
+data.Snowman = {
+    speed = data.Player.speed + 0.01,
+    hp = 100000,
+}
+
+data.Snowman.spawnTiles = -1
+
+data.Snowman.sprites = -1
 
 return data

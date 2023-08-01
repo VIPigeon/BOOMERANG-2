@@ -89,28 +89,28 @@ local function createDoors(levers)
     return doors
 end
 
-enemyRespawnTiles = {}
+game.enemyRespawnTiles = {}
 local function createEnemies()
-    if #enemyRespawnTiles == 0 then
+    if #game.enemyRespawnTiles == 0 then
         for x = 0, MAP_WIDTH do
             for y = 0, MAP_HEIGHT do
                 if mget(x, y) == data.Enemy.defaultEnemyFlagTile then
-                    table.insert(enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='enemy'})
+                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='enemy'})
                     mset(x, y, C0)
                 end
 
                 if table.contains(data.Rose.spawnTiles, mget(x, y)) then
-                    table.insert(enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='rose'})
+                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='rose'})
                     mset(x, y, C0)
                 end
 
                 if table.contains(data.BulletHell.spawnTiles, mget(x, y)) then
-                    table.insert(enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='bullethell'})
+                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='bullethell'})
                     mset(x, y, C0)
                 end
 
                 if table.contains(data.Taraxacum.staticTaraxacumSpawnTile, mget(x, y)) then
-                    table.insert(enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='taraxacum'})
+                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='taraxacum'})
                     mset(x, y, C0)
                 end
             end
@@ -121,8 +121,8 @@ local function createEnemies()
         return spawnTileId - data.Rose.spawnTiles[1]
     end
 
-    enemem = {}
-    for _, respawnTile in ipairs(enemyRespawnTiles) do
+    local enemem = {}
+    for _, respawnTile in ipairs(game.enemyRespawnTiles) do
         local enemy
         if respawnTile.type == 'enemy' then
             enemy = Enemy:new(8 * respawnTile.x, 8 * respawnTile.y)
