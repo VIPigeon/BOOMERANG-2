@@ -158,7 +158,7 @@ data.Door.sprite = {
 data.Taraxacum = {
     diameter = 4,
     speed = 2,
-    color = 14,
+    color = 12,
 
     staticTaraxacumSpawnTile = { 34 },
 

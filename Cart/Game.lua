@@ -199,8 +199,6 @@ function game.restart()
     game.updatables = {}
     game.collideables = {}
 
-    game.bullets = {}
-
     local metronome = createMetronome()
     local enemies = createEnemies()
     local boomerang = createBoomerang(spawnpoint.x, spawnpoint.y)
@@ -244,9 +242,16 @@ function game.draw()
     end
 end
 
+game.deleteSchedule = {}
+
 function game.update()
     for _, updatable in ipairs(game.updatables) do
         updatable:update()
+    end
+
+    for _, deleted in ipairs(game.deleteSchedule) do
+        table.removeElement(game.updatables, deleted)
+        table.removeElement(game.drawables, deleted)
     end
 
     Time.update()

@@ -36,8 +36,7 @@ end
 
 local count = 0
 function Bullet:_destroy()
-    table.removeElement(game.updatables, self)
-    table.removeElement(game.drawables, self)
+    table.insert(game.deleteSchedule, self)
 end
 
 function Bullet:_kill()
