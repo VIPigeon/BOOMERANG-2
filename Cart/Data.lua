@@ -241,9 +241,19 @@ data.Bullet = {
     reloadAnimation = Sprite:new(anim.gen({373, 0, 374, 375, 376}, 4), 1),
 }
 
+data.Dandelion = {
+    circleDiameter = 8,
+    bulletCount = 16,
+    bulletSpeed = 1.0,
+}
+
+data.Dandelion.sprites = -1
+
 data.Snowman = {
     speed = data.Player.speed + 0.01,
     hp = 100,
 }
+
+data.Snowman.sprites = -1
 
 return data
