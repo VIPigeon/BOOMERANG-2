@@ -68,6 +68,10 @@ function math.inRangeNotIncl(num, leftBoarder, rightBoarder)
     return num > leftBoarder and num < rightBoarder
 end
 
+function math.inRangeIncl(num, leftBoarder, rightBoarder)
+    return num >= leftBoarder and num <= rightBoarder
+end
+
 -- function math.sq_distance( ... )
 --     -- body
 -- end

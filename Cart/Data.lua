@@ -194,10 +194,8 @@ data.solidTiles = {
     208, 209, 210,
     224, 225, 226,
     240, 241, 242,
-    204, 205, 206,
-    220, 221, 222,
 }
--- table.concatTable(data.solidTiles,) --> (ノ｀Дa почему??)ノ
+-- table.concatTable(data.solidTiles,) --> (ノ｀Дa почему??)ノ - да потому!
 -- for i, t in ipairs(data.solidTiles) do
 --     trace(t..' ')
 -- end
@@ -264,11 +262,14 @@ data.Bullet = {
 
 data.Snowman = {
     speed = data.Player.speed + 0.01,
-    hp = 100000,
+    hp = 10,
 }
 
-data.Snowman.spawnTiles = -1
+data.Snowman.spawnTiles = {65}
 
-data.Snowman.sprites = -1
+data.Snowman.sprites = {
+    chill = Sprite:new({316}, 2),
+    death = Sprite:new(anim.gen60({312,314,312,314,312}), 2)
+}
 
 return data
