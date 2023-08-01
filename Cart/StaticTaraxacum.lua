@@ -20,6 +20,12 @@ function StaticTaraxacum:_checkCollision()
     end
 end
 
+function StaticTaraxacum:_destroy()
+    table.removeElement(game.updatables, self)
+    table.removeElement(game.drawables, self)
+    table.removeElement(game.collideables, self)
+end
+
 function StaticTaraxacum:_move()
     -- 😣😣😣
 end
