@@ -163,10 +163,8 @@ function aim.bfsMapAdapted(startPos)
             if (y < 0) or (y > 135) then
                 break
             end
-            
-            trace(gm.getTileType8(x,y))
 
-            if gm.getTileType8(x, y) == 1 then
+            if gm.getTileType8(x, y) ~= 0 then --двери не твердые 🙈
                 visited[x][y] = true
                 goto continue
             end
@@ -179,7 +177,6 @@ function aim.bfsMapAdapted(startPos)
                 --trace('enq '..x..' '..y) --🤭
                 
                 local newPath = table.copy(cur.path)
-                --trace(newPath)
                 table.insert(newPath, {x = x, y = y})
 
                 queue:enqueue({x = x, y = y, path = newPath})
@@ -190,7 +187,7 @@ function aim.bfsMapAdapted(startPos)
         end
     end
 
-    error("findn't the way")
+    error("findn't the way") -- when player snuggled to the wall
 end
 
 -- function aim.bfs(path)

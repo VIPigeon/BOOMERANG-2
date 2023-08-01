@@ -8,6 +8,7 @@ gm.sy = 0 -- start map Y >:(
 TileType = {
     Void = 0,
     Solid = 1,
+    Enemy = 2,
 }
 
 function gm.getTileId(x,y)
@@ -27,8 +28,16 @@ end
 function gm.getTileType8(x, y)  -- x, y даются как координаты тайла на глобальной карте
     local tileId = mget(x, y)
 
-    if table.contains(data.solidTiles, tileId) then
+    if table.contains(data.solidTiles, tileId) then --двери не твердые 🙈
         return TileType.Solid
+    else
+        
+        for _, entile in ipairs(game.enemyRespawnTiles) do -- проверяем на столкновение с врагами.（づ￣3￣）づ╭(они тоже твердые)～
+            --trace(entile.x..' '..entile.y..' '..x..' '..y..' ')
+            if (entile.x == x) and (entile.y == y) then
+                return TileType.Enemy
+            end
+        end
     end
     return TileType.Void
 end
