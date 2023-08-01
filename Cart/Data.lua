@@ -160,6 +160,8 @@ data.Taraxacum = {
     speed = 2,
     color = 12,
 
+    bodyColor = 3,
+    staticBodyLength = 5,
     staticTaraxacumSpawnTile = { 34 },
 
     deathBulletSpread = 1,

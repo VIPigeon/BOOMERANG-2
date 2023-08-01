@@ -132,7 +132,8 @@ local function createEnemies()
             local type = respawnTile.tileid - data.BulletHell.spawnTiles[1] + 1
             enemy = BulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, type)
         elseif respawnTile.type == 'taraxacum' then
-            enemy = StaticTaraxacum:new(8 * respawnTile.x, 8 * respawnTile.y)
+            local bodyLength = data.Taraxacum.staticBodyLength
+            enemy = StaticTaraxacum:new(8 * respawnTile.x, 8 * respawnTile.y, bodyLength)
         end
         table.insert(enemem, enemy)
     end
