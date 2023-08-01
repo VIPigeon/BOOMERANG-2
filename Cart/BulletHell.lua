@@ -54,7 +54,7 @@ function BulletHell:_shoot()
 end
 
 function BulletHell:_createShootBullet()
-    local bull = Bullet:new(0, 0)
+    local bull = Taraxacum:new(0, 0)
     bull.speed = self.bulletSpeed
     
     table.insert(game.drawables, bull)

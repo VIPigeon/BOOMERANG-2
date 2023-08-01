@@ -155,6 +155,17 @@ data.Door.sprite = {
     rightPart = -1,
 }
 
+data.Taraxacum = {
+    diameter = 2,
+    speed = 2,
+    color = 14,
+
+    deathBulletSpread = 1,
+    deathBulletCount = 12,
+    deathBulletSpeed = 0.5,
+    deathBulletSprite = Sprite:new({378}, 1),
+}
+
 local turnOnAnimationFrames = {}
 for i = 213, 217 do
     table.insert(turnOnAnimationFrames, i)
