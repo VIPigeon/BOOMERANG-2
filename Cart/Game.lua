@@ -98,20 +98,19 @@ local function createEnemies()
                     table.insert(enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='enemy'})
                     mset(x, y, C0)
                 end
-            end
-        end
-        for x = 0, MAP_WIDTH do
-            for y = 0, MAP_HEIGHT do
+
                 if table.contains(data.Rose.spawnTiles, mget(x, y)) then
                     table.insert(enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='rose'})
                     mset(x, y, C0)
                 end
-            end
-        end
-        for x = 0, MAP_WIDTH do
-            for y = 0, MAP_HEIGHT do
+
                 if table.contains(data.BulletHell.spawnTiles, mget(x, y)) then
                     table.insert(enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='bullethell'})
+                    mset(x, y, C0)
+                end
+
+                if table.contains(data.Taraxacum.staticTaraxacumSpawnTile, mget(x, y)) then
+                    table.insert(enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='taraxacum'})
                     mset(x, y, C0)
                 end
             end
@@ -132,6 +131,8 @@ local function createEnemies()
         elseif respawnTile.type == 'bullethell' then
             local type = respawnTile.tileid - data.BulletHell.spawnTiles[1] + 1
             enemy = BulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, type)
+        elseif respawnTile.type == 'taraxacum' then
+            enemy = StaticTaraxacum:new(8 * respawnTile.x, 8 * respawnTile.y)
         end
         table.insert(enemem, enemy)
     end

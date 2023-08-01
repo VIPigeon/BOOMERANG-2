@@ -34,6 +34,7 @@ function Bullet:_move()
     self.hitbox:set_xy(self.x, self.y)
 end
 
+local count = 0
 function Bullet:_destroy()
     table.removeElement(game.updatables, self)
     table.removeElement(game.drawables, self)
@@ -42,6 +43,7 @@ end
 function Bullet:_kill()
     if self.hitbox:collide(game.player.hitbox) then
         game.player:die()
+        self:_destroy()
     end
 end
 

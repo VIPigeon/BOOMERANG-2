@@ -1,7 +1,7 @@
 Taraxacum = table.copy(Bullet)
 
 function Taraxacum:new(x, y)
-    local obj = {
+    local object = {
         x = x,
         y = y,
         vector = {x = 0, y = 0},
@@ -9,9 +9,9 @@ function Taraxacum:new(x, y)
         speed = data.Taraxacum.speed,
     }
 
-    setmetatable(obj, self)
+    setmetatable(object, self)
     self.__index = self
-    return obj
+    return object
 end
 
 function Taraxacum:_launchBullets()
@@ -35,8 +35,8 @@ function Taraxacum:_createBullet(x, y)
     local bullet = Bullet:new(x, y, data.Taraxacum.deathBulletSprite)
     bullet.speed = data.Taraxacum.deathBulletSpeed
     
-    table.insert(game.drawables, bullet)
     table.insert(game.updatables, bullet)
+    table.insert(game.drawables, bullet)
 
     return bullet
 end

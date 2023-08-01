@@ -160,6 +160,8 @@ data.Taraxacum = {
     speed = 2,
     color = 14,
 
+    staticTaraxacumSpawnTile = { 34 },
+
     deathBulletSpread = 1,
     deathBulletCount = 12,
     deathBulletSpeed = 0.5,
@@ -243,6 +245,7 @@ data.BulletHell = {
     deathTimeMs = 1000,
     hp = {1, 1, 1}
 }
+
 data.BulletHell.spawnTiles = {48, 49, 50}
 data.BulletHell.sprites = {
     defaultSprite = 999,
