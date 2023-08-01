@@ -9,7 +9,7 @@ function Bullet:new(x, y, sprite)
         x = x,
         y = y,
         vector = {x = 0, y = 0},
-        hitbox = Hitbox:new_with_shift(x, y, x + 2, y + 2, 2, 2),
+        hitbox = HitCircle:new(x, y, 2), -- Hitbox:new_with_shift(x, y, x + 2, y + 2, 2, 2),
         speed = data.Bullet.defaultSpeed,
         sprite = sprite:copy(),
     }
