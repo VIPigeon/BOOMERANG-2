@@ -156,7 +156,7 @@ data.Door.sprite = {
 }
 
 data.Taraxacum = {
-    diameter = 2,
+    diameter = 4,
     speed = 2,
     color = 14,
 

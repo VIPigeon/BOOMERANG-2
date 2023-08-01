@@ -42,6 +42,11 @@ function Taraxacum:_createBullet(x, y)
 end
 
 function Taraxacum:_checkCollision()
+    if self.hitbox:collide(game.boomer.hitbox) then
+        self:_launchBullets()
+        self:_destroy()
+    end
+
     if not self.hitbox:mapCheck() then
         self:_launchBullets()
         self:_destroy()
