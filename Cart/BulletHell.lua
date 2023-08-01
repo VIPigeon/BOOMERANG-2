@@ -19,6 +19,7 @@ function BulletHell:new(x, y, type)
         hp = data.BulletHell.hp[type],
         hitbox = HitCircle:new(x, y, data.BulletHell.circleDiameter[type]),
         time = 0,
+        status = '',
 
         reloadingBullets = {},
         currentAnimations = {}
@@ -80,9 +81,21 @@ function BulletHell:launchBulletsAround()
 end
 
 function BulletHell:update()
+    if self.status == 'dying' then
+        self.deathTick()
+        return
+    end
+
     if self:isDeadCheck() then
         self:launchBulletsAround()
-        self:die()
+        local time = 0
+        self.status = 'dying'
+        self.deathTick = function()
+            time = time + Time.dt()
+            if time > data.BulletHell.deathTimeMs then
+                self:die()
+            end
+        end
         return
     end
 
@@ -113,6 +126,11 @@ function BulletHell._moveBullets(bullethell, offset)
 end
 
 function BulletHell:draw()
+    if self.status == 'dying' then
+        self.hitbox:drawOutline(14)
+        return
+    end
+
     if true then
         local progress = 1 - (game.metronome:msBeforeNextBeat() / game.metronome.ms_per_beat)
 

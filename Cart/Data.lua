@@ -240,6 +240,7 @@ data.BulletHell = {
     bulletCount = {8, 12, 16},
     bulletSpeed = {0.6, 0.7, 0.8},
     deathBulletSpeed = {0.7, 0.2, 0.1},
+    deathTimeMs = 1000,
     hp = {1, 1, 1}
 }
 data.BulletHell.spawnTiles = {48, 49, 50}
