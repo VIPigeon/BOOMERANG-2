@@ -48,7 +48,7 @@ function table.removeElement(t, element)
         end
     end
 
-    if ind > 0 and ind < #t then
+    if ind > 0 and ind <= #t then -- 😁😁😁😁 Тут был '<' я его полтора часа исправлял на '<='
         table.remove(t, ind)
     end
 end
