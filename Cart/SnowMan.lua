@@ -6,6 +6,7 @@ function Snowman:new(x, y)
         y = y,
         speed = data.Snowman.speed,
         hp = data.Snowman.hp,
+        sprite = data.Snowman.sprites.chill,
         hitbox = Hitbox:new(x, y, x + 16, y + 16),
         
         theWay = nil,
@@ -21,11 +22,12 @@ function Snowman:new(x, y)
 end
 
 function Snowman:_moveOneTile()
-    if #self.theWay ~= 0 then
-        self.x = path[#self.theWay - 1].x
-        self.y = path[#self.theWay - 1].y
+    if #self.theWay > 3 then -- широкий парень уважает личное пространство
+        self.x = 8 * self.theWay[2].x
+        self.y = 8 * self.theWay[2].y
+        self.hitbox:set_xy(self.x, self.y)
     else
-        trace('let me hug yu!!')
+        trace('let me hug yu🤗!!')
     end
 end
 
@@ -40,7 +42,7 @@ function Snowman:_onBeat()
 end
 
 function Snowman:_setPath() 
-    self.theWay = aim.bfsMapAdapted(self.x, self.y)
+    self.theWay = aim.bfsMapAdaptedV2x2({x = self.x // 8, y = self.y // 8})
 end
 
 function Snowman:update()
@@ -58,15 +60,23 @@ function Snowman:update()
     end
 
     if self:isDeadCheck() then
-        self.sprite = data.Rose.sprites.death:copy()
+        self.sprite = data.Snowman.sprites.death:copy()
         self.status = 'dying'
         return
     end
 
     if game.metronome.on_beat then
-        self:_getPath() 
+        self:_setPath() 
         self:_onBeat()
     end
 
     self:_focusAnimations()
+end
+
+function Snowman:draw()
+    aim.visualizePath(self.theWay)
+
+    self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
+
+    self:_drawAnimations()
 end

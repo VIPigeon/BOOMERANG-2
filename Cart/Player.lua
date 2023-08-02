@@ -21,7 +21,7 @@ function Player:new(x, y, boomerang)
         dy = 0,
         speed = data.Player.speed,
         flip = 0,  -- направление при отрисовке спрайта
-        hitbox = Hitbox:new_with_shift(x, y, x+4, y+6, 1, 1),
+        hitbox = Hitbox:new_with_shift(x, y, x+3, y+6, 0, 0), -- shift портит малину bfs
         boomerang = boomerang,
         boomerangActive = false,
         status = 'alive',

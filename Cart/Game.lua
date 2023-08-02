@@ -113,6 +113,11 @@ local function createEnemies()
                     table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='taraxacum'})
                     mset(x, y, C0)
                 end
+
+                if table.contains(data.Snowman.spawnTiles, mget(x, y)) then
+                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='snowman'})
+                    mset(x, y, C0)
+                end
             end
         end
     end
@@ -134,6 +139,8 @@ local function createEnemies()
         elseif respawnTile.type == 'taraxacum' then
             local bodyLength = data.Taraxacum.staticBodyLength
             enemy = StaticTaraxacum:new(8 * respawnTile.x, 8 * respawnTile.y, bodyLength)
+        elseif respawnTile.type == 'snowman' then
+            enemy = Snowman:new(8 * respawnTile.x, 8 * respawnTile.y)
         end
         table.insert(enemem, enemy)
     end
