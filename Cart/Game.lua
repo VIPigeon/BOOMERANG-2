@@ -49,7 +49,7 @@ local function createLevers()
                 table.insert(leverTiles, {x=x, y=y})
                 local lwr = Lever:new(x * 8, y * 8)
 
-                local doorWiresLever = DoorMechanic.findConnection(x - 1, y - 1) -- подыщем провода и коорды двери
+                local doorWiresLever = DoorMechanic.findConnection(x, y) -- подыщем провода и коорды двери
 
                 lwr.wires = doorWiresLever.wires
                 lwr.door = doorWiresLever.door -- временные координаты, в создании дверей заменится на настоящую дверь
@@ -59,6 +59,11 @@ local function createLevers()
         end
     end
 
+    for _, lever in ipairs(levers) do
+        trace('L-V '..lever.x..' '..lever.y)
+        trace('D-R '..lever.door.x..' '..lever.door.y)
+    end
+
     return levers
 end
 
@@ -66,7 +71,7 @@ local function createDoors(levers)
     local doors = {}
     local doorTiles = {}
 
-    for x = 0, 139 do
+    for x = 0, 239 do
         for y = 0, 135 do
             local tileType = gm.getTileId(x, y)
             if table.contains(data.mapConstants.doorIds, tileType) then -- what is 204? 2004 maybe?
@@ -84,6 +89,10 @@ local function createDoors(levers)
                 end
             end
         end
+    end
+
+    for _, door in ipairs(doors) do
+        trace('N-D '..door.x..' '..door.y)
     end
 
     return doors
