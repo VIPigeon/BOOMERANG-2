@@ -2,7 +2,6 @@ BulletHell = table.copy(Enemy)
 
 function BulletHell:new(x, y, type)
     local bullets = {}
-    trace(type)
     for i = 1, data.BulletHell.bulletCount[type] do
         bullets[i] = HellBullet:new()
     end
