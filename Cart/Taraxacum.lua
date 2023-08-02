@@ -5,7 +5,7 @@ function Taraxacum:new(x, y)
         x = x,
         y = y,
         vector = {x = 0, y = 0},
-        hitbox = HitCircle:new(x, y, data.Taraxacum.diameter),
+        hitbox = HitCircle:new(x, y, data.Taraxacum.radius),
         speed = data.Taraxacum.speed,
     }
 

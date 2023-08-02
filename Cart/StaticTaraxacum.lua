@@ -27,7 +27,6 @@ end
 function StaticTaraxacum:_destroy()
     table.removeElement(game.updatables, self)
     table.removeElement(game.drawables, self)
-    table.removeElement(game.collideables, self)
 
     local r = self.radius
 end

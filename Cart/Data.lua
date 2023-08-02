@@ -158,6 +158,7 @@ data.Door.sprite = {
 data.Taraxacum = {
     speed = 2,
     color = 12,
+    radius = 2,
 
     staticRadius = 3,
     bodyColor = 3,
