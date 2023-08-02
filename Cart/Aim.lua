@@ -133,16 +133,16 @@ function aim.bfsMapAdaptedV2x2(startPos)
     local steps = {
         {x = 0, y = 1},
         {x = 0, y =-1},
-            --{x = 1, y =-1},
+            {x = 1, y =-1},
         {x = 1, y = 0},    
-            --{x = 1, y = 1},
-            --{x =-1, y =-1},
+            {x = 1, y = 1},
+            {x =-1, y =-1},
         {x =-1, y = 0},
-            --{x =-1, y = 1},
+            {x =-1, y = 1},
     }
 
-    local px = game.player:getPositionTile().x
-    local py = game.player:getPositionTile().y
+    local px = game.player.hitbox:get_center().x // 8
+    local py = game.player.hitbox:get_center().y // 8
 
     local queue = Queue:new()
     queue:enqueue({x = startPos.x, y = startPos.y, path = { {x = startPos.x, y = startPos.y} }})
@@ -159,32 +159,34 @@ function aim.bfsMapAdaptedV2x2(startPos)
             local x = cur.x + step.x
             local y = cur.y + step.y
 
-            if (x < 0 + 1) or (x > 240 - 1) then
+            if (x < 0) or (x > 240 - 1) then
+                --trace('wops'..x..' '..y)
                 break
             end
-            if (y < 0 + 1) or (y > 135 - 1) then
+            if (y < 0) or (y > 135 - 1) then
+                --trace("(("..x..' '..y)
                 break
             end
 
             if gm.isBlockingBfs(x, y) then --двери не твердые 🙈 потому что на карте их нет
                     visited[x][y] = true
                     goto continue
+            end
+                if gm.isBlockingBfs(x + 1, y) then
+                    visited[x + 1][y] = true
+                    goto continue
                 end
-                -- if gm.isBlockingBfs(x + 1, y) then
-                --     visited[x + 1][y] = true
-                --     goto continue
-                -- end
-                -- if gm.isBlockingBfs(x, y + 1) then
-                --     visited[x][y + 1] = true
-                --     goto continue
-                -- end
-                -- if gm.isBlockingBfs(x + 1, y + 1) then
-                --     visited[x + 1][y + 1] = true
-                --     goto continue
-                -- end
+                if gm.isBlockingBfs(x, y + 1) then
+                    visited[x][y + 1] = true
+                    goto continue
+                end
+                if gm.isBlockingBfs(x + 1, y + 1) then
+                    visited[x + 1][y + 1] = true
+                    goto continue
+                end
                 
 
-            if (x == px) and (y == py) then
+            if math.inRangeIncl(x, px - 1, px + 1) and math.inRangeIncl(y, py - 1, py + 1) then
                 --trace('I chased you 🤗'..' '..x..' '..y..' !!') -- 🤗
                 table.insert(cur.path, {x = x, y = y})
                 return cur.path
@@ -202,7 +204,12 @@ function aim.bfsMapAdaptedV2x2(startPos)
         end
     end
 
-    error("findn't the way") -- when player snuggled to the wall
+    -- if math.inRangeIncl(cur.x, px - 1, px + 1) and math.inRangeIncl(cur.y, py - 1, py + 1) then
+    --     trace('woooow')
+    --     return cur.path
+    -- end
+
+    --error("findn't the way") -- when player snuggled to the wall
 end
 
 -- function aim.bfs(path)

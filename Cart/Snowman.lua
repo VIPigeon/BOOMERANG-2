@@ -14,6 +14,7 @@ function Snowman:new(x, y)
         status = 'idle',
 
         currentAnimations = {},
+        outOfChaseTime = 0,
     }
 
     setmetatable(object, self)
@@ -22,9 +23,13 @@ function Snowman:new(x, y)
 end
 
 function Snowman:_moveOneTile()
-    if #self.theWay > 3 then -- широкий парень уважает личное пространство
+    if #self.theWay > 2 and self.status == 'chasing 🧐' then -- широкий парень уважает личное пространство
         self.x = 8 * self.theWay[2].x
         self.y = 8 * self.theWay[2].y
+        self.hitbox:set_xy(self.x, self.y)
+    elseif self.outOfChaseTime < #self.theWay - 2 and self.status == 'lost him 😠' then
+        self.x = 8 * self.theWay[2 + self.outOfChaseTime].x
+        self.y = 8 * self.theWay[2 + self.outOfChaseTime].y
         self.hitbox:set_xy(self.x, self.y)
     else
         trace('let me hug yu🤗!!')
@@ -40,10 +45,19 @@ end
 
 function Snowman:_onBeat()
     self:_moveOneTile()
+    trace(self.status)
 end
 
 function Snowman:_setPath() 
-    self.theWay = aim.bfsMapAdaptedV2x2({x = self.x // 8, y = self.y // 8})
+    local way = aim.bfsMapAdaptedV2x2({x = self.x // 8, y = self.y // 8})
+    if way then
+        self.status = 'chasing 🧐'
+        self.theWay = way
+        self.outOfChaseTime = 0
+    else
+        self.status = 'lost him 😠'
+        self.outOfChaseTime = self.outOfChaseTime + 1
+    end
 end
 
 function Snowman:update()
