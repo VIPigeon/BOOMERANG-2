@@ -137,12 +137,19 @@ local function createEnemies()
             local type = respawnTile.tileid - data.BulletHell.spawnTiles[1] + 1
             enemy = BulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, type)
         elseif respawnTile.type == 'taraxacum' then
+            local radius = data.Taraxacum.staticRadius
             local bodyLength = data.Taraxacum.staticBodyLength
-            enemy = StaticTaraxacum:new(8 * respawnTile.x, 8 * respawnTile.y, bodyLength)
+            -- Это чудо костыль, чтобы одуванчик не попадал в collideables (нельзя) 🙄🙄
+            local tara = StaticTaraxacum:new(8 * respawnTile.x, 8 * respawnTile.y, radius, bodyLength)
+            table.insert(game.updatables, tara)
+            table.insert(game.drawables, tara)
         elseif respawnTile.type == 'snowman' then
             enemy = Snowman:new(8 * respawnTile.x, 8 * respawnTile.y)
         end
-        table.insert(enemem, enemy)
+
+        if enemy then
+            table.insert(enemem, enemy)
+        end
     end
 
     return enemem
@@ -199,6 +206,7 @@ function game.restart()
     game.drawables = {}
     game.updatables = {}
     game.collideables = {}
+    game.lineDrawer = LineDrawer:new()
 
     local metronome = createMetronome()
     local enemies = createEnemies()
@@ -217,6 +225,7 @@ function game.restart()
 
     table.concatTable(game.drawables, checkpoints)
     table.concatTable(game.drawables, levers)
+    table.insert(game.drawables, game.lineDrawer)
     table.concatTable(game.drawables, enemies)
     table.insert(game.drawables, player)
     table.insert(game.drawables, boomerang)
@@ -224,6 +233,7 @@ function game.restart()
 
     table.concatTable(game.collideables, enemies)
     table.concatTable(game.collideables, doors)
+
 
     game.mode = 'action' -- Зачем это? :|
     game.metronome = metronome
