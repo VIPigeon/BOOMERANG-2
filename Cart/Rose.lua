@@ -87,6 +87,8 @@ function Rose:new(x, y, direction)
         ticksShooting = data.Rose.metronomeTicksSpentShooting,
 
         currentAnimations = {},
+
+        isActive = false,
     }
 
     setmetatable(obj, self)
@@ -112,58 +114,61 @@ function Rose:onBeat()
 end
 
 function Rose:update()
-    if game.boomer.hitbox:collide(self.hitbox) then
-        local damage = game.boomer.dpMs * Time.dt()
-        self:takeDamage(damage)
-    end
-
-    if self.status == 'dying' then
-        self.sprite:nextFrame()
-        if self.sprite:animationEnd() then
-            self:die()
+    if self.isActive then
+        if game.boomer.hitbox:collide(self.hitbox) then
+            local damage = game.boomer.dpMs * Time.dt()
+            self:takeDamage(damage)
         end
-        return
-    end
 
-    if self:isDeadCheck() then
-        self.sprite = data.Rose.sprites.death:copy()
-        self.status = 'dying'
-        return
-    end
-
-    if game.metronome.on_beat then
-        self:onBeat()
-    end
-
-    if self.status == 'shooting' then
-        if self.laserHitbox:collide(game.player.hitbox) then
-            game.player:die()
-        end
-    end
-
-    if self.status == 'idle' then
-        if game.metronome:msBeforeNextBeat() <= ROSE_ANIMATION_DURATION_MS and not self.animation_playing then
-            self.status = 'shootBegin'
-        end
-    end
-
-    if self.status == 'shootBegin' then
-        if not self.sprite:animationEnd() then
+        if self.status == 'dying' then
             self.sprite:nextFrame()
+            if self.sprite:animationEnd() then
+                self:die()
+            end
+            return
         end
-    end
 
-    if self.status == 'shootEnd' then
-        frame = self.sprite:getFrame()
-        if frame == 1 then
-            self.status = 'idle'
-        else
-            self.sprite:setFrame(frame - 1)
+        if self:isDeadCheck() then
+            self.sprite = data.Rose.sprites.death:copy()
+            self.status = 'dying'
+            return
         end
+
+        if game.metronome.on_beat then
+            self:onBeat()
+        end
+
+        if self.status == 'shooting' then
+            if self.laserHitbox:collide(game.player.hitbox) then
+                game.player:die()
+            end
+        end
+
+        if self.status == 'idle' then
+            if game.metronome:msBeforeNextBeat() <= ROSE_ANIMATION_DURATION_MS and not self.animation_playing then
+                self.status = 'shootBegin'
+            end
+        end
+
+        if self.status == 'shootBegin' then
+            if not self.sprite:animationEnd() then
+                self.sprite:nextFrame()
+            end
+        end
+
+        if self.status == 'shootEnd' then
+            frame = self.sprite:getFrame()
+            if frame == 1 then
+                self.status = 'idle'
+            else
+                self.sprite:setFrame(frame - 1)
+            end
+        end
+
+        self:_focusAnimations()
+    else
+        return
     end
-
-    self:_focusAnimations()
-
 end
 
 function Rose:draw()

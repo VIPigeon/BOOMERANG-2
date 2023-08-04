@@ -21,7 +21,9 @@ function BulletHell:new(x, y, type)
         time = 0,
 
         reloadingBullets = {},
-        currentAnimations = {}
+        currentAnimations = {},
+
+        isActive = false,
     }
 
     BulletHell._moveBullets(object, 0)
@@ -80,26 +82,30 @@ function BulletHell:launchBulletsAround()
 end
 
 function BulletHell:update()
-    if self:isDeadCheck() then
-        self:launchBulletsAround()
-        self:die()
+    if self.isActive then
+        if self:isDeadCheck() then
+            self:launchBulletsAround()
+            self:die()
+            return
+        end
+
+        if game.metronome.on_beat then
+            self:_shoot()
+        end
+
+        if self.hitbox:collide(game.boomer.hitbox) then
+            local damage = game.boomer.dpMs * Time.dt()
+            self:takeDamage(damage)
+        end
+
+        for i = 1, #self.bullets do
+            self.bullets[i]:update()
+        end
+
+        self:_focusAnimations()
+    else
         return
     end
-
-    if game.metronome.on_beat then
-        self:_shoot()
-    end
-
-    if self.hitbox:collide(game.boomer.hitbox) then
-        local damage = game.boomer.dpMs * Time.dt()
-        self:takeDamage(damage)
-    end
-
-    for i = 1, #self.bullets do
-        self.bullets[i]:update()
-    end
-
-    self:_focusAnimations()
 end
 
 function BulletHell._moveBullets(bullethell, offset)

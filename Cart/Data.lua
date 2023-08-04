@@ -87,6 +87,14 @@ data.Boomerang.sprites = {
     hurtingVertical = Sprite:new(anim.gen60({473 + 16, 474 + 16, 475 + 16, 476 + 16, 477 + 16, 478 + 16, 479 + 16}), 1),
 }
 
+--Map и mapConstants должны быть уничтожены
+
+data.Map = {}
+
+data.Map.WallTileIds = {
+    208, 209, 210, 224, 225, 226, 240, 241, 242, 142, 143, 158, 159
+}
+
 data.mapConstants = {}
 
 -- (0 o 0) Use a function for this later

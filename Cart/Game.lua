@@ -144,6 +144,30 @@ local function createEnemies()
     return enemem
 end
 
+function game.updateActiveEnemies()
+    local plarea = game.playerArea
+
+    for _, enemy in ipairs(game.enemies) do
+        if enemy.isActive ~= nil then
+            local enemyLocation = MapAreas.findAreaWithTile(enemy.x, enemy.y)
+            enemy.isActive = plarea == enemyLocation
+        end
+    end
+end
+
+function game.updatePlayerArea()
+    if game.playerAreaLast then
+        if game.playerAreaLast == game.playerArea then
+            return
+        else
+            game.playerAreaLast = game.playerArea
+            game.updateActiveEnemies()
+        end
+    else
+        game.playerAreaLast = 0
+    end
+end
+
 local function createBoomerang(x, y)
     return Boomerang:new(x, y, 0, 0)
 end
@@ -196,9 +220,9 @@ end
 -- респавнится на чекпоинте, штуки снизу
 -- не изменятся)
 game.areas, game.transitionTiles = MapAreas.generate()
-for _, tile in ipairs(game.transitionTiles) do
-    trace(tile.x .. ' ' .. tile.y .. ' ' .. tile.area)
-end
+-- for _, tile in ipairs(game.transitionTiles) do
+--     trace(tile.x .. ' ' .. tile.y .. ' ' .. tile.area)
+-- end
 local levers = createLevers()
 local doors = createDoors(levers)
 
@@ -260,6 +284,8 @@ function game.update()
     for _, updatable in ipairs(game.updatables) do
         updatable:update()
     end
+
+    game.updatePlayerArea()
 
     Time.update()
 

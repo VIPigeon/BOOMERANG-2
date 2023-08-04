@@ -63,11 +63,6 @@ function MapAreas.generate()
         return area
     end
 
-    data.Map = {}
-    data.Map.WallTileIds = {
-        208, 209, 210, 224, 225, 226, 240, 241, 242, 142, 143, 158, 159
-    }
-
     for x = 0, MAP_WIDTH do
         for y = 0, MAP_HEIGHT do
             if visitedTiles[ind(x, y)] or isborder(x, y) then
