@@ -13,7 +13,7 @@ function Queue:new()
 end
 
 function Queue:count() --additional +1
-    return self.head - self.tail + 1
+    return self.head - self.tail
 end
 
 function Queue:enqueue(item)
