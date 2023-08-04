@@ -1,83 +1,5 @@
 game = {}
 
-local function generateMapAreas()
-    local areas = {}
-    local visitedTiles = {}
-
-    local function ind(x, y)
-        return y * MAP_WIDTH + x
-    end
-
-    local function isborder(x, y)
-        local id = mget(x, y)
-        local wallIds = data.Map.WallTileIds
-        local doorIds = data.mapConstants.doorIds
-
-        return table.contains(wallIds, id) or table.contains(doorIds, id)
-    end
-
-    local function areabfs(x, y)
-        local area = {}
-        local queue = Queue:new()
-        queue:enqueue({x=x, y=y})
-        while queue:count() > 0 do
-            local tile = queue:dequeue()
-            local x, y = tile.x, tile.y
-
-            if visitedTiles[ind(x, y)] or isborder(x, y) then
-                goto continue
-            end
-
-            table.insert(area, tile)
-            visitedTiles[ind(x, y)] = true
-
-            if x > 0 then
-                queue:enqueue({x=x-1, y=y})
-            end
-            if x < MAP_WIDTH then
-                queue:enqueue({x=x+1, y=y})
-            end
-            if y > 0 then
-                queue:enqueue({x=x, y=y-1})
-            end
-            if y < MAP_HEIGHT then
-                queue:enqueue({x=x, y=y+1})
-            end
-
-            ::continue::
-        end
-
-        return area
-    end
-
-    data.Map = {}
-    data.Map.WallTileIds = {
-        208, 209, 210, 224, 225, 226, 240, 241, 242, 142, 143, 158, 159
-    }
-
-    for x = 0, MAP_WIDTH do
-        for y = 0, MAP_HEIGHT do
-            if visitedTiles[ind(x, y)] or isborder(x, y) then
-                goto continue
-            end
-
-            local area = areabfs(x, y)
-            table.insert(areas, area)
-            ::continue::
-        end
-    end
-
-    return areas
-end
-
-game.areas = generateMapAreas()
-for i, area in ipairs(game.areas) do
-    trace(i)
-    for _, tile in ipairs(area) do
-        trace(tile.x .. ' ' .. tile.y)
-    end
-end
-
 local function createMetronome()
     return Metronome:new(GAME_BPM)
 end
@@ -169,10 +91,6 @@ local function createDoors(levers)
         end
     end
 
-    for _, door in ipairs(doors) do
-        trace('N-D '..door.x..' '..door.y)
-    end
-
     return doors
 end
 
@@ -231,6 +149,11 @@ local function createBoomerang(x, y)
 end
 
 local function createPlayer(x, y, boomerang)
+    local tilex = x // 8
+    local tiley = y // 8
+    game.playerArea = MapAreas.findAreaWithTile(tilex, tiley)
+    trace('Player is in area ' .. game.playerArea)
+
     return Player:new(x, y, boomerang)
 end
 
@@ -268,9 +191,19 @@ function game.load()
     return checkpoint
 end
 
+-- Глобальные элементы игры, которые не
+-- меняются от сохранений (если игрок
+-- респавнится на чекпоинте, штуки снизу
+-- не изменятся)
+game.areas, game.transitionTiles = MapAreas.generate()
+for _, tile in ipairs(game.transitionTiles) do
+    trace(tile.x .. ' ' .. tile.y .. ' ' .. tile.area)
+end
 local levers = createLevers()
 local doors = createDoors(levers)
 
+-- Все элементы игры, которые появляются 
+-- заново после смерти игрока.
 function game.restart()
     local spawnpoint = game.load()
 

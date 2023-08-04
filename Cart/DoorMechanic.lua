@@ -28,7 +28,6 @@ function DoorMechanic.findConnection(startX, startY) -- where we start searching
                     trace("ERROR!! Couldn't find lever or door for wire at " .. x .. " " .. y)
                     return doorWiresLever
                 else
-                    trace('succlol')
                     return doorWiresLever
                 end
             end
