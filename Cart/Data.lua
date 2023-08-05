@@ -233,6 +233,8 @@ data.Rose = {
     metronomeTicksReloading = 1,
     metronomeTicksSpentShooting = 1,
 }
+data.LongRose = {}
+data.LongRose.spawnTiles = {166, 167, 168, 169}
 data.Rose.spawnTiles = {150, 151, 152, 153}
 data.Rose.anotherRoseFlagTile = 15
 data.Rose.sprites = {

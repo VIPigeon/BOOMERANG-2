@@ -4,13 +4,12 @@ function StaticTaraxacum:new(x, y, radius, bodyLength)
     local object = {
         x = x,
         y = y,
+        w = 0,
+        h = bodyLength,
         radius = radius,
         hitbox = HitCircle:new(x, y, 2 * radius),
-        bodyLength = bodyLength,
+        dead = false,
     }
-
-    local r = radius
-    game.lineDrawer:addLine(r + x - 1, 2 * r + y, 0, bodyLength, data.Taraxacum.bodyColor)
 
     setmetatable(object, self)
     self.__index = self
@@ -26,9 +25,8 @@ end
 
 function StaticTaraxacum:_destroy()
     table.removeElement(game.updatables, self)
-    table.removeElement(game.drawables, self)
-
-    local r = self.radius
+    self.dead = true
+    trace(self.dead)
 end
 
 function StaticTaraxacum:_move()
@@ -36,32 +34,10 @@ function StaticTaraxacum:_move()
 end
 
 function StaticTaraxacum:draw()
-    self.hitbox:draw(data.Taraxacum.color)
-end
-
-LineDrawer = {}
-function LineDrawer:new()
-    local object = {
-        lines = {}
-    }
-
-    setmetatable(object, self)
-    self.__index = self
-    return object
-end
-
-function LineDrawer:addLine(x1, y1, w, h, color)
-    table.insert(self.lines, {x1=x1, y1=y1, w=w, h=h, color=color})
-end
-
-function LineDrawer:draw()
-    if #self.lines == 0 then
-        return
-    end
-
-    for _, l in ipairs(self.lines) do
-        local x = l.x1 - gm.x*8 + gm.sx
-        local y = l.y1 - gm.y*8 + gm.sy
-        line(x, y, x + l.w, y + l.h, l.color)
+    local x = self.radius + self.x - gm.x*8 + gm.sx - 1
+    local y = self.radius + self.y - gm.y*8 + gm.sy - 1
+    line(x, y, x + self.w, y + self.h, data.Taraxacum.bodyColor)
+    if not self.dead then
+        self.hitbox:draw(data.Taraxacum.color)
     end
 end
