@@ -55,7 +55,7 @@ function BulletHell:_shoot()
 end
 
 function BulletHell:_createShootBullet()
-    local bull = Taraxacum:new(0, 0)
+    local bull = Bullet:new(0, 0)
     bull.speed = self.bulletSpeed
     
     table.insert(game.drawables, bull)
@@ -99,7 +99,7 @@ function BulletHell:update()
         return
     end
 
-    if game.metronome.on_beat then
+    if game.metronome.onBeat then
         self:_shoot()
     end
 
@@ -132,7 +132,7 @@ function BulletHell:draw()
     end
 
     if true then
-        local progress = 1 - (game.metronome:msBeforeNextBeat() / game.metronome.ms_per_beat)
+        local progress = 1 - (game.metronome:msBeforeNextBeat() / game.metronome.msPerBeat)
 
         self:_moveBullets(progress)
 

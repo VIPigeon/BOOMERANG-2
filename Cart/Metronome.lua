@@ -1,7 +1,7 @@
 Metronome = {}
 
 --
--- ms_per_beat explanation :D
+-- msPerBeat explanation :D
 --
 -- BPM = Beats / Minute
 -- Minute = Beats / BPM
@@ -17,30 +17,38 @@ Metronome = {}
 function Metronome:new(bpm)
     local obj = {
         time = 0,
-        ms_per_beat = (60 * 1000) / bpm,
-        on_beat = false,
+        msPerBeat = (60 * 1000) / bpm,
+        onBeat = false,
+        onBass = false,
     }
+    obj.smallTick = obj.msPerBeat / 2,
 
     setmetatable(obj, self)
     self.__index = self; return obj
 end
 
 function Metronome:msBeforeNextBeat()
-    return self.ms_per_beat - (self.time % self.ms_per_beat)
+    return self.msPerBeat - (self.time % self.msPerBeat)
 end
 
 function Metronome:_onBeat()
-    self.on_beat = true
+    self.onBeat = true
 end
 
 function Metronome:update()
-    if self.on_beat then
-        self.on_beat = false
+    if self.onBeat then
+        self.onBeat = false
     end
 
-    if self.time >= self.ms_per_beat then
+    if self.time >= self.msPerBeat then
         self:_onBeat()
         self.time = 0
+    end
+
+    if self.time >= self.smallTick then
+        self.onBass = true
+    else
+        self.onBass = false
     end
 
     self.time = self.time + Time.dt()

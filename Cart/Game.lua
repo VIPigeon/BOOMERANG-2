@@ -59,6 +59,11 @@ local function createLevers()
         end
     end
 
+    for _, lever in ipairs(levers) do
+        trace('L-V '..lever.x..' '..lever.y)
+        trace('D-R '..lever.door.x..' '..lever.door.y)
+    end
+
     return levers
 end
 
@@ -84,6 +89,10 @@ local function createDoors(levers)
                 end
             end
         end
+    end
+
+    for _, door in ipairs(doors) do
+        trace('N-D '..door.x..' '..door.y)
     end
 
     return doors
@@ -124,7 +133,7 @@ local function createEnemies()
         if type == 'rose' then
             return spawnTileId - data.Rose.spawnTiles[1]
         elseif type == 'longrose' then
-
+            return spawnTileId - data.LongRose.spawnTiles[1]
         end
     end
 
@@ -134,9 +143,9 @@ local function createEnemies()
         if respawnTile.type == 'enemy' then
             enemy = Enemy:new(8 * respawnTile.x, 8 * respawnTile.y)
         elseif respawnTile.type == 'rose' then
-            enemy = Rose:new(8 * respawnTile.x, 8 * respawnTile.y, getDirection(respawnTile.tileid))
+            enemy = Rose:new(8 * respawnTile.x, 8 * respawnTile.y, getDirection(respawnTile.tileid, respawnTile.type))
         elseif respawnTile.type == 'longrose' then
-            enemy = LongRose:new(8 * respawnTile.x, 8 * respawnTile.y, getDirection(respawnTile.tileid))
+            enemy = LongRose:new(8 * respawnTile.x, 8 * respawnTile.y, getDirection(respawnTile.tileid, respawnTile.type))
         elseif respawnTile.type == 'bullethell' then
             local type = respawnTile.tileid - data.BulletHell.spawnTiles[1] + 1
             enemy = BulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, type)

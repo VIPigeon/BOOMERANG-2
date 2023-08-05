@@ -112,7 +112,7 @@ function Rose:onBeat()
 end
 
 function Rose:handleBeat()
-    if game.metronome.on_beat then
+    if game.metronome.onBeat then
         self:onBeat()
     end
 end
@@ -235,19 +235,20 @@ function Rose:onBeat()
     end
 end
 
-function LongRose:onBeat()
-    if self.status == 'shootBegin' then
+function LongRose:handleBeat()
+    if game.metronome.onSmallTick and self.status == 'shootBegin' then
         self.status = 'shooting'
         self:shoot()
     end
 end
 
 function LongRose:handleBeat()
-    if game.metronome.on_beat and self.status == 'shootBegin' then
+    if game.metronome.onBass and self.status == 'shootBegin' then
+        self.status = 'shooting'
         self:shoot()
     end
 
-    if not game.metronome.on_beat then
+    if self.status == 'shooting' and not game.metronome.onBass then
         self.status = 'shootEnd'
     end
 end

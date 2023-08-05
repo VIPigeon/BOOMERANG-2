@@ -80,7 +80,7 @@ function Snowman:update()
         return
     end
 
-    if game.metronome.on_beat then
+    if game.metronome.onBeat then
         self:_setPath() 
         self:_onBeat()
     end
