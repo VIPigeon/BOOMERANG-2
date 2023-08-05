@@ -111,6 +111,12 @@ function Rose:onBeat()
     end
 end
 
+function Rose:handleBeat()
+    if game.metronome.on_beat then
+        self:onBeat()
+    end
+end
+
 function Rose:update()
     if game.boomer.hitbox:collide(self.hitbox) then
         local damage = game.boomer.dpMs * Time.dt()
@@ -131,9 +137,13 @@ function Rose:update()
         return
     end
 
-    if game.metronome.on_beat then
-        self:onBeat()
+    if self.status == 'shootBegin' then
+        if not self.sprite:animationEnd() then
+            self.sprite:nextFrame()
+        end
     end
+
+    self:handleBeat()
 
     if self.status == 'shooting' then
         if self.laserHitbox:collide(game.player.hitbox) then
@@ -144,12 +154,6 @@ function Rose:update()
     if self.status == 'idle' then
         if game.metronome:msBeforeNextBeat() <= ROSE_ANIMATION_DURATION_MS and not self.animation_playing then
             self.status = 'shootBegin'
-        end
-    end
-
-    if self.status == 'shootBegin' then
-        if not self.sprite:animationEnd() then
-            self.sprite:nextFrame()
         end
     end
 
@@ -210,4 +214,40 @@ function Rose:shoot()
     end
 
     self.laserHitbox = newHitbox
+end
+
+LongRose = table.copy(Rose)
+
+function Rose:onBeat()
+    self.ticks = self.ticks + 1
+
+    if self.status == 'shootBegin' then
+        if self.ticks == self.ticksBeforeShot then
+            self.status = 'shooting'
+            self:shoot()
+            self.ticks = 0
+        end
+    elseif self.status == 'shooting' then
+        if self.ticks == self.ticksShooting then
+            self.status = 'shootEnd'
+            self.ticks = 0
+        end
+    end
+end
+
+function LongRose:onBeat()
+    if self.status == 'shootBegin' then
+        self.status = 'shooting'
+        self:shoot()
+    end
+end
+
+function LongRose:handleBeat()
+    if game.metronome.on_beat and self.status == 'shootBegin' then
+        self:shoot()
+    end
+
+    if not game.metronome.on_beat then
+        self.status = 'shootEnd'
+    end
 end

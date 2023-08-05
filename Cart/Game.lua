@@ -94,36 +94,38 @@ local function createEnemies()
     if #game.enemyRespawnTiles == 0 then
         for x = 0, MAP_WIDTH do
             for y = 0, MAP_HEIGHT do
-                if mget(x, y) == data.Enemy.defaultEnemyFlagTile then
-                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='enemy'})
-                    mset(x, y, C0)
-                end
+                local id = mget(x, y)
 
-                if table.contains(data.Rose.spawnTiles, mget(x, y)) then
-                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='rose'})
+                if id == data.Enemy.defaultEnemyFlagTile then
+                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='enemy'})
                     mset(x, y, C0)
-                end
-
-                if table.contains(data.BulletHell.spawnTiles, mget(x, y)) then
-                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='bullethell'})
+                elseif table.contains(data.Rose.spawnTiles, id) then
+                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='rose'})
                     mset(x, y, C0)
-                end
-
-                if table.contains(data.Taraxacum.staticTaraxacumSpawnTile, mget(x, y)) then
-                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='taraxacum'})
+                elseif table.contains(data.BulletHell.spawnTiles, id) then
+                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='bullethell'})
                     mset(x, y, C0)
-                end
-
-                if table.contains(data.Snowman.spawnTiles, mget(x, y)) then
-                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = mget(x, y), type='snowman'})
+                elseif table.contains(data.Taraxacum.staticTaraxacumSpawnTile, id) then
+                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='taraxacum'})
+                    mset(x, y, C0)
+                elseif table.contains(data.Snowman.spawnTiles, id) then
+                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='snowman'})
+                    mset(x, y, C0)
+                elseif table.contains(data.LongRose.spawnTiles, id) then
+                    local tile = {x=x, y=y, tileid=id, type='longrose'}
+                    table.insert(game.enemyRespawnTiles, tile)
                     mset(x, y, C0)
                 end
             end
         end
     end
 
-    function getDirection(spawnTileId)
-        return spawnTileId - data.Rose.spawnTiles[1]
+    function getDirection(spawnTileId, type)
+        if type == 'rose' then
+            return spawnTileId - data.Rose.spawnTiles[1]
+        elseif type == 'longrose' then
+
+        end
     end
 
     local enemem = {}
@@ -133,17 +135,18 @@ local function createEnemies()
             enemy = Enemy:new(8 * respawnTile.x, 8 * respawnTile.y)
         elseif respawnTile.type == 'rose' then
             enemy = Rose:new(8 * respawnTile.x, 8 * respawnTile.y, getDirection(respawnTile.tileid))
+        elseif respawnTile.type == 'longrose' then
+            enemy = LongRose:new(8 * respawnTile.x, 8 * respawnTile.y, getDirection(respawnTile.tileid))
         elseif respawnTile.type == 'bullethell' then
             local type = respawnTile.tileid - data.BulletHell.spawnTiles[1] + 1
             enemy = BulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, type)
         elseif respawnTile.type == 'taraxacum' then
-
             local radius = data.Taraxacum.staticRadius
             local bodyLength = data.Taraxacum.staticBodyLength
             -- Это чудо костыль, чтобы одуванчик не попадал в collideables (нельзя) 🙄🙄
-            local tara = StaticTaraxacum:new(8 * respawnTile.x, 8 * respawnTile.y, radius, bodyLength)
-            table.insert(game.updatables, tara)
-            table.insert(game.drawables, tara)
+            local taraxacum = StaticTaraxacum:new(8 * respawnTile.x, 8 * respawnTile.y, radius, bodyLength)
+            table.insert(game.updatables, taraxacum)
+            table.insert(game.drawables, taraxacum)
         elseif respawnTile.type == 'snowman' then
             enemy = Snowman:new(8 * respawnTile.x, 8 * respawnTile.y)
         end
@@ -207,7 +210,6 @@ function game.restart()
     game.drawables = {}
     game.updatables = {}
     game.collideables = {}
-    game.lineDrawer = LineDrawer:new()
 
     local metronome = createMetronome()
     local enemies = createEnemies()
@@ -226,7 +228,6 @@ function game.restart()
 
     table.concatTable(game.drawables, checkpoints)
     table.concatTable(game.drawables, levers)
-    table.insert(game.drawables, game.lineDrawer)
     table.concatTable(game.drawables, enemies)
     table.insert(game.drawables, player)
     table.insert(game.drawables, boomerang)
@@ -234,7 +235,6 @@ function game.restart()
 
     table.concatTable(game.collideables, enemies)
     table.concatTable(game.collideables, doors)
-
 
     game.mode = 'action' -- Зачем это? :|
     game.metronome = metronome
