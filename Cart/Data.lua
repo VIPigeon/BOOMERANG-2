@@ -233,8 +233,10 @@ data.Rose = {
     metronomeTicksReloading = 1,
     metronomeTicksSpentShooting = 1,
 }
+
 data.LongRose = {}
 data.LongRose.spawnTiles = {166, 167, 168, 169}
+
 data.Rose.spawnTiles = {150, 151, 152, 153}
 data.Rose.anotherRoseFlagTile = 15
 data.Rose.sprites = {
@@ -269,12 +271,25 @@ data.Bullet = {
 data.Snowman = {
     speed = data.Player.speed + 0.01,
     hp = 10,
+
+}
+
+data.Snowman.specialTaraxacum = {
+    radius = 3,
+    bodyLength = 10,
+    shiftForCenterX = 12,
+    shiftForCenterY = -3,
+    startStickX = 0,
+    startStickY = 0,
+    bodyColor = 3,
+    color = 12,
+    reloadAnimationTime = 18, -- in tics must divide by 3
 }
 
 data.Snowman.spawnTiles = {65}
 
 data.Snowman.sprites = {
-    chill = Sprite:new({316}, 2),
+    chill = Sprite:new({312}, 2),
     death = Sprite:new(anim.gen60({312,314,312,314,312}), 2)
 }
 

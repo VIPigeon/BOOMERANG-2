@@ -1,6 +1,17 @@
 Snowman = table.copy(Enemy)
 
-function Snowman:new(x, y)
+function Snowman:new(x, y, hasTaraxacum)
+    local startTaraxacum = nil
+    if hasTaraxacum then
+        startTaraxacum = SpecialTaraxacum:new(
+            x + data.Snowman.specialTaraxacum.shiftForCenterX,
+            y + data.Snowman.specialTaraxacum.shiftForCenterY,
+            data.Snowman.specialTaraxacum.radius,
+            data.Snowman.specialTaraxacum.bodyLength,
+            data.Snowman.specialTaraxacum.shiftForCenterX,
+            data.Snowman.specialTaraxacum.shiftForCenterY
+        )
+    end
     local object = {
         x = x,
         y = y,
@@ -8,6 +19,8 @@ function Snowman:new(x, y)
         hp = data.Snowman.hp,
         sprite = data.Snowman.sprites.chill,
         hitbox = Hitbox:new(x, y, x + 16, y + 16),
+
+        taraxacum = startTaraxacum,
         
         theWay = nil,
 
@@ -27,10 +40,12 @@ function Snowman:_moveOneTile()
         self.x = 8 * self.theWay[2].x
         self.y = 8 * self.theWay[2].y
         self.hitbox:set_xy(self.x, self.y)
+        self.taraxacum:move(self.x, self.y)
     elseif self.outOfChaseTime < #self.theWay - 2 and self.status == 'lost him 😠' then
         self.x = 8 * self.theWay[2 + self.outOfChaseTime].x
         self.y = 8 * self.theWay[2 + self.outOfChaseTime].y
         self.hitbox:set_xy(self.x, self.y)
+        self.taraxacum:move(self.x + self.taraxacum.staticShiftX, self.y + self.taraxacum.staticShiftY)
     else
         trace('let me hug yu🤗!!')
     end
@@ -38,6 +53,7 @@ end
 
 function Snowman:_updatePath()
     -- Ух ты! Крутая оптимизация.. 🤩🤩
+    -- Я знаю 😎
     -- когда у нас начнет лагать можно будет не создавать новый путь при каждой проверке, а менять предыдущий на основе того,
     -- как изменилось положение игрока. просматривая от конца пути расширяя радиус проверки. должно быть круто, но может быть проблема,
     -- если там глупые препятствия. возможно при этом путь будет не самый короткий, но более интересный.
@@ -92,6 +108,11 @@ function Snowman:draw()
     aim.visualizePath(self.theWay)
 
     self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
+    --line(self.x + 5 - gm.x*8 + gm.sx, self.y + 10 - gm.y*8 + gm.sy, self.x + 18 - gm.x*8 + gm.sx, self.y - 3 - gm.y*8 + gm.sy, 10)
+    --hard🥵coded stick
+    if self.taraxacum then
+        self.taraxacum:draw()
+    end
 
     self:_drawAnimations()
 end

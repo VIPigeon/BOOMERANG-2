@@ -143,12 +143,12 @@ local function createEnemies()
         elseif respawnTile.type == 'taraxacum' then
             local radius = data.Taraxacum.staticRadius
             local bodyLength = data.Taraxacum.staticBodyLength
-            -- Это чудо костыль, чтобы одуванчик не попадал в collideables (нельзя) 🙄🙄
+            -- Это чудо костыль, чтобы одуванчик не попадал в collideables (нельзя) 🙄🙄 \😯/
             local taraxacum = StaticTaraxacum:new(8 * respawnTile.x, 8 * respawnTile.y, radius, bodyLength)
             table.insert(game.updatables, taraxacum)
             table.insert(game.drawables, taraxacum)
         elseif respawnTile.type == 'snowman' then
-            enemy = Snowman:new(8 * respawnTile.x, 8 * respawnTile.y)
+            enemy = Snowman:new(8 * respawnTile.x, 8 * respawnTile.y, true)
         end
 
         if enemy then
