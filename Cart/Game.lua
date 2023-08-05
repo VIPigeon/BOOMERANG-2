@@ -60,8 +60,8 @@ local function createLevers()
     end
 
     for _, lever in ipairs(levers) do
-        trace('L-V '..lever.x..' '..lever.y)
-        trace('D-R '..lever.door.x..' '..lever.door.y)
+        --trace('L-V '..lever.x..' '..lever.y)
+        --trace('D-R '..lever.door.x..' '..lever.door.y)
     end
 
     return levers
@@ -149,8 +149,17 @@ function game.updateActiveEnemies()
 
     for _, enemy in ipairs(game.enemies) do
         if enemy.isActive ~= nil then
-            local enemyLocation = MapAreas.findAreaWithTile(enemy.x, enemy.y)
+            local enemyLocation = MapAreas.findAreaWithTile(enemy.x // 8, enemy.y // 8)
             enemy.isActive = plarea == enemyLocation
+            
+            --debug
+            --local lol = -1
+            -- if enemy.isActive then
+            --     lol = 1
+            -- else
+            --     lol = 0
+            -- end
+            -- trace(enemy.x..' '..enemy.y..' '..lol..' '..enemyLocation)
         end
     end
 end
@@ -160,6 +169,7 @@ function game.updatePlayerArea()
         if game.playerAreaLast == game.playerArea then
             return
         else
+            --trace('changing...')
             game.playerAreaLast = game.playerArea
             game.updateActiveEnemies()
         end
@@ -290,6 +300,11 @@ function game.update()
     Time.update()
 
     game.draw()
+
+    --debug
+    -- for i, tile in ipairs(game.transitionTiles) do
+    --     rect(8 * tile.x - gm.x*8 + gm.sx, 8 * tile.y - gm.y*8 + gm.sy, 8, 8, 1)
+    -- end
 end
 
 return game
