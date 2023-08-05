@@ -276,12 +276,12 @@ data.Snowman = {
 
 data.Snowman.specialTaraxacum = {
     radius = 3,
-    bodyLength = 10,
+    bodyLength = 13,
     shiftForCenterX = 12,
     shiftForCenterY = -3,
     startStickX = 0,
     startStickY = 0,
-    bodyColor = 3,
+    bodyColor = 10,
     color = 12,
     reloadAnimationTime = 18, -- in tics must divide by 3
 }

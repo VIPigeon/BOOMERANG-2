@@ -24,8 +24,8 @@ end
 
 function SpecialTaraxacum:move(x, y)
     -- 😣😣😣
-    self.x = x + self.shiftX
-    self.y = y + self.shiftY
+    self.x = x + self.shiftX -- + data.Snowman.specialTaraxacum.radius - 1 
+    self.y = y + self.shiftY -- - data.Snowman.specialTaraxacum.radius - 1
     self.hitbox:set_xy(self.x, self.y)
 end
 
@@ -52,7 +52,7 @@ function SpecialTaraxacum:draw()
     local x = self.radius + self.x - gm.x*8 + gm.sx - 1
     local y = self.radius + self.y - gm.y*8 + gm.sy - 1
     local start = {x = x, y = y}
-    local ending = {x = x - 13, y = y + 13}
+    local ending = {x = x - data.Snowman.specialTaraxacum.bodyLength, y = y + data.Snowman.specialTaraxacum.bodyLength}
 
     self:_drawline(start, ending)
     if not self.dead then
@@ -60,6 +60,7 @@ function SpecialTaraxacum:draw()
         	self:_reloadAnimation()
         else
         	self.hitbox:draw(data.Taraxacum.color)
+        	self.timer = 0
     	end
     end
 end
