@@ -45,7 +45,7 @@ function Snowman:_moveOneTile()
         self.x = 8 * self.theWay[2 + self.outOfChaseTime].x
         self.y = 8 * self.theWay[2 + self.outOfChaseTime].y
         self.hitbox:set_xy(self.x, self.y)
-        self.taraxacum:move(self.x + self.taraxacum.staticShiftX, self.y + self.taraxacum.staticShiftY)
+        self.taraxacum:move(self.x, self.y)
     else
         trace('let me hug yu🤗!!')
     end
@@ -105,7 +105,7 @@ function Snowman:update()
 end
 
 function Snowman:draw()
-    aim.visualizePath(self.theWay)
+    --aim.visualizePath(self.theWay)
 
     self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
     --line(self.x + 5 - gm.x*8 + gm.sx, self.y + 10 - gm.y*8 + gm.sy, self.x + 18 - gm.x*8 + gm.sx, self.y - 3 - gm.y*8 + gm.sy, 10)
