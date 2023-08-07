@@ -51,11 +51,11 @@ function BulletHell:_shoot()
     bull.x = self.bullets[byTouchId].x
     bull.y = self.bullets[byTouchId].y
     bull.hitbox:set_xy(bull.x, bull.y)
-    bull:vectorUpdateByTarget(game.player.x, game.player.y)
+    -- bull:vectorUpdateByTarget(game.player.x, game.player.y)
 end
 
 function BulletHell:_createShootBullet()
-    local bull = Taraxacum:new(0, 0)
+    local bull = Whirl:new(0, 0, nil, nil, data.Snowman.whirl.fadeTimeMs)
     bull.speed = self.bulletSpeed
     
     table.insert(game.drawables, bull)

@@ -288,6 +288,11 @@ data.Snowman.specialTaraxacum = {
     reloadAnimationTime = 18, -- in tics should divide by 3
 }
 
+data.Snowman.whirl = {
+    fadeTimeMs = 1000,
+    hitbox = Hitbox:new(5, 5),
+}
+
 data.Snowman.spawnTiles = {65}
 
 data.Snowman.sprites = {
