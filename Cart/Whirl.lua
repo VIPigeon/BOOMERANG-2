@@ -1,13 +1,15 @@
 Whirl = table.copy(Body)
 
 function Whirl:new(x, y, taraxacum, angle, fadeTimeMs)
+    local spr = data.Snowman.whirl.sprite:copy()
     local object = {
         x = x,
         y = y,
         taraxacum = taraxacum,
         trail = {},
         angle = 0,
-        hitbox = Hitbox:new_with_shift(x, y, x+3, y+3, 0, 2),
+        sprite = spr,
+        hitbox = Hitbox:new_with_shift(x, y, x+8, y+8, 0, 0),
         stick = data.Snowman.specialTaraxacum.bodyLength,
         fadeTimeMs = fadeTimeMs,
     }
@@ -46,7 +48,7 @@ function Whirl:update()
 end
 
 function Whirl:draw()
-    self.hitbox:draw(1)
+    self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
 end
 
 return Whirl

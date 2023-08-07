@@ -290,7 +290,7 @@ data.Snowman.specialTaraxacum = {
 
 data.Snowman.whirl = {
     fadeTimeMs = 1000,
-    hitbox = Hitbox:new(5, 5),
+    sprite = Sprite:new({350}, 1),
 }
 
 data.Snowman.spawnTiles = {65}
