@@ -37,6 +37,39 @@ local function createCamera(player)
     return camera
 end
 
+local function createSettingLevers()
+    local slevers = {}
+    local leverTiles = {}
+
+    for x = 0, 239 do
+        for y = 0, 135 do
+            local tileType = gm.getTileId(x, y)
+            if table.contains(data.mapConstants.settingLeverIds, tileType) then
+                mset(x, y, 0)
+                table.insert(leverTiles, {x=x, y=y})
+                local lwr = SettingLever:new(x * 8, y * 8)
+                
+                local doorWiresLever = DoorMechanic.findConnectionWithoutDoor(x, y) -- подыщем провода и коорды недвери
+                
+                lwr.wires = doorWiresLever.wires
+
+                table.insert(slevers, lwr)
+            end
+        end
+    end
+
+    if table.length(slevers) ~= table.length(settings) then
+        error('wheres no connection betw settings and togglers '..#slevers..' '..table.length(settings))
+    end
+
+    for i, set in ipairs(settings) do
+        trace(set.name)
+        slevers[i].setting = set
+    end
+
+    return slevers
+end
+
 local function createLevers()
     local levers = {}
     local leverTiles = {}
@@ -203,6 +236,7 @@ end
 
 local levers = createLevers()
 local doors = createDoors(levers)
+local settingLevers = createSettingLevers()
 
 function game.restart()
     local spawnpoint = game.load()
@@ -225,9 +259,11 @@ function game.restart()
     table.concatTable(game.updatables, enemies)
     table.concatTable(game.updatables, levers)
     table.concatTable(game.updatables, doors)
+    table.concatTable(game.updatables, settingLevers)
 
     table.concatTable(game.drawables, checkpoints)
     table.concatTable(game.drawables, levers)
+    table.concatTable(game.drawables, settingLevers)
     table.concatTable(game.drawables, enemies)
     table.insert(game.drawables, player)
     table.insert(game.drawables, boomerang)
@@ -265,6 +301,13 @@ function game.update()
         table.removeElement(game.updatables, deleted)
         table.removeElement(game.drawables, deleted)
     end
+
+    -- if settings[1].state then
+    --     trace(settings[1].name)
+    -- end
+    -- if settings[2].state then
+    --     trace(settings[2].name)
+    -- end
 
     Time.update()
 

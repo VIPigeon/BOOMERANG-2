@@ -106,7 +106,7 @@ function Snowman:_onBeat()
         self:_jumpActivate()
     end
     
-    trace(self.status)
+    --trace(self.status)
     --trace(self.chaseStatus)
 end
 
@@ -155,7 +155,7 @@ function Snowman:update()
     if self.status == 'go' then
         self:_moveOneTile()
         if self:_moveOneTile() then
-            trace('phew')
+            --trace('phew')
             self:_resetJumpActivate()
         end
     end

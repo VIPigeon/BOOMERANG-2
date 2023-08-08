@@ -2,13 +2,6 @@
 
 DoorMechanic = {}
 
--- local doorWiresLever = {
---         door = nil, --{x = 1000000, y = 1000000, id = 'crutch'},
---         lever = nil,
---         wires = {},
---     }
-
-
 function DoorMechanic.findConnection(startX, startY) -- where we start searching
     local doorWiresLever = {
         door = nil, --{x = 1000000, y = 1000000, id = 'crutch'},
@@ -36,6 +29,33 @@ function DoorMechanic.findConnection(startX, startY) -- where we start searching
     end
 end
 
+function DoorMechanic.findConnectionWithoutDoor(startX, startY) -- where we start searching
+    local doorWiresLever = {
+        door = {x = 1000000, y = 1000000, id = 'not a door, just a setting'},
+        lever = nil,
+        wires = {},
+    }
+
+    doorWiresLever.lever = {x = startX, y = startY}
+    for x = startX - 1, startX + 1 do -- будем искать только вокруг рычага
+        for y = startY - 1, startY + 1 do
+            local tileType = gm.getTileId(x, y)
+            if table.contains(data.mapConstants.turnedOnWires, tileType) then
+                DoorMechanic._walkWire(x, y, doorWiresLever)
+                --trace('rrrrrrrr')
+                if doorWiresLever.door == nil or doorWiresLever.lever == nil then
+                    trace("ERROR!! Couldn't find lever or door for wire at " .. x .. " " .. y)
+
+                    return doorWiresLever
+                else
+                    --trace(doorWiresLever.door)
+                    return doorWiresLever
+                end
+            end
+        end
+    end
+end
+
 function DoorMechanic._walkWire(x, y, doorWiresLever) -- _walkWireWhileDoor to be honest
     local tileType = gm.getTileId(x, y)
     if table.contains(data.mapConstants.doorIds, tileType) then
@@ -45,9 +65,9 @@ function DoorMechanic._walkWire(x, y, doorWiresLever) -- _walkWireWhileDoor to b
         end
     end
 
-    if table.contains(data.mapConstants.leverIds, tileType) then
-        doorWiresLever.lever = { x = x, y = y }
-    end
+    --if table.contains(data.mapConstants.leverIds, tileType) then
+    --    doorWiresLever.lever = { x = x, y = y }
+    --end
 
     if not (table.contains(data.mapConstants.turnedOnWires, tileType) or table.contains(data.mapConstants.doorIds, tileType)) then
         return
@@ -114,4 +134,3 @@ end
 --     return obj
 -- end
 
-return DoorMechanic

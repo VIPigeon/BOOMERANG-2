@@ -134,6 +134,12 @@ data.mapConstants.leverIds = {
     [3] = 3,
 }
 
+data.mapConstants.settingLeverIds = {
+    [1] = 4,
+    [2] = 5,
+    [3] = 6,
+}
+
 data.Door = {
     speed = 0.1,
     closingAcceleration = 0.01,
@@ -210,6 +216,11 @@ data.Lever.sprites = {
     off = Sprite:new({2},1),
 }
 
+data.SettingLever ={}
+data.SettingLever.sprites = {
+    on = Sprite:new({6}, 1),
+    off = Sprite:new({5}, 1),
+}
 
 data.Enemy = {
     defaultHP = 5,
