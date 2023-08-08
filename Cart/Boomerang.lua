@@ -33,7 +33,7 @@ function Boomerang:init(x, y, dx, dy)
     self.x = x; self.y = y
     self.dx = dx; self.dy = dy
     self.speed = data.Boomerang.speed
-    game.camera:shake(0.2)
+    -- game.camera:shake(0.2)
 end
 
 function Boomerang:focus()
@@ -47,8 +47,6 @@ function Boomerang:update()
     end
 
     self.sprite:nextFrame()
-
-    self.status = 'no hurting anime'
 
     self.speed = self.speed - self.decelerationThing
     if self.speed < 0 then

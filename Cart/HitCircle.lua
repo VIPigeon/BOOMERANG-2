@@ -40,6 +40,10 @@ function HitCircle:collide(hb)
     return false
 end
 
+function HitCircle:mapCheck()
+    return self.hb:mapCheck()
+end
+
 function HitCircle:set_xy(x, y)
     self.x = x
     self.y = y

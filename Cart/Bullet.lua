@@ -2,14 +2,16 @@ Bullet = table.copy(Body)
 
 Bullet.defaultSprite = Sprite:new({373}, 1)
 
-function Bullet:new(x, y)
+function Bullet:new(x, y, sprite)
+    local sprite = sprite or Bullet.defaultSprite
+
     local obj = {
         x = x,
         y = y,
         vector = {x = 0, y = 0},
-        hitbox = Hitbox:new_with_shift(x, y, x + 2, y + 2, 2, 2),
+        hitbox = HitCircle:new(x, y, 2), -- Hitbox:new_with_shift(x, y, x + 2, y + 2, 2, 2),
         speed = data.Bullet.defaultSpeed,
-        sprite = Bullet.defaultSprite:copy(),
+        sprite = sprite:copy(),
     }
 
     setmetatable(obj, self)
@@ -32,14 +34,15 @@ function Bullet:_move()
     self.hitbox:set_xy(self.x, self.y)
 end
 
+local count = 0
 function Bullet:_destroy()
-    table.removeElement(game.updatables, self)
-    table.removeElement(game.drawables, self)
+    table.insert(game.deleteSchedule, self)
 end
 
 function Bullet:_kill()
     if self.hitbox:collide(game.player.hitbox) then
         game.player:die()
+        self:_destroy()
     end
 end
 
@@ -57,5 +60,4 @@ end
 
 function Bullet:draw()
     self.sprite:draw(self.x - 1 - gm.x*8 + gm.sx, self.y - 1 - gm.y*8 + gm.sy, self.flip, self.rotate)
-    self.hitbox:draw(1)
 end

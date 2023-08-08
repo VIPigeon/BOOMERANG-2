@@ -21,7 +21,7 @@ function Player:new(x, y, boomerang)
         dy = 0,
         speed = data.Player.speed,
         flip = 0,  -- направление при отрисовке спрайта
-        hitbox = Hitbox:new_with_shift(x, y, x+3, y+6, 2, 1),
+        hitbox = Hitbox:new_with_shift(x, y, x+3, y+6, 2, 1), -- shift портит малину bfs
         boomerang = boomerang,
         boomerangActive = false,
         status = 'alive',
@@ -31,6 +31,10 @@ function Player:new(x, y, boomerang)
     setmetatable(obj, self)
     self.__index = self
     return obj
+end
+
+function Player:getPositionTile()
+    return {x = self.x // 8, y = self.y // 8}
 end
 
 function Player:_willMoveCheck()

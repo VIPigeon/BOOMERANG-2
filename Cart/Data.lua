@@ -2,7 +2,7 @@ data = {}
 
 -- 14, 15, 30, 31 - Резервные тайлы (почему бы и нет)
 
-GAME_BPM = 60
+GAME_BPM = 40
 
 C0 = 0
 
@@ -19,8 +19,8 @@ KEY_RIGHT = 61
 MAP_WIDTH = 239
 MAP_HEIGHT = 135
 
-PLAYER_START_Y = 128 * 8
-PLAYER_START_X = 42 * 8
+PLAYER_START_Y = 76 * 8 -- 128 * 8 -- 😋😋
+PLAYER_START_X = 105 * 8 -- 42 * 8  -- 😲😲
 
 DECORATION_IDS = {
     100,
@@ -155,6 +155,23 @@ data.Door.sprite = {
     rightPart = -1,
 }
 
+data.Taraxacum = {
+    speed = 2,
+    color = 12,
+
+    radius = 2,
+
+    staticRadius = 3,
+    bodyColor = 3,
+    staticBodyLength = 10,
+    staticTaraxacumSpawnTile = { 34 },
+
+    deathBulletSpread = 1,
+    deathBulletCount = 12,
+    deathBulletSpeed = 0.5,
+    deathBulletSprite = Sprite:new({378}, 1),
+}
+
 local turnOnAnimationFrames = {}
 for i = 213, 217 do
     table.insert(turnOnAnimationFrames, i)
@@ -182,7 +199,10 @@ data.solidTiles = {
     224, 225, 226,
     240, 241, 242,
 }
-
+-- table.concatTable(data.solidTiles,) --> (ノ｀Дa почему??)ノ - да потому!
+-- for i, t in ipairs(data.solidTiles) do
+--     trace(t..' ')
+-- end
 
 data.Lever = {}
 data.Lever.sprites = {
@@ -192,7 +212,7 @@ data.Lever.sprites = {
 
 
 data.Enemy = {
-    defaultHP = 50,
+    defaultHP = 5,
     defaultEnemyFlagTile = 33,
 }
 data.Enemy.sprites = {
@@ -213,6 +233,8 @@ data.Rose = {
     metronomeTicksReloading = 1,
     metronomeTicksSpentShooting = 1,
 }
+data.LongRose = {}
+data.LongRose.spawnTiles = {166, 167, 168, 169}
 data.Rose.spawnTiles = {150, 151, 152, 153}
 data.Rose.anotherRoseFlagTile = 15
 data.Rose.sprites = {
@@ -223,14 +245,16 @@ data.Rose.animation_frame_duration_ms = 16
 data.Rose.rose_animation_duration_ms = data.Rose.animation_frame_duration_ms * #data.Rose.sprites.transition.animation
 
 data.BulletHell = {
-    circleDiameter = {4, 8, 16},
+    circleDiameter = {5, 8, 16},
     bulletSpeadRadius = {5, 8, 11},
     bulletRotateSpeed = {1,1,1},
     bulletCount = {8, 12, 16},
-    bulletSpeed = {0.6, 0.7, 0.8},
-    deathBulletSpeed = {0.7, 0.2, 0.1},
-    hp = {1, 1, 1}
+    bulletSpeed = {0.8, 0.7, 0.8},
+    deathBulletSpeed = {0.3, 0.2, 0.1},
+    deathTimeMs = 1000,
+    hp = {12, 25, 40}
 }
+
 data.BulletHell.spawnTiles = {48, 49, 50}
 data.BulletHell.sprites = {
     defaultSprite = 999,
@@ -240,6 +264,18 @@ data.Bullet = {
     defaultSpeed = 0.5,
     defaultSprite = Sprite:new({373}, 1),
     reloadAnimation = Sprite:new(anim.gen({373, 0, 374, 375, 376}, 4), 1),
+}
+
+data.Snowman = {
+    speed = data.Player.speed + 0.01,
+    hp = 10,
+}
+
+data.Snowman.spawnTiles = {65}
+
+data.Snowman.sprites = {
+    chill = Sprite:new({316}, 2),
+    death = Sprite:new(anim.gen60({312,314,312,314,312}), 2)
 }
 
 return data

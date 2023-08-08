@@ -22,13 +22,10 @@ function DoorMechanic.findConnection(startX, startY) -- where we start searching
             local tileType = gm.getTileId(x, y)
             if table.contains(data.mapConstants.turnedOnWires, tileType) then
                 DoorMechanic._walkWire(x, y, doorWiresLever)
-                --trace(doorWiresLever.door)
-                --trace(' * '..doorWiresLever.door.x..' ' ..doorWiresLever..door.y)
                 if doorWiresLever.door == nil or doorWiresLever.lever == nil then
                     trace("ERROR!! Couldn't find lever or door for wire at " .. x .. " " .. y)
                     return doorWiresLever
                 else
-                    trace('succlol')
                     return doorWiresLever
                 end
             end
