@@ -6,11 +6,11 @@ Lever.spriteOn = data.Lever.sprites.on
 function Lever:new(x, y)
     local obj = {
         x = x,
-        y = y,
+        y = y - 3,
         wires = {},
         door = nil,
         sprite = Lever.spriteOff:copy(),
-        hitbox = Hitbox:new(x, y, x+8, y+8),
+        hitbox = Hitbox:new(x, y - 3, x+8, y - 3+8),
         status = 'off'
     }
 

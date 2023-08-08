@@ -33,7 +33,7 @@ function Boomerang:init(x, y, dx, dy)
     self.x = x; self.y = y
     self.dx = dx; self.dy = dy
     self.speed = data.Boomerang.speed
-    game.camera:shake(0.2)
+    -- game.camera:shake(0.2)
 end
 
 function Boomerang:focus()

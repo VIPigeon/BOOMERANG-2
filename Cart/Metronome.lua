@@ -21,7 +21,7 @@ function Metronome:new(bpm)
         onBeat = false,
         onBass = false,
     }
-    obj.smallTick = obj.msPerBeat / 2,
+    obj.smallTick = obj.msPerBeat,
 
     setmetatable(obj, self)
     self.__index = self; return obj
@@ -50,6 +50,7 @@ function Metronome:update()
     else
         self.onBass = false
     end
+    self.onBass = true
 
     self.time = self.time + Time.dt()
 end

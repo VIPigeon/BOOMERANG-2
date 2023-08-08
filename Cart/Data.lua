@@ -2,7 +2,7 @@ data = {}
 
 -- 14, 15, 30, 31 - Резервные тайлы (почему бы и нет)
 
-GAME_BPM = 60
+GAME_BPM = 40
 
 C0 = 0
 
@@ -19,8 +19,8 @@ KEY_RIGHT = 61
 MAP_WIDTH = 239
 MAP_HEIGHT = 135
 
-PLAYER_START_Y = 10 -- 128 * 8 -- 😋😋
-PLAYER_START_X = 10 -- 42 * 8  -- 😲😲
+PLAYER_START_Y = 76 * 8 -- 128 * 8 -- 😋😋
+PLAYER_START_X = 105 * 8 -- 42 * 8  -- 😲😲
 
 DECORATION_IDS = {
     100,
@@ -245,14 +245,14 @@ data.Rose.animation_frame_duration_ms = 16
 data.Rose.rose_animation_duration_ms = data.Rose.animation_frame_duration_ms * #data.Rose.sprites.transition.animation
 
 data.BulletHell = {
-    circleDiameter = {4, 8, 16},
+    circleDiameter = {5, 8, 16},
     bulletSpeadRadius = {5, 8, 11},
     bulletRotateSpeed = {1,1,1},
     bulletCount = {8, 12, 16},
-    bulletSpeed = {0.6, 0.7, 0.8},
-    deathBulletSpeed = {0.7, 0.2, 0.1},
+    bulletSpeed = {0.8, 0.7, 0.8},
+    deathBulletSpeed = {0.3, 0.2, 0.1},
     deathTimeMs = 1000,
-    hp = {1, 1, 1}
+    hp = {12, 25, 40}
 }
 
 data.BulletHell.spawnTiles = {48, 49, 50}
