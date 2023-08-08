@@ -19,6 +19,7 @@ function Metronome:new(bpm)
         time = 0,
         ms_per_beat = (60 * 1000) / bpm,
         on_beat = false,
+        onBass = true,
         
         onOddBeat = false,
         onEvenBeat = false,

@@ -12,6 +12,7 @@ function Snowman:new(x, y, hasTaraxacum)
             data.Snowman.specialTaraxacum.shiftForCenterY
         )
     end
+
     local object = {
         x = x,
         y = y,
@@ -73,7 +74,6 @@ function Snowman:_moveOneTile() -- оптимизируем вычисления
 end
 
 function Snowman:_slowMoveOneTile(vector, neededXY)
-    --trace(neededXY.x..' '..neededXY.y..' '..self.x..' '..self.y)
     if math.abs(self.x - neededXY.x) < 1 then
         self.x = neededXY.x
     end
@@ -105,9 +105,6 @@ function Snowman:_onBeat()
     elseif game.metronome.onEvenBeat then
         self:_jumpActivate()
     end
-    
-    trace(self.status)
-    --trace(self.chaseStatus)
 end
 
 function Snowman:_setPath() 
@@ -126,6 +123,17 @@ function Snowman:update()
     if game.boomer.hitbox:collide(self.hitbox) then
         local damage = game.boomer.dpMs * Time.dt()
         self:takeDamage(damage)
+    end
+    
+    if game.metronome.onBass and status ~= 'whirl' then
+        status = 'whirl'
+        -- TODO: Тут костыль +8
+        self.whirlAttack = SnowmanWhirlAttack:new(self.x + 8, self.y + 8, self.taraxacum.h)
+    end
+
+    if status == 'whirl' then
+        self.whirlAttack:update()
+        return
     end
 
     if self.status == 'dying' then
@@ -155,13 +163,11 @@ function Snowman:update()
     if self.status == 'go' then
         self:_moveOneTile()
         if self:_moveOneTile() then
-            trace('phew')
             self:_resetJumpActivate()
         end
     end
 
     if self.status == 'ready' then
-        --trace('im ready')
         self.forJumpTime = self.forJumpTime + 1
         if self.forJumpTime == data.Snowman.resetJumpTime then
             self.status = 'idle'
@@ -181,6 +187,12 @@ function Snowman:update()
 end
 
 function Snowman:draw()
+    if status == 'whirl' then
+        self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
+        self.whirlAttack:draw()
+        return
+    end
+
     aim.visualizePath(self.theWay)
 
     self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)

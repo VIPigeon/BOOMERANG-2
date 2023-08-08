@@ -291,6 +291,8 @@ data.Snowman.specialTaraxacum = {
 data.Snowman.whirl = {
     fadeTimeMs = 1000,
     sprite = Sprite:new({350}, 1),
+    rotationSpeed = 0.001, -- Так мало, потому что миллисекунды 😏
+    particleEmitDelayMs = 200,
 }
 
 data.Snowman.spawnTiles = {65}
