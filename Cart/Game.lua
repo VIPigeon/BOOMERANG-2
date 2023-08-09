@@ -63,7 +63,7 @@ local function createSettingLevers()
     end
 
     for i, set in ipairs(settings) do
-        trace(set.name)
+        --trace(set.name)
         slevers[i].setting = set
     end
 
@@ -92,11 +92,6 @@ local function createLevers()
         end
     end
 
-    for _, lever in ipairs(levers) do
-        trace('L-V '..lever.x..' '..lever.y)
-        trace('D-R '..lever.door.x..' '..lever.door.y)
-    end
-
     return levers
 end
 
@@ -122,10 +117,6 @@ local function createDoors(levers)
                 end
             end
         end
-    end
-
-    for _, door in ipairs(doors) do
-        trace('N-D '..door.x..' '..door.y)
     end
 
     return doors

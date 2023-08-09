@@ -172,7 +172,7 @@ function Snowman:update()
         end
     end
 
-    if game.metronome.on_beat then
+    if game.metronome.onBeat then
         self:_setPath() -- перенести на оддБит
         self:_onBeat()
     end
