@@ -21,6 +21,14 @@ settings = {}
 	    return obj
 	end
 
+	local function changeSetting(name)
+		for i, set in ipairs(settings) do
+			if set.name == name then
+				set.change(set.state)
+			end
+		end
+	end
+
 	function SettingLever:_turn()
 	    if self.status == 'off' then
 	        self.sprite = SettingLever.spriteOn
@@ -28,6 +36,7 @@ settings = {}
 
 	        self:_toogleWires()
 	        self.setting.state = true
+	        changeSetting(self.setting.name)
 
 	        return
 	    elseif self.status == 'on' then
@@ -36,21 +45,24 @@ settings = {}
 
 	        self:_toogleWires()
 	        self.setting.state = false
+	        changeSetting(self.setting.name)
 	        
 	        return
 	    end
 	end
 
 settings = {
-	[1] = {name = 'boomerShake', state = false},
-	[2] = {name = 'oneBitPallete', state = false},
+	[1] = {name = 'oneBitPallete', state = false},
+	[2] = {name = 'boomerShake', state = false},
 }
 
-function findSettingByName(name)
-	for i, set in ipairs(settings) do
-		if set.name == name then
-			return set
-		end
-	end
+
+
+settings[1].change = function (state) -- changes palette
+	palette.toggle1Bit()
+end
+
+ settings[2].change = function (state) -- changes boomer shake
+	game.boomer.shakeOld = state
 end
 

@@ -17,6 +17,7 @@ function Boomerang:new(x, y, dx, dy)
         hitbox = Hitbox:new_with_shift(-1000+2, -1000+2, -1000+6, -1000+6, 2, 2),
         active = false,
         status = 'going brrr',
+        shakeOld = false
     }
 
     if obj['dx'] * obj['dy'] ~= 0 then
@@ -33,9 +34,8 @@ function Boomerang:init(x, y, dx, dy)
     self.x = x; self.y = y
     self.dx = dx; self.dy = dy
     self.speed = data.Boomerang.speed
-    if findSettingByName('boomerShake').state then
+    if self.shakeOld then
         game.camera:shake(0.2)
-        self.shakeOld = true
     end
 end
 
