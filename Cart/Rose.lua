@@ -218,7 +218,7 @@ end
 
 LongRose = table.copy(Rose)
 
-function Rose:onBeat()
+function LongRose:onBeat()
     self.ticks = self.ticks + 1
 
     if self.status == 'shootBegin' then
@@ -232,13 +232,6 @@ function Rose:onBeat()
             self.status = 'shootEnd'
             self.ticks = 0
         end
-    end
-end
-
-function LongRose:handleBeat()
-    if game.metronome.onSmallTick and self.status == 'shootBegin' then
-        self.status = 'shooting'
-        self:shoot()
     end
 end
 

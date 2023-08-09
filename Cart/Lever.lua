@@ -67,6 +67,5 @@ function Lever:update()
             self.status = 'on'
         end
     end
-
     
 end

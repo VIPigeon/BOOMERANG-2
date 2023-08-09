@@ -134,6 +134,12 @@ data.mapConstants.leverIds = {
     [3] = 3,
 }
 
+data.mapConstants.settingLeverIds = {
+    [1] = 4,
+    [2] = 5,
+    [3] = 6,
+}
+
 data.Door = {
     speed = 0.1,
     closingAcceleration = 0.01,
@@ -210,6 +216,11 @@ data.Lever.sprites = {
     off = Sprite:new({2},1),
 }
 
+data.SettingLever ={}
+data.SettingLever.sprites = {
+    on = Sprite:new({6}, 1),
+    off = Sprite:new({5}, 1),
+}
 
 data.Enemy = {
     defaultHP = 5,
@@ -233,8 +244,10 @@ data.Rose = {
     metronomeTicksReloading = 1,
     metronomeTicksSpentShooting = 1,
 }
+
 data.LongRose = {}
 data.LongRose.spawnTiles = {166, 167, 168, 169}
+
 data.Rose.spawnTiles = {150, 151, 152, 153}
 data.Rose.anotherRoseFlagTile = 15
 data.Rose.sprites = {
@@ -267,14 +280,32 @@ data.Bullet = {
 }
 
 data.Snowman = {
-    speed = data.Player.speed + 0.01,
+    speed = data.Player.speed - 0.41,
     hp = 10,
+    prepareJumpTime = 20,
+    --jumpTime = 20,
+    resetJumpTime = 24,
+}
+
+data.Snowman.specialTaraxacum = {
+    radius = 3,
+    bodyLength = 13,
+    shiftForCenterX = 12,
+    shiftForCenterY = -3,
+    startStickX = 0,
+    startStickY = 0,
+    bodyColor = 10,
+    color = 12,
+    reloadAnimationTime = 18, -- in tics should divide by 3
 }
 
 data.Snowman.spawnTiles = {65}
 
 data.Snowman.sprites = {
-    chill = Sprite:new({316}, 2),
+    chill = Sprite:new({312}, 2),
+    prepareJump = Sprite:new({312, 344}, 2),
+    flyJump = Sprite:new(anim.gen60({346,348,346}), 2),
+    resetJump = Sprite:new({348,344,312}, 2),
     death = Sprite:new(anim.gen60({312,314,312,314,312}), 2)
 }
 
