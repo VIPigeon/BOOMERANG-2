@@ -272,6 +272,7 @@ data.Bullet = {
 
 data.Snowman = {
     speed = data.Player.speed - 0.41,
+    speedWithWhirl = data.Player.speed - 0.61,
     hp = 10,
     prepareJumpTime = 20,
     --jumpTime = 20,
