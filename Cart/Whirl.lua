@@ -45,7 +45,6 @@ function Whirl:update()
 end
 
 function Whirl:draw()
-    trace('why?')
     self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
 end
 

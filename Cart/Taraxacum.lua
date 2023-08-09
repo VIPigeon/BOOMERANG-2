@@ -1,12 +1,18 @@
 Taraxacum = table.copy(Bullet)
 
-function Taraxacum:new(x, y)
+function Taraxacum:new(x, y, radius, speed, count, spread)
+    radius = radius or data.Taraxacum.radius
+    speed = speed or data.Taraxacum.speed
+    count = count or data.Taraxacum.deathBulletCount
+    spread = spread or data.Taraxacum.deathBulletSpread
     local object = {
         x = x,
         y = y,
         vector = {x = 0, y = 0},
-        hitbox = HitCircle:new(x, y, data.Taraxacum.radius),
-        speed = data.Taraxacum.speed,
+        hitbox = HitCircle:new(x, y, radius),
+        speed = speed,
+        count = count,
+        spread = spread,
     }
 
     setmetatable(object, self)
@@ -15,13 +21,15 @@ function Taraxacum:new(x, y)
 end
 
 function Taraxacum:_launchBullets()
-    local spread = data.Taraxacum.deathBulletSpread
-    local count = data.Taraxacum.deathBulletCount
+    local spread = self.spread
+    local count = self.count
     local deltaAngle = 2 * math.pi / count
     
     for i = 1, count do
-        local x = self.x + math.round(spread * math.cos(i * deltaAngle))
-        local y = self.y + math.round(spread * math.sin(i * deltaAngle))
+        local x = self.x + spread * math.cos(i * deltaAngle)
+        local y = self.y + spread * math.sin(i * deltaAngle)
+        trace(x)
+        trace(y)
 
         local bullet = self:_createBullet(x, y)
 

@@ -16,6 +16,8 @@ KEY_DOWN = 59
 KEY_LEFT = 60
 KEY_RIGHT = 61
 
+KEY_B = 02 -- Что это?? Это круто. 🙂
+
 MAP_WIDTH = 239
 MAP_HEIGHT = 135
 
@@ -289,10 +291,15 @@ data.Snowman.specialTaraxacum = {
 }
 
 data.Snowman.whirl = {
-    fadeTimeMs = 1000,
+    fadeTimeMs = 300,
     sprite = Sprite:new({350}, 1),
-    rotationSpeed = 0.001, -- Так мало, потому что миллисекунды 😏
-    particleEmitDelayMs = 200,
+    rotationSpeed = 0.005, -- Так мало, потому что миллисекунды 😏
+    particleEmitDelayMs = 25,
+    taraxacum = {
+        radius = 7,
+        deathBulletCount = 24,
+    },
+    endTaraxacumSpeed = 1,
 }
 
 data.Snowman.spawnTiles = {65}

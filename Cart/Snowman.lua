@@ -26,6 +26,7 @@ function Snowman:new(x, y, hasTaraxacum)
         theWay = nil,
 
         status = 'idle',
+        attackStatus = 'idle',
         chaseStatus = 'no chase 🙄',
 
         currentAnimations = {},
@@ -70,6 +71,15 @@ function Snowman:_moveOneTile() -- оптимизируем вычисления
 
     else
         --trace('let me hug yu🤗!!')
+    end
+end
+
+function Snowman:_moveWhirlAttack()
+    -- Тот кто увидит этот комментарий должен удалить
+    -- эту функцию. 🥵🤬🤬
+    if self.whirlAttack then
+        self.whirlAttack.x = self.hitbox:get_center().x
+        self.whirlAttack.y = self.hitbox:get_center().y 
     end
 end
 
@@ -124,18 +134,25 @@ function Snowman:update()
         local damage = game.boomer.dpMs * Time.dt()
         self:takeDamage(damage)
     end
+
+    if keyp(KEY_B) then
+        game.metronome.onBass = not game.metronome.onBass
+    end
     
-    if game.metronome.onBass and status ~= 'whirl' then
-        status = 'whirl'
-        -- TODO: Тут костыль +8
+    if not game.metronome.onBass and self.attackStatus == 'whirl' then
+        self.attackStatus = 'idle'
+        self.whirlAttack:endAttack()
+        self.whirlAttack = nil -- Чтобы жесткие ошибки 😱😱😷
+    end
+    
+    if game.metronome.onBass and self.attackStatus ~= 'whirl' then
+        self.attackStatus = 'whirl'
+        -- DO: Тут костыль +8
         -- Готово 🤠
-        self.whirlAttack = SnowmanWhirlAttack:new(self.hitbox.get_center.x, self.hitbox.get_center.y, self.taraxacum.h)
+        self.whirlAttack = SnowmanWhirlAttack:new(self.hitbox:get_center().x, self.hitbox:get_center().y, self.taraxacum.h)
     end
 
-    if status == 'whirl' then
-        self.whirlAttack:update()
-        return
-    end
+    self:_focusAnimations()
 
     if self.status == 'dying' then
         self.sprite:nextFrame()
@@ -148,6 +165,11 @@ function Snowman:update()
     if self:isDeadCheck() then
         self.sprite = data.Snowman.sprites.death:copy()
         self.status = 'dying'
+        return
+    end
+
+    if self.attackStatus == 'whirl' then
+        self.whirlAttack:update()
         return
     end
 
@@ -183,12 +205,10 @@ function Snowman:update()
         self:_setPath() -- перенести на оддБит
         self:_onBeat()
     end
-
-    self:_focusAnimations()
 end
 
 function Snowman:draw()
-    if status == 'whirl' then
+    if self.attackStatus == 'whirl' then
         self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
         self.whirlAttack:draw()
         return
