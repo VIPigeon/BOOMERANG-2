@@ -40,15 +40,13 @@ end
 function palette.ghostColor(GC)
     -- я понятия не имею как это работает
     -- я тоже 😎😎
-    -- Всем привет, ребята! 🤠
+    -- Всем привет, ребята 🤠
     -- здесь GC = 11
     local id = GC  -- id цвета
     poke(ADDR+(id*3)+2, peek(ADDR+2))  -- red
     poke(ADDR+(id*3)+1, peek(ADDR+1))  -- green
     poke(ADDR+(id*3), peek(ADDR))  -- blue
 end
-
-return palette
 
 for i = 1, 15 do
     local color = palette.getColor(i)
