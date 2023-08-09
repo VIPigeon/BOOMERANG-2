@@ -128,7 +128,8 @@ function Snowman:update()
     if game.metronome.onBass and status ~= 'whirl' then
         status = 'whirl'
         -- TODO: Тут костыль +8
-        self.whirlAttack = SnowmanWhirlAttack:new(self.x + 8, self.y + 8, self.taraxacum.h)
+        -- Готово 🤠
+        self.whirlAttack = SnowmanWhirlAttack:new(self.hitbox.get_center.x, self.hitbox.get_center.y, self.taraxacum.h)
     end
 
     if status == 'whirl' then
