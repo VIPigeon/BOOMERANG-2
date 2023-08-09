@@ -197,6 +197,7 @@ local function createBoomerang(x, y)
 end
 
 local function createPlayer(x, y, boomerang)
+    palette.toggle1Bit()
     return Player:new(x, y, boomerang)
 end
 
