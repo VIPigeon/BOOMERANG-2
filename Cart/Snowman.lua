@@ -42,7 +42,7 @@ end
 
 function Snowman:_prepareJumpActivate()
     self.status = 'steady'
-    if not self.attackStatus == 'whirl' then
+    if not (self.attackStatus == 'whirl') then
         self.sprite = data.Snowman.sprites.prepareJump:copy()
     end
     self.forJumpTime = 0
@@ -50,7 +50,7 @@ end
 
 function Snowman:_jumpActivate()
     self.status = 'go'
-    if not self.attackStatus == 'whirl' then
+    if not (self.attackStatus == 'whirl') then
         self.sprite = data.Snowman.sprites.flyJump:copy()
     end
     self.forJumpTime = 0
@@ -58,7 +58,7 @@ end
 
 function Snowman:_resetJumpActivate()
     self.status = 'ready'
-    if not self.attackStatus == 'whirl' then
+    if not (self.attackStatus == 'whirl') then
         self.sprite = data.Snowman.sprites.resetJump:copy()
     end
     self.forJumpTime = 0
@@ -119,7 +119,9 @@ function Snowman:_updatePath()
 end
 
 function Snowman:_onBeat()
-    if game.metronome.onOddBeat then
+    if self.attackStatus == 'whirl' then
+        return
+    elseif game.metronome.onOddBeat then
         self:_prepareJumpActivate()
     elseif game.metronome.onEvenBeat then
         self:_jumpActivate()
@@ -179,9 +181,19 @@ function Snowman:update()
         return
     end
 
+    if game.metronome.on_beat then
+        --if game.metronome.onOddBeat then
+            self:_setPath() -- перенести на оддБит
+        --end
+        self:_onBeat()
+    end
+
     if self.attackStatus == 'whirl' then
         self.whirlAttack:update()
-        
+        self.sprite = data.Snowman.sprites.chill:copy()
+        if self.theWay then
+            self:_moveOneTile()
+        end
     end
 
     --разбили время на прыжок на две равные части, фрейм меняем в соответствующее время
@@ -212,10 +224,6 @@ function Snowman:update()
         end
     end
 
-    if game.metronome.on_beat then
-        self:_setPath() -- перенести на оддБит
-        self:_onBeat()
-    end
 end
 
 function Snowman:draw()
