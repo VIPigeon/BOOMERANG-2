@@ -201,13 +201,13 @@ function game.updateActiveEnemies()
             enemy.isActive = plarea == enemyLocation
             
             --debug
-            --local lol = -1
-            -- if enemy.isActive then
-            --     lol = 1
-            -- else
-            --     lol = 0
-            -- end
-            -- trace(enemy.x..' '..enemy.y..' '..lol..' '..enemyLocation)
+            local lol = -1
+            if enemy.isActive then
+                lol = 1
+            else
+                lol = 0
+            end
+            trace(enemy.x..' '..enemy.y..' '..lol..' '..enemyLocation)
         end
     end
 end
