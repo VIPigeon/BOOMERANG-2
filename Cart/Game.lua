@@ -210,7 +210,6 @@ function game.updateActiveEnemies()
             else
                 lol = 0
             end
-            trace(enemy.x..' '..enemy.y..' '..lol..' '..enemyLocation)
         end
     end
 end
@@ -220,12 +219,11 @@ function game.updatePlayerArea()
         if game.playerAreaLast == game.playerArea then
             return
         else
-            --trace('changing...')
             game.playerAreaLast = game.playerArea
             game.updateActiveEnemies()
         end
     else
-        game.playerAreaLast = 0
+        game.playerAreaLast = -2147483648
     end
 end
 
@@ -280,9 +278,7 @@ end
 -- респавнится на чекпоинте, штуки снизу
 -- не изменятся)
 game.areas, game.transitionTiles = MapAreas.generate()
--- for _, tile in ipairs(game.transitionTiles) do
---     trace(tile.x .. ' ' .. tile.y .. ' ' .. tile.area)
--- end
+
 local levers = createLevers()
 local doors = createDoors(levers)
 local settingLevers = createSettingLevers()
@@ -329,6 +325,8 @@ function game.restart()
     game.boomer = boomerang
     game.camera = camera
     game.enemies = enemies
+
+    game.updateActiveEnemies()
 end
 
 game.restart()
