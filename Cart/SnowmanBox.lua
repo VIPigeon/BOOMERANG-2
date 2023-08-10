@@ -48,8 +48,7 @@ end
 
 function SnowmanBox:update()
     -- self.checkTimer() -- Можно использовать если метроном не оч 🙄🙄
-    if game.metronome.on_beat and self:_distanceToPlayer() < self.wakeUpDistance then
-
+    if game.metronome.onBeat and self:_distanceToPlayer() < self.wakeUpDistance then
         self:_spawnSnowman()
         self:_changeSprite()
     end

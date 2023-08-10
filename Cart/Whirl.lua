@@ -1,35 +1,51 @@
-
 Whirl = table.copy(Body)
--- одна из атак Snowman
 
-function Whirl:new(x, y, blowball, angle)
+function Whirl:new(x, y, fadeTimeMs)
+    local spr = data.Snowman.whirl.sprite:copy()
     local object = {
         x = x,
         y = y,
-        blowball = blowball,
         trail = {},
-        angle = 0,  -- угол, с которым отрисовывается палка.
-        stick = Data.Snowman.stick,  -- длина палки
+        sprite = spr,
+        hitbox = Hitbox:new_with_shift(x, y, x+8, y+4, 0, 2),
+        fadeTimeMs = fadeTimeMs,
     }
+
+    local time = 0
+    object.timer = function()
+        time = time + Time.dt()
+        if time > object.fadeTimeMs then
+            return true
+        end
+    end
 
     setmetatable(object, self)
     self.__index = self
     return object
 end
 
-function Whirl:draw()
-    -- здесь отрисовывается stick, blowball и trail
+function Whirl:_destroy()
+    table.insert(game.deleteSchedule, self)
+end
+
+function Whirl:_kill()
+    if self.hitbox:collide(game.player.hitbox) then
+        game.player:die()
+        self:_destroy()
+    end
 end
 
 function Whirl:update()
-    -- меняется угол поворота палки, появляются и убираются следы
+    self:_kill()
+    local isEnded = self.timer()
 
-    -- в конце вихря blowball запускается в игрока
+    if isEnded then
+        self:_destroy()
+    end
 end
 
-function Whirl:collide(body)
-    -- проверяется на пересечение с blowball или trail
+function Whirl:draw()
+    self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
 end
-
 
 return Whirl

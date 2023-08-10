@@ -16,6 +16,8 @@ KEY_DOWN = 59
 KEY_LEFT = 60
 KEY_RIGHT = 61
 
+KEY_B = 02 -- Что это?? Это круто. 🙂
+
 MAP_WIDTH = 239
 MAP_HEIGHT = 135
 
@@ -174,16 +176,31 @@ data.Taraxacum = {
     color = 12,
 
     radius = 2,
-
     staticRadius = 3,
     bodyColor = 3,
     staticBodyLength = 10,
     staticTaraxacumSpawnTile = { 34 },
 
-    deathBulletSpread = 1,
-    deathBulletCount = 12,
-    deathBulletSpeed = 0.5,
+    deathBulletCount = 6,
+    deathBulletSlowCount = 3,
+    deathBulletFastCount = 3,
+
+    deathBulletSpeed = 0.37,
+    deathSlowBulletSpeed = 0.2,
+    deathFastBulletSpeed = 0.5,
+
+    deathBulletSpread = 2.5,
+
     deathBulletSprite = Sprite:new({378}, 1),
+}
+
+data.StaticTaraxacum = {
+    radius = 2,
+    speed = 2,
+    deathBulletCount = 6,
+    deathBulletSlowCount = 3,
+    deathBulletFastCount = 3,
+    deathBulletSpread = 2,
 }
 
 local turnOnAnimationFrames = {}
@@ -289,6 +306,7 @@ data.Bullet = {
 
 data.Snowman = {
     speed = data.Player.speed - 0.41,
+    speedWithWhirl = data.Player.speed - 0.61,
     hp = 10,
     prepareJumpTime = 20,
     --jumpTime = 20,
@@ -305,6 +323,21 @@ data.Snowman.specialTaraxacum = {
     bodyColor = 10,
     color = 12,
     reloadAnimationTime = 18, -- in tics should divide by 3
+}
+
+data.Snowman.whirl = {
+    fadeTimeMs = 300, -- Время до исчезания частички вихря
+    sprite = Sprite:new({350}, 1),
+    rotationSpeed = 0.005, -- Скорость вращения палки. Так мало, потому что миллисекунды 😏
+    particleEmitDelayMs = 25, -- Задержка между спавном частиц вихря
+    taraxacum = {
+        radius = 7, -- Радиус одуванчика на палке при вращении
+
+        deathBulletCount = 12, -- Количество пуль после смерти одуванчика
+        deathSlowBulletCount = 6,
+        deathFastBulletCount = 6,
+    },
+    endTaraxacumSpeed = 1.5, -- Скорость одуванчика, который запускается после конца атаки.
 }
 
 data.Snowman.spawnTiles = {65}
