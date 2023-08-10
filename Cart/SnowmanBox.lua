@@ -39,6 +39,7 @@ function SnowmanBox:_spawnSnowman()
     table.insert(game.updatables, snowman)
     table.insert(game.drawables, snowman)
     table.insert(game.collideables, snowman)
+    self:deactivate()
 end
 
 function SnowmanBox:_changeSprite()
@@ -48,6 +49,7 @@ end
 function SnowmanBox:update()
     -- self.checkTimer() -- Можно использовать если метроном не оч 🙄🙄
     if game.metronome.on_beat and self:_distanceToPlayer() < self.wakeUpDistance then
+
         self:_spawnSnowman()
         self:_changeSprite()
     end
