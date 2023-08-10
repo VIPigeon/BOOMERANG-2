@@ -114,6 +114,15 @@ function Player:_tryMove(movementNormalizer)
     else
         self:move(dx, dy)
     end
+
+    local tilex = self.x // 8
+    local tiley = self.y // 8
+    for _, tile in ipairs(game.transitionTiles) do
+        if tile.x == tilex and tile.y == tiley and game.playerArea ~= tile.area then
+            game.playerArea = tile.area
+            trace('Player transitioned into area ' .. game.playerArea)
+        end
+    end
 end
 
 function Player:_movementNormalizerGen()

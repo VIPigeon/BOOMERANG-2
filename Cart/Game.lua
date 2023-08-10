@@ -5,7 +5,7 @@ local function createMetronome()
 end
 
 local function createCheckpoints()
-    checkpoints = {}
+    local checkpoints = {}
 
     for x = 0, MAP_WIDTH do
         for y = 0, MAP_HEIGHT do
@@ -192,11 +192,50 @@ local function createEnemies()
     return enemem
 end
 
+function game.updateActiveEnemies()
+    local plarea = game.playerArea
+
+    for _, enemy in ipairs(game.enemies) do
+        if enemy.isActive ~= nil then
+            local enemyLocation = MapAreas.findAreaWithTile(enemy.x // 8, enemy.y // 8)
+            enemy.isActive = plarea == enemyLocation
+            
+            --debug
+            --local lol = -1
+            -- if enemy.isActive then
+            --     lol = 1
+            -- else
+            --     lol = 0
+            -- end
+            -- trace(enemy.x..' '..enemy.y..' '..lol..' '..enemyLocation)
+        end
+    end
+end
+
+function game.updatePlayerArea()
+    if game.playerAreaLast then
+        if game.playerAreaLast == game.playerArea then
+            return
+        else
+            --trace('changing...')
+            game.playerAreaLast = game.playerArea
+            game.updateActiveEnemies()
+        end
+    else
+        game.playerAreaLast = 0
+    end
+end
+
 local function createBoomerang(x, y)
     return Boomerang:new(x, y, 0, 0)
 end
 
 local function createPlayer(x, y, boomerang)
+    local tilex = x // 8
+    local tiley = y // 8
+    game.playerArea = MapAreas.findAreaWithTile(tilex, tiley)
+    trace('Player is in area ' .. game.playerArea)
+
     return Player:new(x, y, boomerang)
 end
 
@@ -234,10 +273,20 @@ function game.load()
     return checkpoint
 end
 
+-- Глобальные элементы игры, которые не
+-- меняются от сохранений (если игрок
+-- респавнится на чекпоинте, штуки снизу
+-- не изменятся)
+game.areas, game.transitionTiles = MapAreas.generate()
+-- for _, tile in ipairs(game.transitionTiles) do
+--     trace(tile.x .. ' ' .. tile.y .. ' ' .. tile.area)
+-- end
 local levers = createLevers()
 local doors = createDoors(levers)
 local settingLevers = createSettingLevers()
 
+-- Все элементы игры, которые появляются 
+-- заново после смерти игрока.
 function game.restart()
     local spawnpoint = game.load()
 
@@ -302,16 +351,16 @@ function game.update()
         table.removeElement(game.drawables, deleted)
     end
 
-    -- if settings[1].state then
-    --     trace(settings[1].name)
-    -- end
-    -- if settings[2].state then
-    --     trace(settings[2].name)
-    -- end
+    game.updatePlayerArea()
 
     Time.update()
 
     game.draw()
+
+    --debug
+    -- for i, tile in ipairs(game.transitionTiles) do
+    --     rect(8 * tile.x - gm.x*8 + gm.sx, 8 * tile.y - gm.y*8 + gm.sy, 8, 8, 1)
+    -- end
 end
 
 return game

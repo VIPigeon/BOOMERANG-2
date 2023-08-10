@@ -12,6 +12,8 @@ function Enemy:new(x, y)
         hp = data.Enemy.defaultHP,
         isEnemy = true,
         currentAnimations = {},
+
+        isActive = false, -- активируется, когда в зону входит игрок
     }
 
     setmetatable(obj, self)
@@ -47,15 +49,19 @@ function Enemy:draw()
 end
 
 function Enemy:update()
-    if game.boomer.hitbox:collide(self.hitbox) then
-        local damage = game.boomer.dpMs * Time.dt()
-        self:takeDamage(damage)
-    end
-    if self:isDeadCheck() then
-        self:die()
-    end
+    if self.isActive then
+        if game.boomer.hitbox:collide(self.hitbox) then
+            local damage = game.boomer.dpMs * Time.dt()
+            self:takeDamage(damage)
+        end
+        if self:isDeadCheck() then
+            self:die()
+        end
 
-    self:_focusAnimations()
+        self:_focusAnimations()
+    else
+        return
+    end
 end
 
 function Enemy:die()
