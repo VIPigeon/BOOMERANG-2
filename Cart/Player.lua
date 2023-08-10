@@ -219,6 +219,11 @@ function Player:update()
         return
     end
 
+    if keyp(KEY_B) then
+        -- Metronome :(
+        game.metronome.onBass = not game.metronome.onBass
+    end
+
     self:_willMoveCheck() -- wanna move?~
 
     self:_verticalFlipCalculator() -- will flip?

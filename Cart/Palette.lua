@@ -51,7 +51,6 @@ end
 for i = 1, 15 do
     local color = palette.getColor(i)
     table.insert(palette.defaultColors, color)
-    trace(#palette.defaultColors)
 end
 
 return palette

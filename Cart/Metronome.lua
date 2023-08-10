@@ -19,7 +19,7 @@ function Metronome:new(bpm)
         time = 0,
         msPerBeat = (60 * 1000) / bpm,
         onBeat = false,
-        onBass = false,
+        onBass = true,
         
         onOddBeat = false,
         onEvenBeat = false,
@@ -66,13 +66,6 @@ function Metronome:update()
         self.beatCount = self.beatCount + 1
         self.time = 0
     end
-
-    if self.time >= self.smallTick then
-        self.onBass = true
-    else
-        self.onBass = false
-    end
-    self.onBass = true
 
     self.time = self.time + Time.dt()
 end

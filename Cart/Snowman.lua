@@ -12,6 +12,7 @@ function Snowman:new(x, y, hasTaraxacum)
             data.Snowman.specialTaraxacum.shiftForCenterY
         )
     end
+
     local object = {
         x = x,
         y = y,
@@ -25,6 +26,7 @@ function Snowman:new(x, y, hasTaraxacum)
         theWay = nil,
 
         status = 'idle',
+        attackStatus = 'idle',
         chaseStatus = 'no chase 🙄',
 
         currentAnimations = {},
@@ -40,19 +42,25 @@ end
 
 function Snowman:_prepareJumpActivate()
     self.status = 'steady'
-    self.sprite = data.Snowman.sprites.prepareJump:copy()
+    if not (self.attackStatus == 'whirl') then
+        self.sprite = data.Snowman.sprites.prepareJump:copy()
+    end
     self.forJumpTime = 0
 end
 
 function Snowman:_jumpActivate()
     self.status = 'go'
-    self.sprite = data.Snowman.sprites.flyJump:copy()
+    if not (self.attackStatus == 'whirl') then
+        self.sprite = data.Snowman.sprites.flyJump:copy()
+    end
     self.forJumpTime = 0
 end
 
 function Snowman:_resetJumpActivate()
     self.status = 'ready'
-    self.sprite = data.Snowman.sprites.resetJump:copy()
+    if not (self.attackStatus == 'whirl') then
+        self.sprite = data.Snowman.sprites.resetJump:copy()
+    end
     self.forJumpTime = 0
     --error('not implemented error on Snowman:_resetJumpActivate()')
 end
@@ -72,8 +80,18 @@ function Snowman:_moveOneTile() -- оптимизируем вычисления
     end
 end
 
+function Snowman:_moveWhirlAttack()
+    -- kawaii-Code@boomerang2.com: Тот кто увидит этот комментарий должен удалить
+    -- эту функцию. 🥵🤬🤬
+    -- Linux Torbolts@boomerang2.com: я закомментирую, вдруг ещё пригодится 🤓👍
+    -- kawaii-Code@boomerang2.com: Ладно, не удаляйте 😅😅
+    if self.whirlAttack then
+        self.whirlAttack.x = self.hitbox:get_center().x
+        self.whirlAttack.y = self.hitbox:get_center().y 
+    end
+end
+
 function Snowman:_slowMoveOneTile(vector, neededXY)
-    --trace(neededXY.x..' '..neededXY.y..' '..self.x..' '..self.y)
     if math.abs(self.x - neededXY.x) < 1 then
         self.x = neededXY.x
     end
@@ -83,12 +101,14 @@ function Snowman:_slowMoveOneTile(vector, neededXY)
     if self.x == neededXY.x and self.y == neededXY.y then
         self.hitbox:set_xy(self.x, self.y)
         self.taraxacum:move(self.x, self.y)
+        self:_moveWhirlAttack()
         return true
     end
     self.x = self.x + vector.x * self.speed
     self.y = self.y + vector.y * self.speed
     self.hitbox:set_xy(self.x, self.y)
     self.taraxacum:move(self.x, self.y)
+    self:_moveWhirlAttack()
 end
 
 function Snowman:_updatePath()
@@ -100,14 +120,13 @@ function Snowman:_updatePath()
 end
 
 function Snowman:_onBeat()
-    if game.metronome.onOddBeat then
+    if self.attackStatus == 'whirl' then
+        return
+    elseif game.metronome.onOddBeat then
         self:_prepareJumpActivate()
     elseif game.metronome.onEvenBeat then
         self:_jumpActivate()
     end
-    
-    --trace(self.status)
-    --trace(self.chaseStatus)
 end
 
 function Snowman:_setPath() 
@@ -127,6 +146,23 @@ function Snowman:update()
         local damage = game.boomer.dpMs * Time.dt()
         self:takeDamage(damage)
     end
+    
+    if not game.metronome.onBass and self.attackStatus == 'whirl' then
+        self.speed = data.Snowman.speed
+        self.attackStatus = 'idle'
+        self.whirlAttack:endAttack()
+        self.whirlAttack = nil -- Чтобы жесткие ошибки 😱😱😷
+    end
+    
+    if game.metronome.onBass and self.attackStatus ~= 'whirl' then
+        self.attackStatus = 'whirl'
+        self.speed = data.Snowman.speedWithWhirl
+        -- DO: Тут костыль +8
+        -- Готово 🤠
+        self.whirlAttack = SnowmanWhirlAttack:new(self.hitbox:get_center().x, self.hitbox:get_center().y, self.taraxacum.h)
+    end
+
+    self:_focusAnimations()
 
     if self.status == 'dying' then
         self.sprite:nextFrame()
@@ -142,6 +178,21 @@ function Snowman:update()
         return
     end
 
+    if game.metronome.on_beat then
+        --if game.metronome.onOddBeat then
+            self:_setPath() -- перенести на оддБит
+        --end
+        self:_onBeat()
+    end
+
+    if self.attackStatus == 'whirl' then
+        self.whirlAttack:update()
+        self.sprite = data.Snowman.sprites.chill:copy()
+        if self.theWay then
+            self:_moveOneTile()
+        end
+    end
+
     --разбили время на прыжок на две равные части, фрейм меняем в соответствующее время
     if self.status == 'steady' then
         self.forJumpTime = self.forJumpTime + 1
@@ -155,13 +206,11 @@ function Snowman:update()
     if self.status == 'go' then
         self:_moveOneTile()
         if self:_moveOneTile() then
-            --trace('phew')
             self:_resetJumpActivate()
         end
     end
 
     if self.status == 'ready' then
-        --trace('im ready')
         self.forJumpTime = self.forJumpTime + 1
         if self.forJumpTime == data.Snowman.resetJumpTime then
             self.status = 'idle'
@@ -181,12 +230,17 @@ function Snowman:update()
 end
 
 function Snowman:draw()
+    if self.attackStatus == 'whirl' then
+        self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
+        self.whirlAttack:draw()
+    end
+
     aim.visualizePath(self.theWay)
 
     self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
     --line(self.x + 5 - gm.x*8 + gm.sx, self.y + 10 - gm.y*8 + gm.sy, self.x + 18 - gm.x*8 + gm.sx, self.y - 3 - gm.y*8 + gm.sy, 10)
     --hard🥵coded stick
-    if self.taraxacum then
+    if not (self.attackStatus == 'whirl') and self.taraxacum then
         self.taraxacum:draw()
     end
 

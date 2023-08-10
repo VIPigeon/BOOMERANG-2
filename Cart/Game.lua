@@ -181,7 +181,9 @@ local function createEnemies()
             table.insert(game.updatables, taraxacum)
             table.insert(game.drawables, taraxacum)
         elseif respawnTile.type == 'snowman' then
-            enemy = Snowman:new(8 * respawnTile.x, 8 * respawnTile.y, true)
+            local snowmanBox = SnowmanBox:new(8 * respawnTile.x, 8 * respawnTile.y)
+            table.insert(game.updatables, snowmanBox)
+            table.insert(game.drawables, snowmanBox)
         end
 
         if enemy then
@@ -197,6 +199,7 @@ function game.updateActiveEnemies()
 
     for _, enemy in ipairs(game.enemies) do
         if enemy.isActive ~= nil then
+            -- TODO: OPTIMIZE PRIME
             local enemyLocation = MapAreas.findAreaWithTile(enemy.x // 8, enemy.y // 8)
             enemy.isActive = plarea == enemyLocation
             
@@ -207,18 +210,15 @@ function game.updateActiveEnemies()
             else
                 lol = 0
             end
-            trace(enemy.x..' '..enemy.y..' '..lol..' '..enemyLocation)
         end
     end
 end
 
 function game.updatePlayerArea()
     if game.playerAreaLast then
-        trace(game.playerAreaLast..' '..game.playerArea)
         if game.playerAreaLast == game.playerArea then
             return
         else
-            --trace('changing...')
             game.playerAreaLast = game.playerArea
             game.updateActiveEnemies()
         end
@@ -235,7 +235,6 @@ local function createPlayer(x, y, boomerang)
     local tilex = x // 8
     local tiley = y // 8
     game.playerArea = MapAreas.findAreaWithTile(tilex, tiley)
-    trace('Player is in area ' .. game.playerArea)
 
     return Player:new(x, y, boomerang)
 end
@@ -279,9 +278,7 @@ end
 -- респавнится на чекпоинте, штуки снизу
 -- не изменятся)
 game.areas, game.transitionTiles = MapAreas.generate()
--- for _, tile in ipairs(game.transitionTiles) do
---     trace(tile.x .. ' ' .. tile.y .. ' ' .. tile.area)
--- end
+
 local levers = createLevers()
 local doors = createDoors(levers)
 local settingLevers = createSettingLevers()
@@ -349,9 +346,10 @@ function game.update()
         updatable:update()
     end
 
-    for _, deleted in ipairs(game.deleteSchedule) do
-        table.removeElement(game.updatables, deleted)
-        table.removeElement(game.drawables, deleted)
+    if #game.deleteSchedule > 0 then
+        table.removeElements(game.updatables, game.deleteSchedule)
+        table.removeElements(game.drawables, game.deleteSchedule)
+        game.deleteSchedule = {}
     end
 
     game.updatePlayerArea()

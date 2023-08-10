@@ -3,6 +3,12 @@
 --😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣
 
 function SpecialTaraxacum:new(x, y, radius, bodyLength, shiftX, shiftY)
+    local speed = data.StaticTaraxacum.speed
+    local count = data.StaticTaraxacum.deathBulletCount
+    local countSlow = data.StaticTaraxacum.deathBulletSlowCount
+    local countFast = data.StaticTaraxacum.deathBulletFastCount
+    local spread = data.StaticTaraxacum.deathBulletSpread
+
     local object = {
         x = x,
         y = y,
@@ -15,6 +21,12 @@ function SpecialTaraxacum:new(x, y, radius, bodyLength, shiftX, shiftY)
         dead = false,
         status = 'needReload',
         timer = 0,
+
+        speed = speed,
+        count = count,
+        countSlow = countSlow,
+        countFast = countFast,
+        spread = spread,
     }
 
     setmetatable(object, self)

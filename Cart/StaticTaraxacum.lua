@@ -1,6 +1,12 @@
 StaticTaraxacum = table.copy(Taraxacum)
 
 function StaticTaraxacum:new(x, y, radius, bodyLength)
+    radius = radius or data.StaticTaraxacum.radius
+    local speed = data.StaticTaraxacum.speed
+    local count = data.StaticTaraxacum.deathBulletCount
+    local countSlow = data.StaticTaraxacum.deathBulletSlowCount
+    local countFast = data.StaticTaraxacum.deathBulletFastCount
+    local spread = data.StaticTaraxacum.deathBulletSpread
     local object = {
         x = x,
         y = y,
@@ -9,6 +15,11 @@ function StaticTaraxacum:new(x, y, radius, bodyLength)
         radius = radius,
         hitbox = HitCircle:new(x, y, 2 * radius),
         dead = false,
+        speed = speed,
+        count = count,
+        countSlow = countSlow,
+        countFast = countFast,
+        spread = spread,
     }
 
     setmetatable(object, self)
@@ -26,7 +37,6 @@ end
 function StaticTaraxacum:_destroy()
     table.removeElement(game.updatables, self)
     self.dead = true
-    trace(self.dead)
 end
 
 function StaticTaraxacum:_move()
