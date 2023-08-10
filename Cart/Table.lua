@@ -53,6 +53,14 @@ function table.removeElement(t, element)
     end
 end
 
+function table.removeElements(t, removed)
+    for i, value in ipairs(t) do
+        if table.contains(removed, value) then
+            table.remove(t, i)
+        end
+    end
+end
+
 function table.reversed(t)
     res = {}
     for i = #t, 1, -1 do

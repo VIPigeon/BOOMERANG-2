@@ -261,9 +261,10 @@ function game.update()
         updatable:update()
     end
 
-    for _, deleted in ipairs(game.deleteSchedule) do
-        table.removeElement(game.updatables, deleted)
-        table.removeElement(game.drawables, deleted)
+    if #game.deleteSchedule > 0 then
+        table.removeElements(game.updatables, game.deleteSchedule)
+        table.removeElements(game.drawables, game.deleteSchedule)
+        game.deleteSchedule = {}
     end
 
     Time.update()
