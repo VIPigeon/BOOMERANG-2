@@ -142,7 +142,7 @@ function Rose:update()
             return
         end
 
-        if game.metronome.onBeat then
+        if game.metronome.onBass then
             self:onBeat()
         end
 
