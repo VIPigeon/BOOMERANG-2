@@ -192,31 +192,33 @@ function AutoBulletHell:_shoot()
 end
 
 function AutoBulletHell:_superAim(startX, startY)
-    local px = game.player.hitbox:get_center().x - startX
-    local py = game.player.hitbox:get_center().y - startY
+    -- dirx, diry - направление к игроку
+    local dirx = game.player.hitbox:get_center().x - startX
+    local diry = game.player.hitbox:get_center().y - startY
     
-    -- Здесь не учитывается movementNormalizer
     local dirX = game.player.dx
     local dirY = game.player.dy
-    local dx = dirX * game.player.speed
-    local dy = dirY * game.player.speed
-    if dx ~= 0 and dy ~= 0 then
-        dx = dx * data.Player.movementNormalizerDiagonal
-        dy = dy * data.Player.movementNormalizerDiagonal
+    -- vx, vy - velocity крч. Она точно правильная
+    local vx = dirX * game.player.speed
+    local vy = dirY * game.player.speed
+    if vx ~= 0 and vy ~= 0 then
+        vx = vx * data.Player.movementNormalizerDiagonal
+        vy = vy * data.Player.movementNormalizerDiagonal
     end
 
     local s = self.bulletSpeed
 
-    -- ЧТОООООООООО!:!? :!KJ 
-    local a = dx*dx + dy*dy - s*s
-    local b = px*dx + py*dy
-    local c = px*px + py*py
+    -- Квадратное уравнение
+    local a = vx*vx + vy*vy - s*s
+    local b = dirx*vx + diry*vy
+    local c = dirx*dirx + diry*diry
     local d = b*b - a * c
     local t = (b + math.sqrt(d)) / a
-    trace('t: ' .. t .. ' dx: ' .. dx .. ' dy: ' .. dy .. ' px: ' .. px .. ' py: ' .. py)
+    trace('t: ' .. t .. ' vx: ' .. vx .. ' vy: ' .. vy .. ' dirx: ' .. dirx .. ' diry: ' .. diry)
 
-    local resX = px/t + dx
-    local resY = py/t + dy
+    -- Здесь по t находим нужную нам скорость (здесь может быть ошибка!)
+    local resX = dirx/t + vx
+    local resY = diry/t + vy
 
     vec = math.vecNormalize({x=resX, y=resY})
 
@@ -224,6 +226,6 @@ function AutoBulletHell:_superAim(startX, startY)
 
     return {
         x = vec.x,
-        y = -vec.y,
+        y = vec.y,
     }
 end
