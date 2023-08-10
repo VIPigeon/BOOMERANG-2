@@ -181,7 +181,9 @@ local function createEnemies()
             table.insert(game.updatables, taraxacum)
             table.insert(game.drawables, taraxacum)
         elseif respawnTile.type == 'snowman' then
-            enemy = Snowman:new(8 * respawnTile.x, 8 * respawnTile.y, true)
+            local snowmanBox = SnowmanBox:new(8 * respawnTile.x, 8 * respawnTile.y)
+            table.insert(game.updatables, snowmanBox)
+            table.insert(game.drawables, snowmanBox)
         end
 
         if enemy then

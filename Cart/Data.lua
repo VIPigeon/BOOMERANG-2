@@ -317,4 +317,11 @@ data.Snowman.sprites = {
     death = Sprite:new(anim.gen60({312,314,312,314,312}), 2)
 }
 
+-- Я дурак 😫
+data.SnowmanBox = {}
+data.SnowmanBox.playerCheckFrequencyMs = 1000
+data.SnowmanBox.wakeUpDistanceToPlayer = 48
+data.SnowmanBox.sleepSprite = Sprite:new({485}, 2)
+data.SnowmanBox.wokeupSprite = Sprite:new({487}, 2)
+
 return data
