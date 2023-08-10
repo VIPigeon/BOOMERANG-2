@@ -162,15 +162,21 @@ data.Taraxacum = {
     color = 12,
 
     radius = 2,
-
     staticRadius = 3,
     bodyColor = 3,
     staticBodyLength = 10,
     staticTaraxacumSpawnTile = { 34 },
 
-    deathBulletSpread = 1,
-    deathBulletCount = 12,
-    deathBulletSpeed = 0.5,
+    deathBulletSpread = 2.5,
+
+    deathBulletCount = 6,
+    deathBulletSlowCount = 3,
+    deathBulletFastCount = 3,
+
+    deathBulletSpeed = 0.37,
+    deathSlowBulletSpeed = 0.2,
+    deathFastBulletSpeed = 0.5,
+
     deathBulletSprite = Sprite:new({378}, 1),
 }
 
@@ -298,9 +304,12 @@ data.Snowman.whirl = {
     particleEmitDelayMs = 25, -- Задержка между спавном частиц вихря
     taraxacum = {
         radius = 7, -- Радиус одуванчика на палке при вращении
-        deathBulletCount = 24, -- Количество пуль после смерти одуванчика
+
+        deathBulletCount = 12, -- Количество пуль после смерти одуванчика
+        deathSlowBulletCount = 6,
+        deathFastBulletCount = 6,
     },
-    endTaraxacumSpeed = 5, -- Скорость одуванчика, который запускается после конца атаки.
+    endTaraxacumSpeed = 1.5, -- Скорость одуванчика, который запускается после конца атаки.
 }
 
 data.Snowman.spawnTiles = {65}

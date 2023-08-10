@@ -26,7 +26,6 @@ end
 function StaticTaraxacum:_destroy()
     table.removeElement(game.updatables, self)
     self.dead = true
-    trace(self.dead)
 end
 
 function StaticTaraxacum:_move()
