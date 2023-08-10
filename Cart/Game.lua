@@ -138,6 +138,9 @@ local function createEnemies()
                 elseif table.contains(data.BulletHell.spawnTiles, id) then
                     table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='bullethell'})
                     mset(x, y, C0)
+                elseif table.contains(data.AutoBulletHell.spawnTiles, id) then
+                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='autobullethell'})
+                    mset(x, y, C0)
                 elseif table.contains(data.Taraxacum.staticTaraxacumSpawnTile, id) then
                     table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='taraxacum'})
                     mset(x, y, C0)
@@ -173,6 +176,8 @@ local function createEnemies()
         elseif respawnTile.type == 'bullethell' then
             local type = respawnTile.tileid - data.BulletHell.spawnTiles[1] + 1
             enemy = BulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, type)
+        elseif respawnTile.type == 'autobullethell' then
+            enemy = AutoBulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, 1, 13)
         elseif respawnTile.type == 'taraxacum' then
             local radius = data.Taraxacum.staticRadius
             local bodyLength = data.Taraxacum.staticBodyLength

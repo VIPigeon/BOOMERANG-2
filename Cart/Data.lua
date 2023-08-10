@@ -303,6 +303,10 @@ data.BulletHell.sprites = {
     defaultSprite = 999,
 }
 
+data.AutoBulletHell = {
+    spawnTiles = {66,}
+}
+
 data.Bullet = {
     defaultSpeed = 0.5,
     defaultSprite = Sprite:new({373}, 1),

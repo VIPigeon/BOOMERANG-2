@@ -1,10 +1,12 @@
 BulletHell = table.copy(Enemy)
 
-function BulletHell:new(x, y, type)
+function BulletHell:new(x, y, type, color)
     local bullets = {}
     for i = 1, data.BulletHell.bulletCount[type] do
         bullets[i] = HellBullet:new()
     end
+
+    color = color or 14 -- lol
 
     local object = {
         x = x,
@@ -20,6 +22,7 @@ function BulletHell:new(x, y, type)
         hitbox = HitCircle:new(x, y, data.BulletHell.circleDiameter[type]),
         time = 0,
         status = '',
+        color = color,
 
         reloadingBullets = {},
         currentAnimations = {},
@@ -34,7 +37,7 @@ function BulletHell:new(x, y, type)
     return object
 end
 
-function BulletHell:_shoot()
+function BulletHell:_selectBullet()
     local minDist = 2147483647
     local minId = -1
     for i, bull in ipairs(self.bullets) do
@@ -47,9 +50,15 @@ function BulletHell:_shoot()
         end
     end
 
-    local bull = self:_createShootBullet()
     local byTouchId = (minId + data.BulletHell.bulletCount[self.type] - data.BulletHell.bulletCount[self.type] // 4 - 1) % data.BulletHell.bulletCount[self.type] + 1
     table.insert(self.reloadingBullets, self.bullets[(byTouchId - 1) % 8 + 1])
+
+    return byTouchId
+end
+
+function BulletHell:_shoot()
+    local byTouchId = self:_selectBullet()
+    local bull = self:_createShootBullet()
     bull.x = self.bullets[byTouchId].x
     bull.y = self.bullets[byTouchId].y
     bull.hitbox:set_xy(bull.x, bull.y)
@@ -158,11 +167,63 @@ function BulletHell:draw()
         end
     end
 
-    self.hitbox:draw(14)
+    self.hitbox:draw(self.color)
 
     for i = 1, #self.bullets do
         self.bullets[i]:draw()
     end
 
     self:_drawAnimations()
+end
+
+AutoBulletHell = table.copy(BulletHell)
+
+function AutoBulletHell:_shoot()
+    local byTouchId = self:_selectBullet()
+    local bull = self:_createShootBullet()
+    bull.x = self.bullets[byTouchId].x
+    bull.y = self.bullets[byTouchId].y
+    trace('before: ' .. bull.x .. ' ' .. bull.y)
+    bull.hitbox:set_xy(bull.x, bull.y)
+    local kawaiiCode = self:_superAim(bull.x, bull.y)
+    bull:setVelocity(kawaiiCode.x, kawaiiCode.y)
+    bull.speed = self.bulletSpeed
+    trace('after: ' .. bull.x .. ' ' .. bull.y)
+end
+
+function AutoBulletHell:_superAim(startX, startY)
+    local px = game.player.hitbox:get_center().x - startX
+    local py = game.player.hitbox:get_center().y - startY
+    
+    -- Здесь не учитывается movementNormalizer
+    local dirX = game.player.dx
+    local dirY = game.player.dy
+    local dx = dirX * game.player.speed
+    local dy = dirY * game.player.speed
+    if dx ~= 0 and dy ~= 0 then
+        dx = dx * data.Player.movementNormalizerDiagonal
+        dy = dy * data.Player.movementNormalizerDiagonal
+    end
+
+    local s = self.bulletSpeed
+
+    -- ЧТОООООООООО!:!? :!KJ 
+    local a = dx*dx + dy*dy - s*s
+    local b = px*dx + py*dy
+    local c = px*px + py*py
+    local d = b*b - a * c
+    local t = (b + math.sqrt(d)) / a
+    trace('t: ' .. t .. ' dx: ' .. dx .. ' dy: ' .. dy .. ' px: ' .. px .. ' py: ' .. py)
+
+    local resX = px/t + dx
+    local resY = py/t + dy
+
+    vec = math.vecNormalize({x=resX, y=resY})
+
+    trace('rx: ' .. vec.x .. ' ' .. 'ry: ' .. vec.y)
+
+    return {
+        x = vec.x,
+        y = -vec.y,
+    }
 end
