@@ -10,7 +10,12 @@ function Lever:new(x, y)
         wires = {},
         door = nil,
         sprite = Lever.spriteOff:copy(),
-        hitbox = Hitbox:new(x, y - 3, x+8, y - 3+8),
+        hitbox = Hitbox:new(
+            x + data.Lever.hitboxShiftX,
+            y - 3 + data.Lever.hitboxShiftY,
+            x + data.Lever.hitboxShiftX + data.Lever.hitboxWidth,
+            y - 3 + data.Lever.hitboxShiftY + data.Lever.hitboxHeight
+            ),
         status = 'off'
     }
 
@@ -68,4 +73,5 @@ function Lever:update()
         end
     end
     
+    self.hitbox:draw(3)
 end

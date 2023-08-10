@@ -218,7 +218,12 @@ data.solidTiles = {
 --     trace(t..' ')
 -- end
 
-data.Lever = {}
+data.Lever = {
+    hitboxShiftX = 2,
+    hitboxShiftY =2,
+    hitboxWidth = 2,
+    hitboxHeight = 4,
+}
 data.Lever.sprites = {
     on = Sprite:new({3},1),
     off = Sprite:new({2},1),
