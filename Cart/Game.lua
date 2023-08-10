@@ -214,6 +214,7 @@ end
 
 function game.updatePlayerArea()
     if game.playerAreaLast then
+        trace(game.playerAreaLast..' '..game.playerArea)
         if game.playerAreaLast == game.playerArea then
             return
         else
@@ -222,7 +223,7 @@ function game.updatePlayerArea()
             game.updateActiveEnemies()
         end
     else
-        game.playerAreaLast = 0
+        game.playerAreaLast = -2147483648
     end
 end
 
@@ -327,6 +328,8 @@ function game.restart()
     game.boomer = boomerang
     game.camera = camera
     game.enemies = enemies
+
+    game.updateActiveEnemies()
 end
 
 game.restart()

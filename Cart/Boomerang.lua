@@ -36,6 +36,7 @@ function Boomerang:init(x, y, dx, dy)
     self.speed = data.Boomerang.speed
     if self.shakeOld then
         game.camera:shake(0.2)
+        self.shaking = true
     end
 end
 
@@ -56,8 +57,9 @@ function Boomerang:update()
         self:focus()
         if self.hitbox:collide(game.player.hitbox) and
                 self.speed < game.player.speed then
-            if self.shakeOld then
+            if self.shakeOld or self.shaking then
                 game.camera:shakeStop()
+                self.shaking = false
             end
             self.active = false
             self.hitbox:set_xy(-1000, -1000)
