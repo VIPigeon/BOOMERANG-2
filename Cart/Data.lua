@@ -157,6 +157,7 @@ data.Door = {
     heightTiles = 4,
     shakeTimeTics = 20,
     closedGapInPixels = 4,
+    solidTileId = 207,
 }
 data.Door.spriteTiles = {
     upperLeft = 204,
@@ -230,10 +231,17 @@ data.solidTiles = {
     224, 225, 226,
     240, 241, 242,
 }
+
 -- table.concatTable(data.solidTiles,) --> (ノ｀Дa почему??)ノ - да потому!
 -- for i, t in ipairs(data.solidTiles) do
 --     trace(t..' ')
 -- end
+
+data.bfs = {'😎'}
+
+data.bfs.solidTiles = {
+    207, -- special tile for door to make it fit SOLID principles
+}
 
 data.Lever = {
     hitboxShiftX = 2,

@@ -39,6 +39,7 @@ function SnowmanBox:_spawnSnowman()
     table.insert(game.updatables, snowman)
     table.insert(game.drawables, snowman)
     table.insert(game.collideables, snowman)
+    table.insert(game.enemies, snowman) -- всем привет, пока что он здесь не босс 👾
     self:deactivate()
 end
 
