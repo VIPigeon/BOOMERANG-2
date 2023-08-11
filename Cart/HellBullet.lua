@@ -5,7 +5,7 @@ function HellBullet:new()
         x = 0,
         y = 0,
         sprite = data.Bullet.reloadAnimation:copy(),
-        hitbox = Hitbox:new(0, 0, 2, 2),
+        hitbox = Hitbox:new_with_shift(0, 0, 2, 2, 1, 1),
         status = 'idle',
     }
 
@@ -30,6 +30,9 @@ function HellBullet:update()
     end
 end
 
-function HellBullet:draw()
-    self.sprite:draw(self.x - 2 - gm.x*8 + gm.sx, self.y - 2 - gm.y*8 + gm.sy, self.flip, self.rotate)
+function HellBullet:draw(color)
+    local x = self.x - gm.x*8 + gm.sx
+    local y = self.y - gm.y*8 + gm.sy
+
+    self.hitbox:draw(color)
 end

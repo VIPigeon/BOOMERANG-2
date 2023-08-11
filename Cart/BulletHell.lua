@@ -1,10 +1,12 @@
 BulletHell = table.copy(Enemy)
 
-function BulletHell:new(x, y, type)
+function BulletHell:new(x, y, type, color, bulletSprite)
     local bullets = {}
     for i = 1, data.BulletHell.bulletCount[type] do
         bullets[i] = HellBullet:new()
     end
+
+    color = color or 14 -- lol
 
     local object = {
         x = x,
@@ -14,12 +16,14 @@ function BulletHell:new(x, y, type)
         bullets = bullets,
         bulletCount = data.BulletHell.bulletCount[type],
         bulletSpeed = data.BulletHell.bulletSpeed[type],
+        bulletSprite = bulletSprite,
         deathBulletSpeed = data.BulletHell.deathBulletSpeed[type],
         bulletRotateSpeed = data.BulletHell.bulletRotateSpeed[type],
         hp = data.BulletHell.hp[type],
         hitbox = HitCircle:new(x, y, data.BulletHell.circleDiameter[type]),
         time = 0,
         status = '',
+        color = color,
 
         reloadingBullets = {},
         currentAnimations = {},
@@ -34,7 +38,7 @@ function BulletHell:new(x, y, type)
     return object
 end
 
-function BulletHell:_shoot()
+function BulletHell:_selectBullet()
     local minDist = 2147483647
     local minId = -1
     for i, bull in ipairs(self.bullets) do
@@ -47,9 +51,15 @@ function BulletHell:_shoot()
         end
     end
 
-    local bull = self:_createShootBullet()
     local byTouchId = (minId + data.BulletHell.bulletCount[self.type] - data.BulletHell.bulletCount[self.type] // 4 - 1) % data.BulletHell.bulletCount[self.type] + 1
     table.insert(self.reloadingBullets, self.bullets[(byTouchId - 1) % 8 + 1])
+
+    return byTouchId
+end
+
+function BulletHell:_shoot()
+    local byTouchId = self:_selectBullet()
+    local bull = self:_createShootBullet()
     bull.x = self.bullets[byTouchId].x
     bull.y = self.bullets[byTouchId].y
     bull.hitbox:set_xy(bull.x, bull.y)
@@ -57,7 +67,7 @@ function BulletHell:_shoot()
 end
 
 function BulletHell:_createShootBullet()
-    local bull = Bullet:new(0, 0)
+    local bull = Bullet:new(0, 0, self.bulletSprite)
     bull.speed = self.bulletSpeed
     
     table.insert(game.drawables, bull)
@@ -158,10 +168,10 @@ function BulletHell:draw()
         end
     end
 
-    self.hitbox:draw(14)
+    self.hitbox:draw(self.color)
 
     for i = 1, #self.bullets do
-        self.bullets[i]:draw()
+        self.bullets[i]:draw(self.color)
     end
 
     self:_drawAnimations()
