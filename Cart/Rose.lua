@@ -133,6 +133,8 @@ function Rose:update()
         return
     end
 
+    self:_focusAnimations()
+
     if not self.isActive then
         return
     end
@@ -175,8 +177,6 @@ function Rose:update()
             self.sprite:setFrame(frame - 1)
         end
     end
-
-    self:_focusAnimations()
 end
 
 function Rose:draw()

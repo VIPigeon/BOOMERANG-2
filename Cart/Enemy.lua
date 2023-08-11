@@ -58,11 +58,11 @@ function Enemy:update()
         self:die()
     end
 
+    self:_focusAnimations()
+
     if not self.isActive then
         return
     end
-
-    self:_focusAnimations()
 end
 
 function Enemy:die()

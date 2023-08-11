@@ -96,9 +96,9 @@ function BulletHell:launchBulletsAround()
 end
 
 function BulletHell:update()
-    if self.hitbox:collide(game.boomer.hitbox) then
-        local damage = game.boomer.dpMs * Time.dt()
-        self:takeDamage(damage)
+    if self.status == 'dying' then
+        self.deathTick()
+        return
     end
 
     if self:isDeadCheck() then
@@ -114,10 +114,12 @@ function BulletHell:update()
         return
     end
 
-    if self.status == 'dying' then
-        self.deathTick()
-        return
+    if self.hitbox:collide(game.boomer.hitbox) then
+        local damage = game.boomer.dpMs * Time.dt()
+        self:takeDamage(damage)
     end
+
+    self:_focusAnimations()
 
     if not self.isActive then
         return
@@ -130,8 +132,6 @@ function BulletHell:update()
     for i = 1, #self.bullets do
         self.bullets[i]:update()
     end
-
-    self:_focusAnimations()
 end
 
 function BulletHell._moveBullets(bullethell, offset)
