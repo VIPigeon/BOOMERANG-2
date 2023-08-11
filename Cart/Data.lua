@@ -260,8 +260,8 @@ data.SettingLever.sprites = {
     off = Sprite:new({5}, 1),
 }
 
-data.Enemy = {
-    defaultHP = 5,
+data.Enemy = {  -- ahegao enemy
+    defaultHP = 20,
     defaultEnemyFlagTile = 98,
 }
 data.Enemy.sprites = {
