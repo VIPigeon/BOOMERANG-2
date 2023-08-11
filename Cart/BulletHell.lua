@@ -143,7 +143,7 @@ end
 
 function BulletHell:draw()
     if self.status == 'dying' then
-        self.hitbox:drawOutline(14)
+        self.hitbox:drawOutline(self.color)
         return
     end
 

@@ -304,7 +304,16 @@ data.BulletHell.sprites = {
 }
 
 data.AutoBulletHell = {
-    spawnTiles = {32,}
+    spawnTiles = {32,33,34},
+
+    circleDiameter = {5, 8, 16},
+    bulletSpeadRadius = {5, 8, 11},
+    bulletRotateSpeed = {1,1,1},
+    bulletCount = {8, 12, 16},
+    bulletSpeed = {0.8, 0.7, 0.8},
+    deathBulletSpeed = {0.3, 0.2, 0.1},
+    hp = {12, 25, 40},
+    deathTimeMs = 1000,
 }
 
 data.Bullet = {
