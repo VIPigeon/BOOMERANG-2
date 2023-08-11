@@ -157,6 +157,7 @@ data.Door = {
     heightTiles = 4,
     shakeTimeTics = 20,
     closedGapInPixels = 4,
+    solidTileId = 207,
 }
 data.Door.spriteTiles = {
     upperLeft = 204,
@@ -230,10 +231,17 @@ data.solidTiles = {
     224, 225, 226,
     240, 241, 242,
 }
+
 -- table.concatTable(data.solidTiles,) --> (ノ｀Дa почему??)ノ - да потому!
 -- for i, t in ipairs(data.solidTiles) do
 --     trace(t..' ')
 -- end
+
+data.bfs = {'😎'}
+
+data.bfs.solidTiles = {
+    207, -- special tile for door to make it fit SOLID principles
+}
 
 data.Lever = {
     hitboxShiftX = 2,
@@ -323,17 +331,25 @@ data.Bullet = {
 }
 
 data.Snowman = {
+    color = 12,
     speed = data.Player.speed - 0.41,
     speedWithWhirl = data.Player.speed - 0.61,
     hp = 10,
     prepareJumpTime = 20,
     --jumpTime = 20,
     resetJumpTime = 24,
+
+    deathParticleCountMin = 100,
+    deathParticleCountMax = 300,
+    deathAnimationParticleSpeed = 1,
+    deathAnimationParticleSpeedNormalizer = 0.4,
+    deathParticleMinSpeed = 1,
+    deathParticleSprite = Sprite:new({378}, 1),
 }
 
 data.Snowman.specialTaraxacum = {
     radius = 3,
-    bodyLength = 13,
+    bodyLength = 15,
     shiftForCenterX = 12,
     shiftForCenterY = -3,
     startStickX = 0,
@@ -346,7 +362,7 @@ data.Snowman.specialTaraxacum = {
 data.Snowman.whirl = {
     fadeTimeMs = 300, -- Время до исчезания частички вихря
     sprite = Sprite:new({350}, 1),
-    rotationSpeed = 0.005, -- Скорость вращения палки. Так мало, потому что миллисекунды 😏
+    rotationSpeed = 0.01, -- Скорость вращения палки. Так мало, потому что миллисекунды 😏
     particleEmitDelayMs = 25, -- Задержка между спавном частиц вихря
     taraxacum = {
         radius = 7, -- Радиус одуванчика на палке при вращении

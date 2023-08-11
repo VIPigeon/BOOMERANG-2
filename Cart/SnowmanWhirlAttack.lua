@@ -73,5 +73,16 @@ function SnowmanWhirlAttack:draw()
     local endX = x + self.bodyLength * math.cos(self.angle)
     local endY = y + self.bodyLength * math.sin(self.angle)
     line(x, y, endX, endY, data.Snowman.specialTaraxacum.bodyColor)
+
     self.taraxacum:draw()
+
+    local armLength = self.bodyLength / 3
+    local armX = x + armLength * math.cos(self.angle)
+    local armY = y + armLength * math.sin(self.angle)
+    
+    -- МАГИЧЕСКИЕ ЧИСЛА 👽👽👽👺
+    -- left arm
+    line (x - 2, y - 2, armX, armY, data.Snowman.color)
+    -- right arm
+    line (x + 2, y - 2, armX, armY, data.Snowman.color)
 end

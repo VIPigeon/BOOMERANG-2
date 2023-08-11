@@ -33,6 +33,8 @@ function Snowman:new(x, y, hasTaraxacum)
         
         outOfChaseTime = 0,
         forJumpTime = 0,
+
+        area = MapAreas.findAreaWithTile(x // 8, y // 8),
     }
 
     setmetatable(object, self)
@@ -65,16 +67,43 @@ function Snowman:_resetJumpActivate()
     --error('not implemented error on Snowman:_resetJumpActivate()')
 end
 
-function Snowman:_moveOneTile() -- оптимизируем вычисления в 60 раз если будем вызывать каждый бит, а не тик
+function Snowman:move(dx, dy) -- special for doors 🥰
+    trace('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+    self.x = self.x + dx
+    self.y = self.y + dy
+    self.hitbox:set_xy(self.x, self.y)
+    self.taraxacum:move(self.x, self.y)
+    self:_moveWhirlAttack()
+end
+
+function Snowman:_moveOneTile() -- оптимизируем вычисления в 60 раз если будем вызывать каждый бит, а не тик.. эх, раньше надо было
+    for _, tile in ipairs(game.transitionTiles) do -- этот парень почти как игрок, ему можно
+        if tile.x == self.x // 8 and tile.y == self.y // 8 and self.area ~= tile.area then
+            self.area = tile.area
+            trace('Snowman transitioned into area ' .. self.area)
+        end
+    end
+
     if #self.theWay > 2 and self.chaseStatus == 'chasing 🧐' then --[[ придётся менять это условие и то, что ниже в _jumpActivate()
      широкий парень уважает личное пространство                 ]]--
-        local vec = {x = 8 * self.theWay[2].x - self.x, y = 8 * self.theWay[2].y - self.y}
-        return self:_slowMoveOneTile(math.vecNormalize(vec), {x = 8 * self.theWay[2].x, y = 8 * self.theWay[2].y})
-
-    elseif self.outOfChaseTime < #self.theWay - 2 and self.chaseStatus == 'lost him 😠' then
-        local vec = {x = 8 * self.theWay[2 + self.outOfChaseTime].x - self.x, y = 8 * self.theWay[2 + self.outOfChaseTime].y - self.y}
-        return self:_slowMoveOneTile(math.vecNormalize(vec), {x = 8 * self.theWay[2 + self.outOfChaseTime].x, y = 8 * self.theWay[2 + self.outOfChaseTime].y})
-
+        --trace(tostring(table.contains(data.bfs.solidTiles, mget(self.theWay[2].x, self.theWay[2].y))))
+        if not table.contains(data.bfs.solidTiles, mget(self.theWay[2 + 1].x, self.theWay[2 + 1].y)) then -- тут мы проверяем, не является ли, совершенно случайно, следующий тайл дверью 😅
+            local vec = {x = 8 * self.theWay[2].x - self.x, y = 8 * self.theWay[2].y - self.y}
+            return self:_slowMoveOneTile(math.vecNormalize(vec), {x = 8 * self.theWay[2].x, y = 8 * self.theWay[2].y})
+        else
+            trace('next time i chase you 👿')
+            return false
+        end
+        -- Честно говоря, я тоже боюсь того, что написал
+    elseif self.outOfChaseTime < #self.theWay - 2 and self.chaseStatus == 'lost him 😠' then 
+        --trace(tostring(table.contains(data.bfs.solidTiles, mget(self.theWay[2 + self.outOfChaseTime].x, self.theWay[2 + self.outOfChaseTime].y))))
+        if self.area == game.playerArea then -- провяем, на одной ли зоне 🐓
+            local vec = {x = 8 * self.theWay[2 + self.outOfChaseTime].x - self.x, y = 8 * self.theWay[2 + self.outOfChaseTime].y - self.y}
+            return self:_slowMoveOneTile(math.vecNormalize(vec), {x = 8 * self.theWay[2 + self.outOfChaseTime].x, y = 8 * self.theWay[2 + self.outOfChaseTime].y})
+        else 
+            trace('damn you, player the sandass')
+            return false
+        end
     else
         --trace('let me hug yu🤗!!')
     end
@@ -167,6 +196,7 @@ function Snowman:update()
     if self.status == 'dying' then
         self.sprite:nextFrame()
         if self.sprite:animationEnd() then
+            self:_createDeathEffect()
             self:die()
         end
         return
@@ -229,13 +259,56 @@ function Snowman:update()
     self:_focusAnimations()
 end
 
+function Snowman:_createDeathEffect()
+    local x = self.x
+    local y = self.y
+
+    local particleCount = math.random(data.Snowman.deathParticleCountMin, data.Snowman.deathParticleCountMax)
+    local particleSpeed = data.Snowman.deathAnimationParticleSpeed
+
+    local function randomSide()
+        return 2 * math.random() - 1
+    end
+
+    local function randomSpeed()
+        return math.random(50, 150) / 100 
+    end
+
+    particles = {}
+    for i = 1, particleCount do
+        local spawnx = x + randomSide()
+        local spawny = y + randomSide()
+        --particles are weak, bullets here
+        particles[i] = Bullet:new(spawnx, spawny, data.Snowman.deathParticleSprite)
+        table.insert(game.updatables, particles[i])
+        table.insert(game.drawables, particles[i])
+
+        local dx = randomSide() * randomSpeed()
+        local dy = randomSide() * randomSpeed()
+        local vecLen = math.sqrt(dx * dx + dy * dy)
+        if vecLen < data.Snowman.deathAnimationParticleSpeedNormalizer then
+            dx = dx * data.Snowman.deathAnimationParticleSpeedNormalizer / vecLen
+            dy = dy * data.Snowman.deathAnimationParticleSpeedNormalizer / vecLen
+        end
+        particles[i]:setVelocity(particleSpeed * dx, particleSpeed * dy)
+    end
+end
+
+function Snowman:die()
+    trace("I AM DEAD!!!")
+    table.removeElement(game.updatables, self)
+    table.removeElement(game.drawables, self)
+    table.removeElement(game.collideables, self)
+    table.removeElement(game.enemies, self) -- именно этого ему не хватало, чтобы умереть спокойно
+end
+
 function Snowman:draw()
     if self.attackStatus == 'whirl' then
         self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
         self.whirlAttack:draw()
     end
 
-    aim.visualizePath(self.theWay)
+    --aim.visualizePath(self.theWay)
 
     self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
     --line(self.x + 5 - gm.x*8 + gm.sx, self.y + 10 - gm.y*8 + gm.sy, self.x + 18 - gm.x*8 + gm.sx, self.y - 3 - gm.y*8 + gm.sy, 10)

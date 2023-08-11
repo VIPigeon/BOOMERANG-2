@@ -13,7 +13,17 @@ function Door:new(x, y) --калитка только из двух частей
         shakeTimer = 1,
         hitboxLeft = Hitbox:new(rectangleLeft:left(), rectangleLeft:up(), rectangleLeft:right(), rectangleLeft:down()),
         hitboxRight = Hitbox:new(rectangleRight:left(), rectangleRight:up(), rectangleRight:right(), rectangleRight:down()),
+
+        solidTilesSpawned = true, 
     }
+
+    --shit code
+    for addX = 0, data.Door.widthTiles - 1 do
+        for addY = 0, data.Door.heightTiles - 1 do
+            mset(x // 8 + addX, y // 8 + addY, data.Door.solidTileId)
+        end
+    end
+    --
 
     setmetatable(object1, self)
     self.__index = self
@@ -42,10 +52,13 @@ function Door:_colliding()
     for _, collider in ipairs(game.enemies) do
         if self.hitboxLeft:collide(collider.hitbox) and self.hitboxRight:collide(collider.hitbox) then
             collider:die()
+            --trace('xxxxxxdddddddddd')
         elseif self.hitboxLeft:collide(collider.hitbox) and math.inRangeNotIncl(collider.y, self.hitboxLeft.y1, self.hitboxLeft.y2) then
             collider:move(self.speed, 0)
+            --trace('bbbbbbbbbbbb')
         elseif self.hitboxRight:collide(collider.hitbox) and math.inRangeNotIncl(collider.y, self.hitboxRight.y1, self.hitboxRight.y2) then
             collider:move(-self.speed, 0)
+            --trace('cccccccccccccc')
         end
     end
 end
@@ -155,11 +168,37 @@ function Door:draw()
     
 end
 
+function Door:_spawnBlockingTiles()
+    if not self.solidTilesSpawned then
+        for addX = 0, data.Door.widthTiles - 1 do
+            for addY = 0, data.Door.heightTiles - 1 do
+                --trace('st^:^'..self.x + 8 * addX..' '..self.y + 8 * addY)
+                mset(self.x // 8 + addX, self.y // 8 + addY, data.Door.solidTileId)
+            end
+        end
+        self.solidTilesSpawned = true
+    end
+end
+
+function Door:_despawnBlockingTiles()
+    if self.solidTilesSpawned then
+        for addX = 0, data.Door.widthTiles - 1 do
+            for addY = 0, data.Door.heightTiles - 1 do
+                --trace('setting...')
+                mset(self.x // 8 + addX, self.y // 8 + addY, 0)
+            end
+        end
+        self.solidTilesSpawned = false
+    end
+end
+
 function Door:update()
     self:drawUpdate()
     if self.status == 'close' then
         self:_closing()
+        self:_spawnBlockingTiles()
     elseif self.status == 'open'then
         self:_opening()
+        self:_despawnBlockingTiles()
     end
 end

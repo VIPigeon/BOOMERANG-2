@@ -30,7 +30,7 @@ function Player:new(x, y, boomerang)
 
     setmetatable(obj, self)
     self.__index = self
-    return obj
+        return obj
 end
 
 function Player:getPositionTile()
