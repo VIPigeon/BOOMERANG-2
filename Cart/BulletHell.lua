@@ -1,6 +1,6 @@
 BulletHell = table.copy(Enemy)
 
-function BulletHell:new(x, y, type, color)
+function BulletHell:new(x, y, type, color, bulletSprite)
     local bullets = {}
     for i = 1, data.BulletHell.bulletCount[type] do
         bullets[i] = HellBullet:new()
@@ -16,6 +16,7 @@ function BulletHell:new(x, y, type, color)
         bullets = bullets,
         bulletCount = data.BulletHell.bulletCount[type],
         bulletSpeed = data.BulletHell.bulletSpeed[type],
+        bulletSprite = bulletSprite,
         deathBulletSpeed = data.BulletHell.deathBulletSpeed[type],
         bulletRotateSpeed = data.BulletHell.bulletRotateSpeed[type],
         hp = data.BulletHell.hp[type],
@@ -66,7 +67,7 @@ function BulletHell:_shoot()
 end
 
 function BulletHell:_createShootBullet()
-    local bull = Bullet:new(0, 0)
+    local bull = Bullet:new(0, 0, self.bulletSprite)
     bull.speed = self.bulletSpeed
     
     table.insert(game.drawables, bull)
@@ -170,7 +171,7 @@ function BulletHell:draw()
     self.hitbox:draw(self.color)
 
     for i = 1, #self.bullets do
-        self.bullets[i]:draw()
+        self.bullets[i]:draw(self.color)
     end
 
     self:_drawAnimations()

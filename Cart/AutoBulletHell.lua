@@ -7,11 +7,9 @@ function AutoBulletHell:_shoot()
     bull.y = self.bullets[byTouchId].y
     bull.hitbox:set_xy(bull.x, bull.y)
 
-    -- trace('before: ' .. bull.x .. ' ' .. bull.y)
     local kawaiiCode = self:_superAim(bull.x, bull.y)
     bull:setVelocity(kawaiiCode.x, kawaiiCode.y)
     bull.speed = self.bulletSpeed
-    -- trace('after: ' .. bull.x .. ' ' .. bull.y)
 end
 
 function AutoBulletHell:_superAim(startX, startY)

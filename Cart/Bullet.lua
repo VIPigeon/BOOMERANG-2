@@ -3,7 +3,7 @@ Bullet = table.copy(Body)
 Bullet.defaultSprite = Sprite:new({373}, 1)
 
 function Bullet:new(x, y, sprite)
-    local sprite = sprite or Bullet.defaultSprite
+    sprite = sprite or Bullet.defaultSprite
 
     local obj = {
         x = x,

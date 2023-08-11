@@ -177,7 +177,7 @@ local function createEnemies()
             local type = respawnTile.tileid - data.BulletHell.spawnTiles[1] + 1
             enemy = BulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, type)
         elseif respawnTile.type == 'autobullethell' then
-            enemy = AutoBulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, 1, 13)
+            enemy = AutoBulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, 1, 13, Sprite:new({379}, 1))
         elseif respawnTile.type == 'taraxacum' then
             local radius = data.Taraxacum.staticRadius
             local bodyLength = data.Taraxacum.staticBodyLength
