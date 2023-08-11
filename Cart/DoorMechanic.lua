@@ -79,6 +79,11 @@ function DoorMechanic._walkWire(x, y, doorWiresLever) -- _walkWireWhileDoor to b
         DoorMechanic._walkWire(x - 1, y, doorWiresLever)
         DoorMechanic._walkWire(x, y + 1, doorWiresLever)
         DoorMechanic._walkWire(x, y - 1, doorWiresLever)
+
+        DoorMechanic._walkWire(x + 1, y + 1, doorWiresLever)
+        DoorMechanic._walkWire(x - 1, y + 1, doorWiresLever)
+        DoorMechanic._walkWire(x + 1, y - 1, doorWiresLever)
+        DoorMechanic._walkWire(x - 1, y - 1, doorWiresLever)
         return
     end
 
