@@ -208,8 +208,15 @@ function Rose:shoot()
         laserHitbox:set_xy(newx, newy)
     end
 
-    local x = laserHitbox.x1 - self.laserdx / self.speed
-    local y = laserHitbox.y1 - self.laserdy / self.speed
+    local x
+    local y
+    if self.direction == 0 or self.direction == 2 then
+        x = laserHitbox.x1 - self.laserdx / self.speed
+        y = laserHitbox.y1 - self.laserdy / self.speed
+    else
+        x = laserHitbox.x1 + self.laserdx / self.speed
+        y = laserHitbox.y1 + self.laserdy / self.speed
+    end
 
     local newHitbox
     if self.direction == 0 then
