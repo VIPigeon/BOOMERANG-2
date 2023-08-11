@@ -304,7 +304,7 @@ data.BulletHell.sprites = {
 }
 
 data.AutoBulletHell = {
-    spawnTiles = {66,}
+    spawnTiles = {32,}
 }
 
 data.Bullet = {
