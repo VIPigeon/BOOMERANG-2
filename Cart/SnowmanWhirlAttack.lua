@@ -42,6 +42,7 @@ function SnowmanWhirlAttack:endAttack()
     taraxacum:setVelocity(vec.x, vec.y)
     table.insert(game.updatables, taraxacum)
     table.insert(game.drawables, taraxacum)
+    self.snowman.taraxacum.status = 'needReload'
     -- 😚😚
 end
 

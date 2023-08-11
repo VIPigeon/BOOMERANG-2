@@ -37,6 +37,8 @@ function Snowman:new(x, y, hasTaraxacum)
         area = MapAreas.findAreaWithTile(x // 8, y // 8),
     }
 
+    object.taraxacum.snowman = object
+
     setmetatable(object, self)
     self.__index = self
     return object
@@ -110,10 +112,18 @@ function Snowman:_moveOneTile() -- оптимизируем вычисления
 end
 
 function Snowman:_moveWhirlAttack()
-    -- kawaii-Code@boomerang2.com: Тот кто увидит этот комментарий должен удалить
-    -- эту функцию. 🥵🤬🤬
-    -- Linux Torbolts@boomerang2.com: я закомментирую, вдруг ещё пригодится 🤓👍
-    -- kawaii-Code@boomerang2.com: Ладно, не удаляйте 😅😅
+    --  ________________________________________________________________________________________
+    -- | BOOMER @ MAIL.tic 😏 |                                                                 |
+    -- |-----------------------                                                                 |
+    -- |                                                                                        |
+    -- | kawaii-Code@boomerang2.com: Тот кто увидит этот комментарий должен удалить             | 
+    -- | эту функцию. 🥵🤬🤬                                                                    |
+    -- |                                                                                        |
+    -- | Linux Torbolts@boomerang2.com: я закомментирую, вдруг ещё пригодится 🤓👍              |
+    -- |                                                                                        |
+    -- | kawaii-Code@boomerang2.com: Ладно, не удаляйте 😅😅                                    |
+    --  ----------------------------------------------------------------------------------------
+    --
     if self.whirlAttack then
         self.whirlAttack.x = self.hitbox:get_center().x
         self.whirlAttack.y = self.hitbox:get_center().y 
@@ -189,6 +199,7 @@ function Snowman:update()
         -- DO: Тут костыль +8
         -- Готово 🤠
         self.whirlAttack = SnowmanWhirlAttack:new(self.hitbox:get_center().x, self.hitbox:get_center().y, self.taraxacum.h)
+        self.whirlAttack.snowman = self
     end
 
     self:_focusAnimations()

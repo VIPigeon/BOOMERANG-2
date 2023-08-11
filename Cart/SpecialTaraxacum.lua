@@ -14,8 +14,8 @@ function SpecialTaraxacum:new(x, y, radius, bodyLength, shiftX, shiftY)
         y = y,
         w = 0,
         h = bodyLength,
-        shiftX = shiftX,
-        shiftY = shiftY,
+        shiftX = shiftX + 1,
+        shiftY = shiftY - 1,
         radius = radius,
         hitbox = HitCircle:new(x, y, 2 * radius),
         dead = false,
@@ -73,7 +73,21 @@ function SpecialTaraxacum:draw()
     local start = {x = x, y = y}
     local ending = {x = x - data.Snowman.specialTaraxacum.bodyLength, y = y + data.Snowman.specialTaraxacum.bodyLength}
 
+    -- ARMS
+    local armLength = data.Snowman.specialTaraxacum.bodyLength / 4
+    local sx = self.snowman.hitbox:get_center().x - gm.x*8 + gm.sx
+    local sy = self.snowman.hitbox:get_center().y - gm.y*8 + gm.sy
+    local leftArmStart = {x = sx - 2, y = sy - 2}
+    local rightArmStart = {x = sx + 2, y = sy - 1}
+    local leftArmEnd = {x = leftArmStart.x - armLength + 1, y = leftArmStart.y + armLength,}
+    local rightArmEnd = {x = rightArmStart.x + armLength - 2, y = rightArmStart.y - armLength - 1,}
+
+    -- ARMS DRAAAAAAAAAAW
+    line(leftArmStart.x, leftArmStart.y, leftArmEnd.x, leftArmEnd.y, data.Snowman.color)
+    line(rightArmStart.x, rightArmStart.y, rightArmEnd.x, rightArmEnd.y, data.Snowman.color)
+
     self:_drawline(start, ending)
+
     if not self.dead then
     	if self.status == 'needReload' then
         	self:_reloadAnimation()
