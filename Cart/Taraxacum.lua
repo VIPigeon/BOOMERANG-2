@@ -75,6 +75,7 @@ function Taraxacum:_checkCollision()
         self:_destroy()
     end
 
+    -- TODO: тут можно пользоваться тайлами двери, а не этими приколами 🤔🤔
     for _, door in ipairs(game.doors) do
         -- САМЫЙ БЕЗУМНЫЙ КОСТЫЛЬ
         if self.hitbox:collide(door.hitboxLeft) or
