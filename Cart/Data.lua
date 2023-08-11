@@ -178,7 +178,7 @@ data.Taraxacum = {
 
     radius = 2,
     staticRadius = 3,
-    bodyColor = 3,
+    bodyColor = 10,
     staticBodyLength = 10,
     staticTaraxacumSpawnTile = { 97 },
 
