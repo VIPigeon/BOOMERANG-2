@@ -50,6 +50,17 @@ function Bullet:_checkCollision()
     if not self.hitbox:mapCheck() then
         self:_destroy()
     end
+
+    -- TODO: тут можно пользоваться тайлами двери, а не этими приколами 🤔🤔
+    for _, door in ipairs(game.doors) do
+        -- САМЫЙ БЕЗУМНЫЙ КОСТЫЛЬ
+        if self.hitbox:collide(door.hitboxLeft) or
+           self.hitbox:collide(door.hitboxRight)
+        then
+     -- begin
+            self:_destroy()
+        end
+    end
 end
 
 function Bullet:update()

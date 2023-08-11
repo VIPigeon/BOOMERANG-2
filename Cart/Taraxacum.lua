@@ -75,6 +75,17 @@ function Taraxacum:_checkCollision()
         self:_destroy()
     end
 
+    for _, door in ipairs(game.doors) do
+        -- САМЫЙ БЕЗУМНЫЙ КОСТЫЛЬ
+        if self.hitbox:collide(door.hitboxLeft) or
+           self.hitbox:collide(door.hitboxRight)
+        then
+     -- begin
+            self:_launchBullets()
+            self:_destroy()
+        end
+    end
+
     if not self.hitbox:mapCheck() then
         self:_launchBullets()
         self:_destroy()

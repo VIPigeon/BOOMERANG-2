@@ -63,7 +63,6 @@ local function createSettingLevers()
     end
 
     for i, set in ipairs(settings) do
-        --trace(set.name)
         slevers[i].setting = set
     end
 
@@ -285,7 +284,7 @@ end
 game.areas, game.transitionTiles = MapAreas.generate()
 
 local levers = createLevers()
-local doors = createDoors(levers)
+game.doors = createDoors(levers)
 local settingLevers = createSettingLevers()
 
 -- Все элементы игры, которые появляются 
@@ -310,7 +309,7 @@ function game.restart()
     table.insert(game.updatables, boomerang)
     table.concatTable(game.updatables, enemies)
     table.concatTable(game.updatables, levers)
-    table.concatTable(game.updatables, doors)
+    table.concatTable(game.updatables, game.doors)
     table.concatTable(game.updatables, settingLevers)
 
     table.concatTable(game.drawables, checkpoints)
@@ -319,10 +318,10 @@ function game.restart()
     table.concatTable(game.drawables, enemies)
     table.insert(game.drawables, player)
     table.insert(game.drawables, boomerang)
-    table.concatTable(game.drawables, doors)
+    table.concatTable(game.drawables, game.doors)
 
     table.concatTable(game.collideables, enemies)
-    table.concatTable(game.collideables, doors)
+    table.concatTable(game.collideables, game.doors)
 
     game.mode = 'action' -- Зачем это? :|
     game.metronome = metronome
