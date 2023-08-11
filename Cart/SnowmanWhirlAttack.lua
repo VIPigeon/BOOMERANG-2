@@ -38,7 +38,8 @@ function SnowmanWhirlAttack:endAttack()
         data.Snowman.whirl.taraxacum.deathSlowBulletCount,
         data.Snowman.whirl.taraxacum.deathFastBulletCount
     )
-    taraxacum:vectorUpdateByTarget(game.player.x, game.player.y)
+    vec = aim.superAim(self.x, self.y, data.Snowman.whirl.endTaraxacumSpeed)
+    taraxacum:setVelocity(vec.x, vec.y)
     table.insert(game.updatables, taraxacum)
     table.insert(game.drawables, taraxacum)
     -- 😚😚

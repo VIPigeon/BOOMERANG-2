@@ -254,7 +254,7 @@ data.SettingLever.sprites = {
 
 data.Enemy = {
     defaultHP = 5,
-    defaultEnemyFlagTile = 33,
+    defaultEnemyFlagTile = 98,
 }
 data.Enemy.sprites = {
     defaultSprite = Sprite:new({403}, 1),

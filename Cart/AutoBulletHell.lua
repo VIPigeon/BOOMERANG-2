@@ -7,12 +7,12 @@ function AutoBulletHell:_shoot()
     bull.y = self.bullets[byTouchId].y
     bull.hitbox:set_xy(bull.x, bull.y)
 
-    local kawaiiCode = self:_superAim(bull.x, bull.y)
+    local kawaiiCode = aim.superAim(bull.x, bull.y, self.bulletSpeed)
     bull:setVelocity(kawaiiCode.x, kawaiiCode.y)
     bull.speed = self.bulletSpeed
 end
 
-function AutoBulletHell:_superAim(startX, startY)
+function aim.superAim(startX, startY, bulletSpeed)
     -- dirx, diry - направление к игроку
     -- local dirx = game.player.hitbox:get_center().x - startX
     -- local diry = game.player.hitbox:get_center().y - startY
@@ -29,7 +29,7 @@ function AutoBulletHell:_superAim(startX, startY)
         vy = vy * data.Player.movementNormalizerDiagonal
     end
 
-    local s = self.bulletSpeed
+    local s = bulletSpeed
 
     -- Квадратное уравнение
     local a = vx*vx + vy*vy - s*s

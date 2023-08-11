@@ -63,7 +63,10 @@ function BulletHell:_shoot()
     bull.x = self.bullets[byTouchId].x
     bull.y = self.bullets[byTouchId].y
     bull.hitbox:set_xy(bull.x, bull.y)
-    bull:vectorUpdateByTarget(game.player.x, game.player.y)
+    local function randomFactor()
+        return 16 * (2 * math.random() - 1)
+    end
+    bull:vectorUpdateByTarget(game.player.x + randomFactor(), game.player.y + randomFactor())
 end
 
 function BulletHell:_createShootBullet()
