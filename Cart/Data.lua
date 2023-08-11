@@ -326,7 +326,7 @@ data.Snowman = {
     resetJumpTime = 24,
 
     deathParticleCountMin = 100,
-    deathParticleCountMax = 1000,
+    deathParticleCountMax = 300,
     deathAnimationParticleSpeed = 1,
     deathAnimationParticleSpeedNormalizer = 0.4,
     deathParticleMinSpeed = 1,
