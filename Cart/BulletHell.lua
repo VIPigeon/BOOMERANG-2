@@ -114,12 +114,12 @@ function BulletHell:update()
         return
     end
 
-    if not self.isActive then
-        return
-    end
-    
     if self.status == 'dying' then
         self.deathTick()
+        return
+    end
+
+    if not self.isActive then
         return
     end
 
