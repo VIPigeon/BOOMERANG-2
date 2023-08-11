@@ -180,7 +180,7 @@ data.Taraxacum = {
     staticRadius = 3,
     bodyColor = 3,
     staticBodyLength = 10,
-    staticTaraxacumSpawnTile = { 34 },
+    staticTaraxacumSpawnTile = { 97 },
 
     deathBulletCount = 6,
     deathBulletSlowCount = 3,
