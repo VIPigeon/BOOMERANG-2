@@ -69,6 +69,7 @@ function Enemy:die()
     table.removeElement(game.updatables, self)
     table.removeElement(game.drawables, self)
     table.removeElement(game.collideables, self)
+    --table.removeElement(game.enemies, self)
 end
 
 function Enemy:isDeadCheck()

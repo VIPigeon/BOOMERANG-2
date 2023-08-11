@@ -5,4 +5,6 @@
 # Config
 *.json
 
+# TIC-80 bullshit
+*.exe
 .local/
