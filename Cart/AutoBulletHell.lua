@@ -46,8 +46,6 @@ function AutoBulletHell:_superAim(startX, startY)
     local vec = math.vecNormalize({x=resX, y=resY})
     -- vec = {x=resX, y=resY}
 
-    trace('rx: ' .. vec.x .. ' ' .. 'ry: ' .. vec.y)
-
     return {
         x = vec.x,
         y = vec.y,
