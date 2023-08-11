@@ -272,7 +272,7 @@ function Snowman:draw()
         self.whirlAttack:draw()
     end
 
-    aim.visualizePath(self.theWay)
+    --aim.visualizePath(self.theWay)
 
     self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
     --line(self.x + 5 - gm.x*8 + gm.sx, self.y + 10 - gm.y*8 + gm.sy, self.x + 18 - gm.x*8 + gm.sx, self.y - 3 - gm.y*8 + gm.sy, 10)
