@@ -1,5 +1,5 @@
 --😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣
-  SpecialTaraxacum = table.copy(StaticTaraxacum) -- 😣😣😣😣😣😣😣😣😣😣😣
+SpecialTaraxacum = table.copy(StaticTaraxacum) -- 😣😣😣😣😣😣😣😣😣😣😣
 --😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣😣
 
 function SpecialTaraxacum:new(x, y, radius, bodyLength, shiftX, shiftY)
@@ -43,6 +43,13 @@ end
 
 function SpecialTaraxacum:_drawline(start, ending)
 	line(start.x, start.y, ending.x, ending.y, data.Snowman.specialTaraxacum.bodyColor)
+    -- local arm = self.h / 4
+    -- local shift = self.h / 4
+    -- local dir = aim.compute(start.x, start.y, ending.x, ending.y, 1)
+    -- local white = data.Snowman.specialTaraxacum.color
+
+    -- line(1 + start.x + shift*dir.x, start.y + shift*dir.y, 1 + start.x + arm*dir.x, start.y + arm*dir.y, white)
+    -- line(-1 + ending.x - shift*dir.x, ending.y - shift*dir.y, -1 + ending.x - (shift+arm)*dir.x, ending.y - (shift+arm)*dir.y, white)
 end
 
 function SpecialTaraxacum:_reloadAnimation()

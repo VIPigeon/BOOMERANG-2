@@ -328,7 +328,7 @@ data.Snowman = {
 
 data.Snowman.specialTaraxacum = {
     radius = 3,
-    bodyLength = 13,
+    bodyLength = 15,
     shiftForCenterX = 12,
     shiftForCenterY = -3,
     startStickX = 0,
