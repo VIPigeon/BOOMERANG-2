@@ -91,7 +91,7 @@ function Snowman:_moveOneTile() -- оптимизируем вычисления
             local vec = {x = 8 * self.theWay[2].x - self.x, y = 8 * self.theWay[2].y - self.y}
             return self:_slowMoveOneTile(math.vecNormalize(vec), {x = 8 * self.theWay[2].x, y = 8 * self.theWay[2].y})
         else
-            --trace('uhm, im in trouble 1')
+            trace('next time i chase you 👿')
             return false
         end
         -- Честно говоря, я тоже боюсь того, что написал
@@ -101,7 +101,7 @@ function Snowman:_moveOneTile() -- оптимизируем вычисления
             local vec = {x = 8 * self.theWay[2 + self.outOfChaseTime].x - self.x, y = 8 * self.theWay[2 + self.outOfChaseTime].y - self.y}
             return self:_slowMoveOneTile(math.vecNormalize(vec), {x = 8 * self.theWay[2 + self.outOfChaseTime].x, y = 8 * self.theWay[2 + self.outOfChaseTime].y})
         else 
-            --trace('damn you, player the sandass')
+            trace('damn you, player the sandass')
             return false
         end
     else
@@ -196,6 +196,7 @@ function Snowman:update()
     if self.status == 'dying' then
         self.sprite:nextFrame()
         if self.sprite:animationEnd() then
+            self:_createDeathEffect()
             self:die()
         end
         return
@@ -256,6 +257,41 @@ function Snowman:update()
     end
 
     self:_focusAnimations()
+end
+
+function Snowman:_createDeathEffect()
+    local x = self.x
+    local y = self.y
+
+    local particleCount = math.random(data.Snowman.deathParticleCountMin, data.Snowman.deathParticleCountMax)
+    local particleSpeed = data.Snowman.deathAnimationParticleSpeed
+
+    local function randomSide()
+        return 2 * math.random() - 1
+    end
+
+    local function randomSpeed()
+        return math.random(50, 150) / 100 
+    end
+
+    particles = {}
+    for i = 1, particleCount do
+        local spawnx = x + randomSide()
+        local spawny = y + randomSide()
+        --particles are weak, bullets here
+        particles[i] = Bullet:new(spawnx, spawny, data.Snowman.deathParticleSprite)
+        table.insert(game.updatables, particles[i])
+        table.insert(game.drawables, particles[i])
+
+        local dx = randomSide() * randomSpeed()
+        local dy = randomSide() * randomSpeed()
+        local vecLen = math.sqrt(dx * dx + dy * dy)
+        if vecLen < data.Snowman.deathAnimationParticleSpeedNormalizer then
+            dx = dx * data.Snowman.deathAnimationParticleSpeedNormalizer / vecLen
+            dy = dy * data.Snowman.deathAnimationParticleSpeedNormalizer / vecLen
+        end
+        particles[i]:setVelocity(particleSpeed * dx, particleSpeed * dy)
+    end
 end
 
 function Snowman:die()

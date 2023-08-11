@@ -324,6 +324,13 @@ data.Snowman = {
     prepareJumpTime = 20,
     --jumpTime = 20,
     resetJumpTime = 24,
+
+    deathParticleCountMin = 100,
+    deathParticleCountMax = 1000,
+    deathAnimationParticleSpeed = 1,
+    deathAnimationParticleSpeedNormalizer = 0.4,
+    deathParticleMinSpeed = 1,
+    deathParticleSprite = Sprite:new({378}, 1),
 }
 
 data.Snowman.specialTaraxacum = {
