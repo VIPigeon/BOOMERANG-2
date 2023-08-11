@@ -49,16 +49,17 @@ function Enemy:draw()
 end
 
 function Enemy:update()
-    if not self.isActive then
-        return
-    end
-
     if game.boomer.hitbox:collide(self.hitbox) then
         local damage = game.boomer.dpMs * Time.dt()
         self:takeDamage(damage)
     end
+    
     if self:isDeadCheck() then
         self:die()
+    end
+
+    if not self.isActive then
+        return
     end
 
     self:_focusAnimations()
