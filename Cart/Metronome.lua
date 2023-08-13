@@ -14,6 +14,7 @@ Metronome = {}
 --
 -- Milliseconds = (60 * 1000) / BPM
 --
+
 function Metronome:new(bpm)
     local obj = {
         time = 0,
