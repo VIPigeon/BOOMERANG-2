@@ -131,9 +131,10 @@ local function createEnemies()
                 if id == data.Enemy.defaultEnemyFlagTile then
                     table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='enemy'})
                     mset(x, y, C0)
-                elseif table.contains(data.Rose.spawnTiles, id) then
-                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='rose'})
-                    mset(x, y, C0)
+                -- нахер обычную розу
+                -- elseif table.contains(data.Rose.spawnTiles, id) then
+                --     table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='rose'})
+                --     mset(x, y, C0)
                 elseif table.contains(data.BulletHell.spawnTiles, id) then
                     table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='bullethell'})
                     mset(x, y, C0)
