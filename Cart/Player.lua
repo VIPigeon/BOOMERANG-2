@@ -219,10 +219,27 @@ function Player:update()
         return
     end
 
-    if keyp(KEY_B) then
-        -- Metronome :(
-        game.metronome.onBass = not game.metronome.onBass
-    end
+    -- if keyp(KEY_B) then
+    --     -- Metronome :(
+    --     game.metronome.onBass = not game.metronome.onBass
+    -- end
+
+    -- if keyp(27) then
+    --     sfx(0, 'D-2', -1, 0, 10, 0)
+    --     -- trace('GNOADFNASDJV')
+    -- end
+    -- if keyp(28) then
+    --     sfx(0, 'D-2', 10, 0, 10, 0)
+    -- end
+    -- if keyp(29) then
+    --     sfx(0, 'D-2', 20, 0, 10, 0)
+    -- end
+    -- if keyp(30) then
+    --     sfx(0, 'D-2', 30, 0, 10, 0)
+    -- end
+    -- if keyp(31) then
+    --     sfx(0, 'D-2', 60, 0, 10, 0)
+    -- end
 
     self:_willMoveCheck() -- wanna move?~
 
