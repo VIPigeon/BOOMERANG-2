@@ -153,8 +153,8 @@ local function createEnemies()
                 --     local tile = {x=x, y=y, tileid=id, type='longrose'}
                 --     table.insert(game.enemyRespawnTiles, tile)
                 --     mset(x, y, C0)
-                elseif table.contains(data.LongRoseWithBlackjackAndHookers.spawnTiles, id) then
-                    local tile = {x=x, y=y, tileid=id, type='longrosewithblackjackandhookers'}
+                elseif table.contains(data.MusicRose.spawnTiles, id) then
+                    local tile = {x=x, y=y, tileid=id, type='musicrose'}
                     table.insert(game.enemyRespawnTiles, tile)
                     mset(x, y, C0)
                 end
@@ -167,8 +167,8 @@ local function createEnemies()
             return spawnTileId - data.Rose.spawnTiles[1]
         elseif type == 'longrose' then
             return spawnTileId - data.LongRose.spawnTiles[1]
-        elseif type == 'longrosewithblackjackandhookers' then
-            local tiles = data.LongRoseWithBlackjackAndHookers.spawnTiles
+        elseif type == 'musicrose' then
+            local tiles = data.MusicRose.spawnTiles
             if tiles[1] <= spawnTileId and spawnTileId <= tiles[4] then
                 return spawnTileId - tiles[1]
             end
@@ -184,8 +184,8 @@ local function createEnemies()
             enemy = Rose:new(8 * respawnTile.x, 8 * respawnTile.y, getDirection(respawnTile.tileid, respawnTile.type))
         elseif respawnTile.type == 'longrose' then
             enemy = LongRose:new(8 * respawnTile.x, 8 * respawnTile.y, getDirection(respawnTile.tileid, respawnTile.type))
-        elseif respawnTile.type == 'longrosewithblackjackandhookers' then
-            enemy = LongRoseWithBlackjackAndHookers:new(8 * respawnTile.x, 8 * respawnTile.y, getDirection(respawnTile.tileid, respawnTile.type))
+        elseif respawnTile.type == 'musicrose' then
+            enemy = MusicRose:new(8 * respawnTile.x, 8 * respawnTile.y, getDirection(respawnTile.tileid, respawnTile.type))
             enemy:tuning(bassLine.roseD.beatMap, bassLine.roseD.sfxMap)
         elseif respawnTile.type == 'bullethell' then
             local type = respawnTile.tileid - data.BulletHell.spawnTiles[1] + 1

@@ -1,11 +1,11 @@
 
-LongRoseWithBlackjackAndHookers = table.copy(LongRose)
--- LongRoseWithBlackjackAndHookers.idle_sprite = Sprite:new()
--- LongRoseWithBlackjackAndHookers.shooting_sprite = Sprite:new()
+MusicRose = table.copy(LongRose)
+-- MusicRose.idle_sprite = Sprite:new()
+-- MusicRose.shooting_sprite = Sprite:new()
 
 
--- function LongRoseWithBlackjackAndHookers:tuning(beatMap, noteMap, soundMap, durationTable, volumeTable, speedTable, channel)
-function LongRoseWithBlackjackAndHookers:tuning(beatMap, sfxMap)
+-- function MusicRose:tuning(beatMap, noteMap, soundMap, durationTable, volumeTable, speedTable, channel)
+function MusicRose:tuning(beatMap, sfxMap)
     -- обязательно вызывается после new для настройки музыки
 
     -- строка из 0, 1, указывающая биты, на которые начинает стрелять роза
@@ -17,7 +17,7 @@ function LongRoseWithBlackjackAndHookers:tuning(beatMap, sfxMap)
 end
 
 
-function LongRoseWithBlackjackAndHookers:full_shot()
+function MusicRose:full_shot()
     if self.beatMap[self.i_beatMap] == '0' then
         self.status = 'idle'
         self.sprite = data.Rose.sprites.idle
@@ -40,7 +40,7 @@ function LongRoseWithBlackjackAndHookers:full_shot()
 end
 
 
-function LongRoseWithBlackjackAndHookers:onBeat()
+function MusicRose:onBeat()
     -- trace(#self.beatMap)
     if #self.beatMap == 4 then
         if not game.metronome.beat4 then
@@ -53,7 +53,7 @@ function LongRoseWithBlackjackAndHookers:onBeat()
 end
 
 
--- function LongRoseWithBlackjackAndHookers:handleBeat()
+-- function MusicRose:handleBeat()
     -- if game.metronome.onBeat then
     --     self:onBeat()
     -- end
@@ -62,7 +62,7 @@ end
     -- end
 -- end
 
--- function LongRoseWithBlackjackAndHookers:onBeat()
+-- function MusicRose:onBeat()
 --     self.ticks = self.ticks + 1
 
 --     if self.status == 'shootBegin' then
@@ -80,7 +80,7 @@ end
 --     self.i_beatMap = (self.i_beatMap % #self.i_beatMap) + 1
 -- end
 
-function LongRoseWithBlackjackAndHookers:update()
+function MusicRose:update()
     if game.boomer.hitbox:collide(self.hitbox) then
         local damage = game.boomer.dpMs * Time.dt()
         self:takeDamage(damage)

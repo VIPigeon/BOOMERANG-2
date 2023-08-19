@@ -286,8 +286,8 @@ data.Rose = {
 data.LongRose = {}
 data.LongRose.spawnTiles = {166, 167, 168, 169}
 
-data.LongRoseWithBlackjackAndHookers = {}
-data.LongRoseWithBlackjackAndHookers.spawnTiles = {182, 183, 184, 185}
+data.MusicRose = {}
+data.MusicRose.spawnTiles = {182, 183, 184, 185}
 
 data.Rose.spawnTiles = {150, 151, 152, 153}
 data.Rose.anotherRoseFlagTile = 15
