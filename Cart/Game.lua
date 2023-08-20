@@ -124,10 +124,25 @@ end
 
 game.enemyRespawnTiles = {}
 local function createEnemies()
+
+    function getMusic(spawnTileId, type)
+        if type == 'musicrose' then
+            for bassline, tiles in pairs(data.MusicRose.spawnTiles) do
+                if tiles[1] <= spawnTileId and spawnTileId <= tiles[4] then
+                    return {direction = spawnTileId - tiles[1],
+                            bassline = bassline
+                            }
+                end
+            end
+        end
+        return false
+    end
+
     if #game.enemyRespawnTiles == 0 then
         for x = 0, MAP_WIDTH do
             for y = 0, MAP_HEIGHT do
                 local id = mget(x, y)
+                local musicrose = getMusic(id, 'musicrose')
 
                 if id == data.Enemy.defaultEnemyFlagTile then
                     table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='enemy'})
@@ -153,8 +168,9 @@ local function createEnemies()
                 --     local tile = {x=x, y=y, tileid=id, type='longrose'}
                 --     table.insert(game.enemyRespawnTiles, tile)
                 --     mset(x, y, C0)
-                elseif table.contains(data.MusicRose.spawnTiles, id) then
-                    local tile = {x=x, y=y, tileid=id, type='musicrose'}
+                elseif musicrose then
+                    local tile = {x=x, y=y, tileid=id, type='musicrose',
+                                bassline=musicrose.bassline, direction=musicrose.direction}
                     table.insert(game.enemyRespawnTiles, tile)
                     mset(x, y, C0)
                 end
@@ -167,13 +183,9 @@ local function createEnemies()
             return spawnTileId - data.Rose.spawnTiles[1]
         elseif type == 'longrose' then
             return spawnTileId - data.LongRose.spawnTiles[1]
-        elseif type == 'musicrose' then
-            local tiles = data.MusicRose.spawnTiles
-            if tiles[1] <= spawnTileId and spawnTileId <= tiles[4] then
-                return spawnTileId - tiles[1]
-            end
         end
     end
+
 
     local enemem = {}
     for _, respawnTile in ipairs(game.enemyRespawnTiles) do
@@ -185,8 +197,11 @@ local function createEnemies()
         elseif respawnTile.type == 'longrose' then
             enemy = LongRose:new(8 * respawnTile.x, 8 * respawnTile.y, getDirection(respawnTile.tileid, respawnTile.type))
         elseif respawnTile.type == 'musicrose' then
-            enemy = MusicRose:new(8 * respawnTile.x, 8 * respawnTile.y, getDirection(respawnTile.tileid, respawnTile.type))
-            enemy:tuning(bassLine.roseD.beatMap, bassLine.roseD.sfxMap)
+            local baza = getMusic(respawnTile.tileid, respawnTile.type)
+            trace(baza)
+            enemy = MusicRose:new(8 * respawnTile.x, 8 * respawnTile.y, baza.direction)
+            enemy:tuning(bassLine.rose[baza.bassline].beatMap,
+                        bassLine.rose[baza.bassline].sfxMap)
         elseif respawnTile.type == 'bullethell' then
             local type = respawnTile.tileid - data.BulletHell.spawnTiles[1] + 1
             enemy = BulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, type)

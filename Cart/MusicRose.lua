@@ -18,7 +18,7 @@ end
 
 
 function MusicRose:full_shot()
-    if self.beatMap[self.i_beatMap] == '0' then
+    if self.beatMap[self.i_beatMap] == 0 then
         self.status = 'idle'
         self.sprite = data.Rose.sprites.idle
         return
@@ -28,6 +28,7 @@ function MusicRose:full_shot()
     self:shoot()
 
     local sound = self.sfxMap[self.i_sfxMap]
+    -- trace('sfx '..self.i_beatMap)
     sfx(sound[1],
         sound[2],
         sound[3],
@@ -46,10 +47,21 @@ function MusicRose:onBeat()
         if not game.metronome.beat4 then
             return
         end
-        -- sfx(1, 'G-4', -1, 3, 12, 0)
+        self:full_shot()
+    elseif #self.beatMap == 8 then
+        if not game.metronome.beat8 then
+            return
+        end
+        self:full_shot()
+    elseif #self.beatMap == 24 then
+        self:full_shot()
+    elseif #self.beatMap == 6 then
+        if not game.metronome.beat6 then
+            return
+        end
         self:full_shot()
     end
-    self.i_beatMap = (self.i_beatMap + 1) % #self.beatMap
+    self.i_beatMap = (self.i_beatMap % #self.beatMap) + 1
 end
 
 

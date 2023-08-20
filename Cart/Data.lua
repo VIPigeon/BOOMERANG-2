@@ -2,7 +2,7 @@ data = {}
 
 -- 14, 15, 30, 31 - Резервные тайлы (почему бы и нет)
 
-GAME_BPM = 40
+GAME_BPM = 160
 
 C0 = 0
 
@@ -41,6 +41,8 @@ CAMERA_SPEED = 0.3
 
 MAP_WIDTH = 239
 MAP_HEIGHT = 135
+
+M44 = 24  -- константа для Metronome4_4
 
 data.Player = {
     movementNormalizerStraight = 1,
@@ -287,7 +289,12 @@ data.LongRose = {}
 data.LongRose.spawnTiles = {166, 167, 168, 169}
 
 data.MusicRose = {}
-data.MusicRose.spawnTiles = {182, 183, 184, 185}
+data.MusicRose.spawnTiles = {
+    D2 = {182, 183, 184, 185},
+    Fd2 = {170, 171, 172, 173},
+    Gd2 = {186, 187, 188, 190},
+}
+
 
 data.Rose.spawnTiles = {150, 151, 152, 153}
 data.Rose.anotherRoseFlagTile = 15
