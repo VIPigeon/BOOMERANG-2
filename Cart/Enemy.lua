@@ -81,7 +81,9 @@ function Enemy:takeDamage(damage)
     table.insert(self.currentAnimations, 
         AnimationOver:new(table.chooseRandomElement(data.Enemy.sprites.hurtEffect), 'randomOn', 'activeOnes')
     )
-    -- это может оказаться неэффективно 🙄
+    -- это может оказаться неэффективно
+
+    trace(self.hp)
 
     self.hp = math.fence(self.hp - damage, 0, self.hp)
 end

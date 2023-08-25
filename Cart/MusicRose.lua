@@ -75,13 +75,13 @@ function MusicRose:update()
 
     self:_focusAnimations()
 
-    if not self.isActive then
-        return
-    end
-
     if self:isDeadCheck() then
         self.sprite = data.Rose.sprites.death:copy()
         self.status = 'dying'
+        return
+    end
+
+    if not self.isActive then
         return
     end
 
