@@ -157,6 +157,16 @@ local function createEnemies()
                 -- elseif table.contains(data.Rose.spawnTiles, id) then
                 --     table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='rose'})
                 --     mset(x, y, C0)
+                elseif musicrose.bassline then
+                    local tile = {x=x, y=y, tileid=id, type='musicrose',
+                                bassline=musicrose.bassline, direction=musicrose.direction}
+                    table.insert(game.enemyRespawnTiles, tile)
+                    mset(x, y, C0)
+                elseif musicbullethell.drums then
+                    local tile = {x=x, y=y, tileid=id, type='musicbullethell',
+                                drums=musicbullethell.drums}
+                    table.insert(game.enemyRespawnTiles, tile)
+                    mset(x, y, C0)
                 elseif table.contains(data.BulletHell.spawnTiles, id) then
                     table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='bullethell'})
                     mset(x, y, C0)
@@ -174,16 +184,6 @@ local function createEnemies()
                 --     local tile = {x=x, y=y, tileid=id, type='longrose'}
                 --     table.insert(game.enemyRespawnTiles, tile)
                 --     mset(x, y, C0)
-                elseif musicrose.bassline then
-                    local tile = {x=x, y=y, tileid=id, type='musicrose',
-                                bassline=musicrose.bassline, direction=musicrose.direction}
-                    table.insert(game.enemyRespawnTiles, tile)
-                    mset(x, y, C0)
-                elseif musicbullethell.drums then
-                    local tile = {x=x, y=y, tileid=id, type='musicbullethell',
-                                drums=musicbullethell.drums}
-                    table.insert(game.enemyRespawnTiles, tile)
-                    mset(x, y, C0)
                 end
             end
         end
@@ -209,7 +209,6 @@ local function createEnemies()
             enemy = LongRose:new(8 * respawnTile.x, 8 * respawnTile.y, getDirection(respawnTile.tileid, respawnTile.type))
         elseif respawnTile.type == 'musicrose' then
             local baza = getMusic(respawnTile.tileid, respawnTile.type)
-            trace(baza)
             enemy = MusicRose:new(8 * respawnTile.x, 8 * respawnTile.y, baza.direction)
             enemy:tuning(bassLine.rose[baza.bassline].beatMap,
                         bassLine.rose[baza.bassline].sfxMap)
@@ -217,8 +216,11 @@ local function createEnemies()
             local type = respawnTile.tileid - data.BulletHell.spawnTiles[1] + 1
             enemy = BulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, type)
         elseif respawnTile.type == 'musicbullethell' then
+            local baza = getMusic(respawnTile.tileid, respawnTile.type)
             local type = respawnTile.tileid - data.BulletHell.spawnTiles[1] + 1
             enemy = MusicBulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, type)
+            enemy:tuning(baza.drums.beatMap,
+                        baza.drums.sfxMap)
         elseif respawnTile.type == 'autobullethell' then
             local type = respawnTile.tileid - data.AutoBulletHell.spawnTiles[1] + 1
             enemy = AutoBulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, type, 13, Sprite:new({379}, 1))
