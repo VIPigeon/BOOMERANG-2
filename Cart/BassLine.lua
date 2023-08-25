@@ -4,7 +4,10 @@ bassLine = {}
 bassLine.rose = {}
 bassLine.rose.D2 = {
     beatMap = {1,0,0,0,0,0,0,0},
-    sfxMap = {{0, 'D-2', -1, 0, 10, 0}}
+    sfxMap = {
+        {0, 'D-2', -1, 0, 10, 0},
+        {0, 'C#2', -1, 0, 10, 0}
+    }
 }
 
 bassLine.rose.Fd2 = {

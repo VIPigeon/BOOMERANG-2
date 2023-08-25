@@ -1,10 +1,9 @@
+MusicBulletHell = table.copy(BulletHell)
 
-MusicRose = table.copy(LongRose)
 
-
-function MusicRose:tuning(beatMap, sfxMap)
+function MusicBulletHell:tuning(beatMap, sfxMap)
     -- обязательно вызывается после new для настройки музыки
-
+    
     self.sfxMap = sfxMap
     self.i_sfxMap = 1
 
@@ -14,15 +13,11 @@ function MusicRose:tuning(beatMap, sfxMap)
 end
 
 
-function MusicRose:_full_shot()
+function MusicBulletHell:_full_shot()
     if self.beatMap[self.i_beatMap] == 0 then
-        self.status = 'idle'
-        self.sprite = data.Rose.sprites.idle
         return
     end
-    self.status = 'shooting'
-    self.sprite = data.Rose.sprites.shooting
-    self:shoot()
+    self:_shoot()
 
     local sound = self.sfxMap[self.i_sfxMap]
     sfx(sound[1],
@@ -36,7 +31,7 @@ function MusicRose:_full_shot()
 end
 
 
-function MusicRose:onBeat()
+function MusicBulletHell:onBeat()
     if #self.beatMap == 4 then
         if not game.metronome.beat4 then
             return
@@ -59,18 +54,28 @@ function MusicRose:onBeat()
 end
 
 
-function MusicRose:update()
-    if game.boomer.hitbox:collide(self.hitbox) then
-        local damage = game.boomer.dpMs * Time.dt()
-        self:takeDamage(damage)
-    end
-    
+function MusicBulletHell:update()
     if self.status == 'dying' then
-        self.sprite:nextFrame()
-        if self.sprite:animationEnd() then
-            self:die()
+        self.deathTick()
+        return
+    end
+
+    if self:isDeadCheck() then
+        self:launchBulletsAround()
+        local time = 0
+        self.status = 'dying'
+        self.deathTick = function()
+            time = time + Time.dt()
+            if time > data.BulletHell.deathTimeMs then
+                self:die()
+            end
         end
         return
+    end
+
+    if self.hitbox:collide(game.boomer.hitbox) then
+        local damage = game.boomer.dpMs * Time.dt()
+        self:takeDamage(damage)
     end
 
     self:_focusAnimations()
@@ -79,17 +84,12 @@ function MusicRose:update()
         return
     end
 
-    if self:isDeadCheck() then
-        self.sprite = data.Rose.sprites.death:copy()
-        self.status = 'dying'
-        return
+    if game.metronome.onBeat then
+        self:onBeat()
     end
 
-    self:onBeat()
-
-    if self.status == 'shooting' then
-        if self.laserHitbox:collide(game.player.hitbox) then
-            game.player:die()
-        end
+    for i = 1, #self.bullets do
+        self.bullets[i]:update()
     end
 end
+
