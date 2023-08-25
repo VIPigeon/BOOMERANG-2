@@ -1,2 +1,6 @@
 
-drums = {}
+drums = {
+    {beatMap = {}
+    sfxMap = {}
+    },
+}

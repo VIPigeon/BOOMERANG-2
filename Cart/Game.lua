@@ -129,13 +129,18 @@ local function createEnemies()
         if type == 'musicrose' then
             for bassline, tiles in pairs(data.MusicRose.spawnTiles) do
                 if tiles[1] <= spawnTileId and spawnTileId <= tiles[4] then
-                    return {direction = spawnTileId - tiles[1],
-                            bassline = bassline
-                            }
+                    return {
+                        direction = spawnTileId - tiles[1],
+                        bassline = bassline,
+                    }
                 end
             end
+        elseif type == 'musicbullethell' then
+            return {
+                drums = drums[spawnTileId]
+            }
         end
-        return false
+        return {}
     end
 
     if #game.enemyRespawnTiles == 0 then
@@ -143,6 +148,7 @@ local function createEnemies()
             for y = 0, MAP_HEIGHT do
                 local id = mget(x, y)
                 local musicrose = getMusic(id, 'musicrose')
+                local musicbullethell = getMusic(id, 'musicbullethell')
 
                 if id == data.Enemy.defaultEnemyFlagTile then
                     table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='enemy'})
@@ -168,9 +174,14 @@ local function createEnemies()
                 --     local tile = {x=x, y=y, tileid=id, type='longrose'}
                 --     table.insert(game.enemyRespawnTiles, tile)
                 --     mset(x, y, C0)
-                elseif musicrose then
+                elseif musicrose.bassline then
                     local tile = {x=x, y=y, tileid=id, type='musicrose',
                                 bassline=musicrose.bassline, direction=musicrose.direction}
+                    table.insert(game.enemyRespawnTiles, tile)
+                    mset(x, y, C0)
+                elseif musicbullethell.drums then
+                    local tile = {x=x, y=y, tileid=id, type='musicbullethell',
+                                drums=musicbullethell.drums}
                     table.insert(game.enemyRespawnTiles, tile)
                     mset(x, y, C0)
                 end
@@ -205,6 +216,9 @@ local function createEnemies()
         elseif respawnTile.type == 'bullethell' then
             local type = respawnTile.tileid - data.BulletHell.spawnTiles[1] + 1
             enemy = BulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, type)
+        elseif respawnTile.type == 'musicbullethell' then
+            local type = respawnTile.tileid - data.BulletHell.spawnTiles[1] + 1
+            enemy = MusicBulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, type)
         elseif respawnTile.type == 'autobullethell' then
             local type = respawnTile.tileid - data.AutoBulletHell.spawnTiles[1] + 1
             enemy = AutoBulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, type, 13, Sprite:new({379}, 1))
