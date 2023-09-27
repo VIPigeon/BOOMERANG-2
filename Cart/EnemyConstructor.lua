@@ -18,3 +18,10 @@ function enemyConstructor.spawn(x, y, template)
         assert(false, 'snowman isnt finished')
     end
 end
+
+
+--[[
+template -- это таблица с именными полями
+template определяет тип противника и характристики в зависимости от типа
+Всегда содержит в себе поля type и music (см. Drums.lua и BassLine.lua)
+]]

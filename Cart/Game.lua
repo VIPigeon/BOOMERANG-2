@@ -85,7 +85,7 @@ local function createLevers()
                 local doorWiresLever = DoorMechanic.findConnection(x, y) -- подыщем провода и коорды двери
 
                 lwr.wires = doorWiresLever.wires
-                lwr.door = doorWiresLever.door -- временные координаты, в создании дверей заменится на настоящую дверь
+                lwr.door = doorWiresLever.door  -- временные координаты, в создании дверей заменится на настоящую дверь
 
                 table.insert(levers, lwr)
             end
