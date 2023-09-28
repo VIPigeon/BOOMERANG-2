@@ -147,6 +147,9 @@ local function createEnemies()
         for x = 0, MAP_WIDTH do
             for y = 0, MAP_HEIGHT do
                 local id = mget(x, y)
+                enemyFactory.create(id)
+                mset(x, y, C0)
+
                 local musicrose = getMusic(id, 'musicrose')
                 local musicbullethell = getMusic(id, 'musicbullethell')
 
@@ -197,8 +200,9 @@ local function createEnemies()
         end
     end
 
-
     local enemem = {}
+    enemyFactory.spawn(respawnTile)
+
     for _, respawnTile in ipairs(game.enemyRespawnTiles) do
         local enemy
         if respawnTile.type == 'enemy' then
