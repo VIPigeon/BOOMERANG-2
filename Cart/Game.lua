@@ -134,10 +134,11 @@ local function createEnemies()
             if additionalInfo.noCollisions then
                 table.insert(game.drawables, enemy)
                 table.insert(game.updatables, enemy)
-                continue
+                goto continue
             end
 
             table.insert(enemies, enemy)
+            ::continue::
         end
     end
 
