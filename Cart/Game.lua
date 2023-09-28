@@ -128,10 +128,10 @@ local function createEnemies()
     for x = 0, MAP_WIDTH do
         for y = 0, MAP_HEIGHT do
             local id = mget(x, y)
-            local enemy, additionalInfo = enemyFactory.create(id)
+            local enemy, additionalInfo = enemyFactory.create(x, y, id)
             mset(x, y, C0)
 
-            if additionalInfo.noCollisions then
+            if additionalInfo and additionalInfo.noCollisions then
                 table.insert(game.drawables, enemy)
                 table.insert(game.updatables, enemy)
                 goto continue
