@@ -11,6 +11,9 @@ function enemyFactory.create(tileX, tileY, tileID)
     local config = enemyFactory.getConfig(tileID)
     local type = config.name
 
+    -- Заметка(Каня): В идеальном мире всё так и будет работать.
+    -- Однако мир не идеален. 🦍🦍
+
     if type == 'Enemy' then
         return Enemy:new(x, y)
     elseif type == 'StaticTaraxacum' then
