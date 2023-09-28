@@ -1,3 +1,7 @@
+--Эпиграф: 
+
+        --"-- Я дурак 😫"
+
 data = {}
 
 -- 14, 15, 30, 31 - Резервные тайлы (почему бы и нет)
@@ -16,7 +20,7 @@ KEY_DOWN = 59
 KEY_LEFT = 60
 KEY_RIGHT = 61
 
-KEY_B = 02 -- Что это?? Это круто. 🙂
+KEY_B = 02 -- Что это?? Это круто. 🙂 ЁЯЩа<😎>
 
 MAP_WIDTH = 239
 MAP_HEIGHT = 135
@@ -175,35 +179,35 @@ data.Door.sprite = {
 }
 
 data.Taraxacum = {
-    speed = 2,
-    color = 12,
+    -- speed = 2,
+    -- color = 12,
 
-    radius = 2,
-    staticRadius = 3,
-    bodyColor = 3,
-    staticBodyLength = 10,
-    staticTaraxacumSpawnTile = { 97 },
+    -- radius = 2,
+    -- staticRadius = 3,
+    -- bodyColor = 3,
+    -- staticBodyLength = 10,
+    -- staticTaraxacumSpawnTile = { 97 },
 
-    deathBulletCount = 6,
-    deathBulletSlowCount = 3,
-    deathBulletFastCount = 3,
+    -- deathBulletCount = 6,
+    -- deathBulletSlowCount = 3,
+    -- deathBulletFastCount = 3,
 
-    deathBulletSpeed = 0.37,
-    deathSlowBulletSpeed = 0.2,
-    deathFastBulletSpeed = 0.5,
+    -- deathBulletSpeed = 0.37,
+    -- deathSlowBulletSpeed = 0.2,
+    -- deathFastBulletSpeed = 0.5,
 
-    deathBulletSpread = 2.5,
+    -- deathBulletSpread = 2.5,
 
-    deathBulletSprite = Sprite:new({378}, 1),
+    -- deathBulletSprite = Sprite:new({378}, 1),
 }
 
 data.StaticTaraxacum = {
-    radius = 2,
-    speed = 2,
-    deathBulletCount = 6,
-    deathBulletSlowCount = 3,
-    deathBulletFastCount = 3,
-    deathBulletSpread = 2,
+    -- radius = 2,
+    -- speed = 2,
+    -- deathBulletCount = 6,
+    -- deathBulletSlowCount = 3,
+    -- deathBulletFastCount = 3,
+    -- deathBulletSpread = 2,
 }
 
 local turnOnAnimationFrames = {}
@@ -262,6 +266,234 @@ data.SettingLever.sprites = {
     off = Sprite:new({5}, 1),
 }
 
+--IEnemyable
+data.EnemyConfig = {
+    -- dict: [tileId : EnemyConfigLol]
+    [98] = {},
+    [32] = {
+        name = 'BulletHell',
+        circleDiameter = 5,
+        bulletSpeadRadius = {5, 8, 11},
+        bulletRotateSpeed = 1,
+        bulletCount = 8,
+        bulletSpeed = 0.8,
+        deathBulletSpeed = 0.3,
+        hp = 12,
+        autoAim = true,
+    },
+    [33] = {
+        name = 'BulletHell',
+        circleDiameter = 8,
+        bulletSpeadRadius = 8,
+        bulletRotateSpeed = 1,
+        bulletCount = 12,
+        bulletSpeed = 0.7,
+        deathBulletSpeed = 0.2,
+        hp = 25,
+        autoAim = true,
+    },
+    [34] = {
+        name = 'BulletHell',
+        circleDiameter = 16,
+        bulletSpeadRadius = 11,
+        bulletRotateSpeed = 1,
+        bulletCount = 16,
+        bulletSpeed = 0.8,
+        deathBulletSpeed = 0.1,
+        autoAim = true,
+    },
+    [48] = {
+        name = 'BulletHell',
+        circleDiameter = 5,
+        bulletSpeadRadius = {5, 8, 11},
+        bulletRotateSpeed = 1,
+        bulletCount = 8,
+        bulletSpeed = 0.8,
+        deathBulletSpeed = 0.3,
+        hp = 12,
+    },
+    [49] = {
+        name = 'BulletHell',
+        circleDiameter = 8,
+        bulletSpeadRadius = 8,
+        bulletRotateSpeed = 1,
+        bulletCount = 12,
+        bulletSpeed = 0.7,
+        deathBulletSpeed = 0.2,
+        hp = 25,
+    }, -- bullet help pls
+    [50] = {
+        name = 'BulletHell',
+        circleDiameter = 16,
+        bulletSpeadRadius = 11,
+        bulletRotateSpeed = 1,
+        bulletCount = 16,
+        bulletSpeed = 0.8,
+        deathBulletSpeed = 0.1,
+        hp = 40,
+    },
+    -- [65] = {
+    --     name = 'Snowman',
+    --     color = 12,
+    --     speed = data.Player.speed - 0.41,
+    --     speedWithWhirl = data.Player.speed - 0.61,
+    --     hp = 10,
+    --     prepareJumpTime = 20,
+    --     --jumpTime = 20,
+    --     resetJumpTime = 24,
+    --     deathParticleCountMin = 100,
+    --     deathParticleCountMax = 300,
+    --     deathAnimationParticleSpeed = 1,
+    --     deathAnimationParticleSpeedNormalizer = 0.4,
+    --     deathParticleMinSpeed = 1,
+    --     deathParticleSprite = Sprite:new({378}, 1),
+    -- },
+    [97] = {
+        name = 'StaticTaraxacum',
+        speed = 2,
+        color = 12,
+
+        radius = 2,
+        staticRadius = 3,
+        bodyColor = 3,
+        staticBodyLength = 10,
+        staticTaraxacumSpawnTile = { 97 },
+
+        deathBulletCount = 6,
+        deathBulletSlowCount = 3,
+        deathBulletFastCount = 3,
+
+        deathBulletSpeed = 0.37,
+        deathSlowBulletSpeed = 0.2,
+        deathFastBulletSpeed = 0.5,
+
+        deathBulletSpread = 2,
+
+        deathBulletSprite = Sprite:new({378}, 1),
+    }, -- mb static idk
+    [150] = {},
+    [151] = {},
+    [152] = {},
+    [153] = {},
+
+    [166] = {},
+    [167] = {},
+    [168] = {},
+    [169] = {},
+    --D2 = {182, 183, 184, 185},
+    -- Fd2 = {170, 171, 172, 173},
+    -- Gd2 = {186, 187, 188, 190},
+    [170] = {
+        name = 'MusicRose',
+        startingHealth = 50,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+    },
+    [171] = {
+        name = 'MusicRose',
+        startingHealth = 50,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+    },
+    [172] = {
+        name = 'MusicRose',
+        startingHealth = 50,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+    },
+    [173] = {
+        name = 'MusicRose',
+        startingHealth = 50,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+    },
+
+    [182] = {
+        name = 'MusicRose',
+        startingHealth = 50,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+    },
+    [183] = {
+        name = 'MusicRose',
+        startingHealth = 50,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+    },
+    [184] = {
+        name = 'MusicRose',
+        startingHealth = 50,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+    },
+    [185] = {
+        name = 'MusicRose',
+        startingHealth = 50,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+    },
+
+    [186] = {
+        name = 'MusicRose',
+        startingHealth = 50,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+    },
+    [187] = {
+        name = 'MusicRose',
+        startingHealth = 50,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+    },
+    [188] = {
+        name = 'MusicRose',
+        startingHealth = 50,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+    },
+    [189] = {
+        name = 'MusicRose',
+        startingHealth = 50,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+    },
+}
+
+data.BulletHell = {
+    -- circleDiameter = {5, 8, 16},
+    -- bulletSpeadRadius = {5, 8, 11},
+    -- bulletRotateSpeed = {1,1,1},
+    -- bulletCount = {8, 12, 16},
+    -- bulletSpeed = {0.8, 0.7, 0.8},
+    -- deathBulletSpeed = {0.3, 0.2, 0.1},
+    -- hp = {12, 25, 40},
+    deathTimeMs = 1000,
+}
+
+-- data.BulletHell.spawnTiles = {48, 49, 50}
+data.BulletHell.sprites = {
+    defaultSprite = 999,
+}
+
+data.AutoBulletHell = {
+    -- spawnTiles = {32,33,34},
+
+    -- circleDiameter = {5, 8, 16},
+    -- bulletSpeadRadius = {5, 8, 11},
+    -- bulletRotateSpeed = {1,1,1},
+    -- bulletCount = {8, 12, 16},
+    -- bulletSpeed = {0.8, 0.7, 0.8},
+    -- deathBulletSpeed = {0.3, 0.2, 0.1},
+    -- hp = {12, 25, 40},
+    deathTimeMs = 1000,
+}
+
+data.Bullet = {
+    defaultSpeed = 0.5,
+    defaultSprite = Sprite:new({373}, 1),
+    reloadAnimation = Sprite:new(anim.gen({373, 0, 374, 375, 376}, 4), 1),
+}
+
 data.Enemy = {
     defaultHP = 5,
     defaultEnemyFlagTile = 98,
@@ -307,56 +539,22 @@ data.Rose.sprites = {
 data.Rose.animation_frame_duration_ms = 16
 data.Rose.rose_animation_duration_ms = data.Rose.animation_frame_duration_ms * #data.Rose.sprites.transition.animation
 
-data.BulletHell = {
-    circleDiameter = {5, 8, 16},
-    bulletSpeadRadius = {5, 8, 11},
-    bulletRotateSpeed = {1,1,1},
-    bulletCount = {8, 12, 16},
-    bulletSpeed = {0.8, 0.7, 0.8},
-    deathBulletSpeed = {0.3, 0.2, 0.1},
-    deathTimeMs = 1000,
-    hp = {12, 25, 40}
-}
 
-data.BulletHell.spawnTiles = {48, 49, 50}
-data.BulletHell.sprites = {
-    defaultSprite = 999,
-}
-
-data.AutoBulletHell = {
-    spawnTiles = {32,33,34},
-
-    circleDiameter = {5, 8, 16},
-    bulletSpeadRadius = {5, 8, 11},
-    bulletRotateSpeed = {1,1,1},
-    bulletCount = {8, 12, 16},
-    bulletSpeed = {0.8, 0.7, 0.8},
-    deathBulletSpeed = {0.3, 0.2, 0.1},
-    hp = {12, 25, 40},
-    deathTimeMs = 1000,
-}
-
-data.Bullet = {
-    defaultSpeed = 0.5,
-    defaultSprite = Sprite:new({373}, 1),
-    reloadAnimation = Sprite:new(anim.gen({373, 0, 374, 375, 376}, 4), 1),
-}
 
 data.Snowman = {
-    color = 12,
-    speed = data.Player.speed - 0.41,
-    speedWithWhirl = data.Player.speed - 0.61,
-    hp = 10,
-    prepareJumpTime = 20,
-    --jumpTime = 20,
-    resetJumpTime = 24,
-
-    deathParticleCountMin = 100,
-    deathParticleCountMax = 300,
-    deathAnimationParticleSpeed = 1,
-    deathAnimationParticleSpeedNormalizer = 0.4,
-    deathParticleMinSpeed = 1,
-    deathParticleSprite = Sprite:new({378}, 1),
+    -- color = 12,
+    -- speed = data.Player.speed - 0.41,
+    -- speedWithWhirl = data.Player.speed - 0.61,
+    -- hp = 10,
+    -- prepareJumpTime = 20,
+    -- --jumpTime = 20,
+    -- resetJumpTime = 24,
+    -- deathParticleCountMin = 100,
+    -- deathParticleCountMax = 300,
+    -- deathAnimationParticleSpeed = 1,
+    -- deathAnimationParticleSpeedNormalizer = 0.4,
+    -- deathParticleMinSpeed = 1,
+    -- deathParticleSprite = Sprite:new({378}, 1),
 }
 
 data.Snowman.specialTaraxacum = {
@@ -395,6 +593,7 @@ data.Snowman.sprites = {
     resetJump = Sprite:new({348,344,312}, 2),
     death = Sprite:new(anim.gen60({312,314,312,314,312}), 2)
 }
+
 
 -- Я дурак 😫
 data.SnowmanBox = {}
