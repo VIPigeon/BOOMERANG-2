@@ -122,131 +122,26 @@ local function createDoors(levers)
     return doors
 end
 
-game.enemyRespawnTiles = {}
 local function createEnemies()
+    local enemies = {}
 
-    function getMusic(spawnTileId, type)
-        if type == 'musicrose' then
-            for bassline, tiles in pairs(data.MusicRose.spawnTiles) do
-                if tiles[1] <= spawnTileId and spawnTileId <= tiles[4] then
-                    return {
-                        direction = spawnTileId - tiles[1],
-                        bassline = bassline,
-                    }
-                end
+    for x = 0, MAP_WIDTH do
+        for y = 0, MAP_HEIGHT do
+            local id = mget(x, y)
+            local enemy, additionalInfo = enemyFactory.create(id)
+            mset(x, y, C0)
+
+            if additionalInfo.noCollisions then
+                table.insert(game.drawables, enemy)
+                table.insert(game.updatables, enemy)
+                continue
             end
-        elseif type == 'musicbullethell' then
-            return {
-                drums = drums[spawnTileId]
-            }
-        end
-        return {}
-    end
 
-    if #game.enemyRespawnTiles == 0 then
-        for x = 0, MAP_WIDTH do
-            for y = 0, MAP_HEIGHT do
-                local id = mget(x, y)
-                enemyFactory.create(id)
-                mset(x, y, C0)
-
-                local musicrose = getMusic(id, 'musicrose')
-                local musicbullethell = getMusic(id, 'musicbullethell')
-
-                if id == data.Enemy.defaultEnemyFlagTile then
-                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='enemy'})
-                    mset(x, y, C0)
-                -- нахер обычную розу
-                -- elseif table.contains(data.Rose.spawnTiles, id) then
-                --     table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='rose'})
-                --     mset(x, y, C0)
-                elseif musicrose.bassline then
-                    local tile = {x=x, y=y, tileid=id, type='musicrose',
-                                bassline=musicrose.bassline, direction=musicrose.direction}
-                    table.insert(game.enemyRespawnTiles, tile)
-                    mset(x, y, C0)
-                elseif musicbullethell.drums then
-                    local tile = {x=x, y=y, tileid=id, type='musicbullethell',
-                                drums=musicbullethell.drums}
-                    table.insert(game.enemyRespawnTiles, tile)
-                    mset(x, y, C0)
-                elseif table.contains(data.BulletHell.spawnTiles, id) then
-                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='bullethell'})
-                    mset(x, y, C0)
-                elseif table.contains(data.AutoBulletHell.spawnTiles, id) then
-                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='autobullethell'})
-                    mset(x, y, C0)
-                elseif table.contains(data.Taraxacum.staticTaraxacumSpawnTile, id) then
-                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='taraxacum'})
-                    mset(x, y, C0)
-                elseif table.contains(data.Snowman.spawnTiles, id) then
-                    table.insert(game.enemyRespawnTiles, {x=x, y=y, tileid = id, type='snowman'})
-                    mset(x, y, C0)
-                -- нахер длинную розу
-                -- elseif table.contains(data.LongRose.spawnTiles, id) then
-                --     local tile = {x=x, y=y, tileid=id, type='longrose'}
-                --     table.insert(game.enemyRespawnTiles, tile)
-                --     mset(x, y, C0)
-                end
-            end
+            table.insert(enemies, enemy)
         end
     end
 
-    function getDirection(spawnTileId, type)
-        if type == 'rose' then
-            return spawnTileId - data.Rose.spawnTiles[1]
-        elseif type == 'longrose' then
-            return spawnTileId - data.LongRose.spawnTiles[1]
-        end
-    end
-
-    local enemem = {}
-    enemyFactory.spawn(respawnTile)
-
-    for _, respawnTile in ipairs(game.enemyRespawnTiles) do
-        local enemy
-        if respawnTile.type == 'enemy' then
-            enemy = Enemy:new(8 * respawnTile.x, 8 * respawnTile.y)
-        elseif respawnTile.type == 'rose' then
-            enemy = Rose:new(8 * respawnTile.x, 8 * respawnTile.y, getDirection(respawnTile.tileid, respawnTile.type))
-        elseif respawnTile.type == 'longrose' then
-            enemy = LongRose:new(8 * respawnTile.x, 8 * respawnTile.y, getDirection(respawnTile.tileid, respawnTile.type))
-        elseif respawnTile.type == 'musicrose' then
-            local baza = getMusic(respawnTile.tileid, respawnTile.type)
-            enemy = MusicRose:new(8 * respawnTile.x, 8 * respawnTile.y, baza.direction)
-            enemy:tuning(bassLine.rose[baza.bassline].beatMap,
-                        bassLine.rose[baza.bassline].sfxMap)
-        elseif respawnTile.type == 'bullethell' then
-            local type = respawnTile.tileid - data.BulletHell.spawnTiles[1] + 1
-            enemy = BulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, type)
-        elseif respawnTile.type == 'musicbullethell' then
-            local baza = getMusic(respawnTile.tileid, respawnTile.type)
-            local type = respawnTile.tileid - data.BulletHell.spawnTiles[1] + 1
-            enemy = MusicBulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, type)
-            enemy:tuning(baza.drums.beatMap,
-                        baza.drums.sfxMap)
-        elseif respawnTile.type == 'autobullethell' then
-            local type = respawnTile.tileid - data.AutoBulletHell.spawnTiles[1] + 1
-            enemy = AutoBulletHell:new(8 * respawnTile.x, 8 * respawnTile.y, type, 13, Sprite:new({379}, 1))
-        elseif respawnTile.type == 'taraxacum' then
-            local radius = data.Taraxacum.staticRadius
-            local bodyLength = data.Taraxacum.staticBodyLength
-            -- Это чудо костыль, чтобы одуванчик не попадал в collideables (нельзя) 🙄🙄 \😯/
-            local taraxacum = StaticTaraxacum:new(8 * respawnTile.x, 8 * respawnTile.y, radius, bodyLength)
-            table.insert(game.updatables, taraxacum)
-            table.insert(game.drawables, taraxacum)
-        elseif respawnTile.type == 'snowman' then
-            local snowmanBox = SnowmanBox:new(8 * respawnTile.x, 8 * respawnTile.y) -- а дверь его теперь как убивать будет, ты подумал? 🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁🙁
-            table.insert(game.updatables, snowmanBox)
-            table.insert(game.drawables, snowmanBox)
-        end
-
-        if enemy then
-            table.insert(enemem, enemy)
-        end
-    end
-
-    return enemem
+    return enemies
 end
 
 function game.updateActiveEnemies()
