@@ -1,10 +1,16 @@
 enemyFactory = {}
 
 function enemyFactory.getConfig(tileID)
-    return data.enemyConfig[tileID]
+    trace(tileID)
+    trace(data.EnemyConfig[tileID])
+    return data.EnemyConfig[tileID]
 end
 
 function enemyFactory.create(tileX, tileY, tileID)
+    if data.EnemyConfig[tileID] == nil then
+        return
+    end
+
     local x = 8 * tileX;
     local y = 8 * tileY;
 
@@ -22,11 +28,11 @@ function enemyFactory.create(tileX, tileY, tileID)
         return SnowmanBox:new(x, y), {noCollisions = true}
     elseif type == 'MusicRose' then
         local musicRose = MusicRose:new(x, y, config.direction)
-        musicRose:tuning(config.bassline.beatMap, config.bassline.sfxMap)
+        musicRose:tuning(config.music.beatMap, config.music.sfxMap)
         return musicRose
     elseif type == 'MusicBulletHell' then
         local musicBulletHell = MusicBulletHell:new(x, y, config.bulletHellType)
-        musicBulletHell:tuning(config.drums.beatMap, config.drums.sfxMap)
+        musicBulletHell:tuning(config.music.beatMap, config.music.sfxMap)
         return musicBulletHell
     end
 end

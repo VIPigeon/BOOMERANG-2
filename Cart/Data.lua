@@ -356,7 +356,7 @@ data.EnemyConfig = {
         radius = 2,
         staticRadius = 3,
         bodyColor = 3,
-        staticBodyLength = 10,
+        bodyLength = 10,
         staticTaraxacumSpawnTile = { 97 },
 
         deathBulletCount = 6,
@@ -385,24 +385,28 @@ data.EnemyConfig = {
     -- Gd2 = {186, 187, 188, 190},
     [170] = {
         name = 'MusicRose',
+        music = bassLine.rose.D2,
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
     },
     [171] = {
         name = 'MusicRose',
+        music = bassLine.rose.D2,
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
     },
     [172] = {
         name = 'MusicRose',
+        music = bassLine.rose.D2,
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
     },
     [173] = {
         name = 'MusicRose',
+        music = bassLine.rose.D2,
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
@@ -410,24 +414,28 @@ data.EnemyConfig = {
 
     [182] = {
         name = 'MusicRose',
+        music = bassLine.rose.D2,
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
     },
     [183] = {
         name = 'MusicRose',
+        music = bassLine.rose.D2,
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
     },
     [184] = {
         name = 'MusicRose',
+        music = bassLine.rose.D2,
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
     },
     [185] = {
         name = 'MusicRose',
+        music = bassLine.rose.D2,
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
@@ -435,24 +443,28 @@ data.EnemyConfig = {
 
     [186] = {
         name = 'MusicRose',
+        music = bassLine.rose.D2,
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
     },
     [187] = {
         name = 'MusicRose',
+        music = bassLine.rose.D2,
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
     },
     [188] = {
         name = 'MusicRose',
+        music = bassLine.rose.D2,
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
     },
     [189] = {
         name = 'MusicRose',
+        music = bassLine.rose.D2,
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
