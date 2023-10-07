@@ -7,10 +7,6 @@ function enemyFactory.getConfig(tileID)
 end
 
 function enemyFactory.create(tileX, tileY, tileID)
-    if data.EnemyConfig[tileID] == nil then
-        return
-    end
-
     local x = 8 * tileX;
     local y = 8 * tileY;
 

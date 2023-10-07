@@ -128,6 +128,10 @@ local function createEnemies()
     for x = 0, MAP_WIDTH do
         for y = 0, MAP_HEIGHT do
             local id = mget(x, y)
+            if data.EnemyConfig[id] == nil then
+                goto continue
+            end
+
             local enemy, additionalInfo = enemyFactory.create(x, y, id)
             mset(x, y, C0)
 
