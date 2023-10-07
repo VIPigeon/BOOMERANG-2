@@ -1,5 +1,5 @@
 game = {}
-
+-- assert(false)
 local function createMetronome()
     -- return Metronome:new(GAME_BPM)
     return Metronome4_4:new(GAME_BPM)
