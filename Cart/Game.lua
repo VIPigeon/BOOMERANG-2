@@ -274,7 +274,7 @@ function game.restart()
     table.concatTable(game.collideables, enemies)
     table.concatTable(game.collideables, game.doors)
 
-    game.mode = 'action' -- Зачем это? :|
+    game.mode = 'action' -- Зачем это? :|  -- это было для меню и создания паузы
     game.metronome = metronome
     game.player = player
     game.boomer = boomerang
