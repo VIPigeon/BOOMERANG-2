@@ -122,8 +122,29 @@ local function createDoors(levers)
     return doors
 end
 
+
+game.enemyRespawn = {}
 local function createEnemies()
     local enemies = {}
+
+    if #game.enemyRespawn ~= 0 then
+        for i, enemy in ipairs(game.enemyRespawn) do
+            enemy = table.copy(enemy)
+            -- trace("(")
+            -- trace(enemy)
+            -- enemy:draw()
+            -- enemy:update()
+            -- trace(")")
+            if additionalInfo and additionalInfo.noCollisions then
+                table.insert(game.drawables, enemy)
+                table.insert(game.updatables, enemy)
+                goto continue
+            end
+            table.insert(enemies, enemy)
+            ::continue::
+        end
+        return enemies
+    end
 
     for x = 0, MAP_WIDTH do
         for y = 0, MAP_HEIGHT do
@@ -133,6 +154,8 @@ local function createEnemies()
             end
 
             local enemy, additionalInfo = enemyFactory.create(x, y, id)
+            table.insert(game.enemyRespawn, table.copy(enemy))
+            -- table.insert(game.enemyRespawn, enemy)
             mset(x, y, C0)
 
             if additionalInfo and additionalInfo.noCollisions then
@@ -290,6 +313,7 @@ function game.draw()
     map(gm.x, gm.y , 30, 17, gm.sx, gm.sy, C0)
 
     for _, drawable in ipairs(game.drawables) do
+        trace(drawable.status)
         drawable:draw()
     end
 end

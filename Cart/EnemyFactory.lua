@@ -31,4 +31,6 @@ function enemyFactory.create(tileX, tileY, tileID)
         musicBulletHell:tuning(config.music.beatMap, config.music.sfxMap)
         return musicBulletHell
     end
+    trace("!!!!!!")
+    trace(tileID)
 end
