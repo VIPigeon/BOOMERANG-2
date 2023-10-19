@@ -389,6 +389,7 @@ data.EnemyConfig = {
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
+        direction = 0,
     },
     [171] = {
         name = 'MusicRose',
@@ -396,6 +397,7 @@ data.EnemyConfig = {
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
+        direction = 1,
     },
     [172] = {
         name = 'MusicRose',
@@ -403,6 +405,7 @@ data.EnemyConfig = {
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
+        direction = 2,
     },
     [173] = {
         name = 'MusicRose',
@@ -410,6 +413,7 @@ data.EnemyConfig = {
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
+        direction = 3,
     },
 
     [182] = {
@@ -418,6 +422,7 @@ data.EnemyConfig = {
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
+        direction = 0,
     },
     [183] = {
         name = 'MusicRose',
@@ -425,6 +430,7 @@ data.EnemyConfig = {
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
+        direction = 1,
     },
     [184] = {
         name = 'MusicRose',
@@ -432,6 +438,7 @@ data.EnemyConfig = {
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
+        direction = 2,
     },
     [185] = {
         name = 'MusicRose',
@@ -439,6 +446,7 @@ data.EnemyConfig = {
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
+        direction = 3,
     },
 
     [186] = {
@@ -447,6 +455,7 @@ data.EnemyConfig = {
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
+        direction = 0,
     },
     [187] = {
         name = 'MusicRose',
@@ -454,6 +463,7 @@ data.EnemyConfig = {
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
+        direction = 1,
     },
     [188] = {
         name = 'MusicRose',
@@ -461,6 +471,7 @@ data.EnemyConfig = {
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
+        direction = 2,
     },
     [189] = {
         name = 'MusicRose',
@@ -468,6 +479,7 @@ data.EnemyConfig = {
         startingHealth = 50,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
+        direction = 3,
     },
 }
 
