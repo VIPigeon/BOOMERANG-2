@@ -1,26 +1,26 @@
 BulletHell = table.copy(Enemy)
 
-function BulletHell:new(x, y, type, color, bulletSprite)
+function BulletHell:new(x, y, config) -- type, color, bulletSprite, config)
     local bullets = {}
-    for i = 1, data.BulletHell.bulletCount[type] do
+    for i = 1, config.bulletCount do -- data.BulletHell.bulletCount[type] do
         bullets[i] = HellBullet:new()
     end
 
-    color = color or 14 -- lol
+    local color = 14
 
     local object = {
         x = x,
         y = y,
         type = type,
-        spread = data.BulletHell.bulletSpeadRadius[type],
+        spread = config.bulletSpreadRadius,
         bullets = bullets,
-        bulletCount = data.BulletHell.bulletCount[type],
-        bulletSpeed = data.BulletHell.bulletSpeed[type],
+        bulletCount = config.bulletCount,
+        bulletSpeed = config.bulletSpeed,
         bulletSprite = bulletSprite,
-        deathBulletSpeed = data.BulletHell.deathBulletSpeed[type],
-        bulletRotateSpeed = data.BulletHell.bulletRotateSpeed[type],
-        hp = data.BulletHell.hp[type],
-        hitbox = HitCircle:new(x, y, data.BulletHell.circleDiameter[type]),
+        deathBulletSpeed = config.deathBulletSpeed,
+        bulletRotateSpeed = config.bulletRotateSpeed,
+        hp = config.hp,
+        hitbox = HitCircle:new(x, y, config.circleDiameter),
         time = 0,
         status = '',
         color = color,
@@ -51,7 +51,7 @@ function BulletHell:_selectBullet()
         end
     end
 
-    local byTouchId = (minId + data.BulletHell.bulletCount[self.type] - data.BulletHell.bulletCount[self.type] // 4 - 1) % data.BulletHell.bulletCount[self.type] + 1
+    local byTouchId = (minId + self.bulletCount - self.bulletCount // 4 - 1) % self.bulletCount + 1
     table.insert(self.reloadingBullets, self.bullets[(byTouchId - 1) % 8 + 1])
 
     return byTouchId
@@ -135,6 +135,7 @@ function BulletHell:update()
 end
 
 function BulletHell._moveBullets(bullethell, offset)
+    trace(bullethell.spread)
     local step = 2 * math.pi / bullethell.bulletCount
     for i = 1, #bullethell.bullets do
         local x = math.round(bullethell.spread * math.cos((i + offset) * step))

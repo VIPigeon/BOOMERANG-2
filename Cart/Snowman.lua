@@ -70,7 +70,6 @@ function Snowman:_resetJumpActivate()
 end
 
 function Snowman:move(dx, dy) -- special for doors 🥰
-    trace('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
     self.x = self.x + dx
     self.y = self.y + dy
     self.hitbox:set_xy(self.x, self.y)

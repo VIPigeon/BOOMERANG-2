@@ -11,7 +11,7 @@ local function addDebugValidation(t)
     local metatable = {
         __index = function(_, k)
             if t[k] == nil then
-                trace("Config value '" .. k .. "' is missing!")
+                error("Config value '" .. k .. "' is missing!")
             end
             return t[k]
         end
@@ -42,7 +42,7 @@ function enemyFactory.create(tileX, tileY, tileID)
         musicRose:tuning(config.music.beatMap, config.music.sfxMap)
         return musicRose
     elseif type == 'MusicBulletHell' then
-        local musicBulletHell = MusicBulletHell:new(x, y, config.bulletHellType)
+        local musicBulletHell = MusicBulletHell:new(x, y, config)
         musicBulletHell:tuning(config.music.beatMap, config.music.sfxMap)
         return musicBulletHell
     end
