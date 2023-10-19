@@ -126,47 +126,34 @@ end
 game.enemyRespawn = {}
 local function createEnemies()
     local enemies = {}
+    if #game.enemyRespawn == 0 then
+        for x = 0, MAP_WIDTH do
+            for y = 0, MAP_HEIGHT do
+                local id = mget(x, y)
+                if data.EnemyConfig[id] == nil then
+                    goto continue
+                end
 
-    if #game.enemyRespawn ~= 0 then
-        for i, enemy in ipairs(game.enemyRespawn) do
-            enemy = table.copy(enemy)
-            -- trace("(")
-            -- trace(enemy)
-            -- enemy:draw()
-            -- enemy:update()
-            -- trace(")")
-            if additionalInfo and additionalInfo.noCollisions then
-                table.insert(game.drawables, enemy)
-                table.insert(game.updatables, enemy)
-                goto continue
+                mset(x, y, C0)
+                table.insert(game.enemyRespawn, {x=x, y=y, id=id})
+
+                ::continue::
             end
-            table.insert(enemies, enemy)
-            ::continue::
         end
-        return enemies
     end
 
-    for x = 0, MAP_WIDTH do
-        for y = 0, MAP_HEIGHT do
-            local id = mget(x, y)
-            if data.EnemyConfig[id] == nil then
-                goto continue
-            end
-
-            local enemy, additionalInfo = enemyFactory.create(x, y, id)
-            table.insert(game.enemyRespawn, table.copy(enemy))
-            -- table.insert(game.enemyRespawn, enemy)
-            mset(x, y, C0)
-
-            if additionalInfo and additionalInfo.noCollisions then
-                table.insert(game.drawables, enemy)
-                table.insert(game.updatables, enemy)
-                goto continue
-            end
-
-            table.insert(enemies, enemy)
-            ::continue::
+    for _, enemyInfo in ipairs(game.enemyRespawn) do
+        local enemy, additionalInfo = enemyFactory.create(
+            enemyInfo.x, enemyInfo.y, enemyInfo.id
+        )
+        if additionalInfo and additionalInfo.noCollisions then
+            table.insert(game.drawables, enemy)
+            table.insert(game.updatables, enemy)
+            goto continue
         end
+
+        table.insert(enemies, enemy)
+        ::continue::
     end
 
     return enemies
@@ -313,7 +300,6 @@ function game.draw()
     map(gm.x, gm.y , 30, 17, gm.sx, gm.sy, C0)
 
     for _, drawable in ipairs(game.drawables) do
-        trace(drawable.status)
         drawable:draw()
     end
 end
