@@ -6,11 +6,26 @@ function enemyFactory.getConfig(tileID)
     return data.EnemyConfig[tileID]
 end
 
+local function addDebugValidation(t)
+    wrapper = {t}
+    local metatable = {
+        __index = function(_, k)
+            if t[k] == nil then
+                trace("Config value '" .. k .. "' is missing!")
+            end
+            return t[k]
+        end
+    }
+    setmetatable(wrapper, metatable)
+    return wrapper
+end
+
 function enemyFactory.create(tileX, tileY, tileID)
     local x = 8 * tileX;
     local y = 8 * tileY;
 
     local config = enemyFactory.getConfig(tileID)
+    config = addDebugValidation(config)
     local type = config.name
 
     -- Заметка(Каня): В идеальном мире всё так и будет работать.
