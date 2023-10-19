@@ -1,17 +1,23 @@
 StaticTaraxacum = table.copy(Taraxacum)
 
-function StaticTaraxacum:new(x, y, radius, bodyLength)
-    radius = radius or data.StaticTaraxacum.radius
-    local speed = data.StaticTaraxacum.speed
-    local count = data.StaticTaraxacum.deathBulletCount
-    local countSlow = data.StaticTaraxacum.deathBulletSlowCount
-    local countFast = data.StaticTaraxacum.deathBulletFastCount
-    local spread = data.StaticTaraxacum.deathBulletSpread
+function StaticTaraxacum:new(
+    x, y, config
+)
+    local radius = config.staticRadius or error('no config!')
+    local speed = config.speed or error('no config!')
+    local count = config.deathBulletCount or error('no config!')
+    local countSlow = config.deathBulletSlowCount or error('no config!')
+    local countFast = config.deathBulletFastCount or error('no config!')
+    local spread = config.deathBulletSpread or error('no config!')
+    local bodyLength = config.bodyLength or error('no config!')
+    local deathBulletSpeed = config.deathBulletSpeed or error('no config!')
+
     local object = {
         x = x,
         y = y,
         w = 0,
         h = bodyLength,
+        config = config,
         radius = radius,
         hitbox = HitCircle:new(x, y, 2 * radius),
         dead = false,
@@ -19,6 +25,7 @@ function StaticTaraxacum:new(x, y, radius, bodyLength)
         count = count,
         countSlow = countSlow,
         countFast = countFast,
+        deathBulletSpeed = deathBulletSpeed,
         spread = spread,
     }
 
@@ -46,7 +53,7 @@ end
 function StaticTaraxacum:draw()
     local x = self.radius + self.x - gm.x*8 + gm.sx - 1
     local y = self.radius + self.y - gm.y*8 + gm.sy - 1
-    line(x, y, x + self.w, y + self.h, data.Taraxacum.bodyColor)
+    line(x, y, x + self.w, y + self.h, data.StaticTaraxacum.bodyColor)
     if not self.dead then
         self.hitbox:draw(data.Taraxacum.color)
     end

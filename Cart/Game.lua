@@ -149,6 +149,7 @@ local function createEnemies()
         if additionalInfo and additionalInfo.noCollisions then
             table.insert(game.drawables, enemy)
             table.insert(game.updatables, enemy)
+            trace(enemy)
             goto continue
         end
 

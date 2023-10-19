@@ -179,8 +179,8 @@ data.Door.sprite = {
 }
 
 data.Taraxacum = {
+    color = 12,
     -- speed = 2,
-    -- color = 12,
 
     -- radius = 2,
     -- staticRadius = 3,
@@ -198,10 +198,11 @@ data.Taraxacum = {
 
     -- deathBulletSpread = 2.5,
 
-    -- deathBulletSprite = Sprite:new({378}, 1),
+    deathBulletSprite = Sprite:new({378}, 1),
 }
 
 data.StaticTaraxacum = {
+    bodyColor = 3,
     -- radius = 2,
     -- speed = 2,
     -- deathBulletCount = 6,
@@ -355,7 +356,6 @@ data.EnemyConfig = {
 
         radius = 2,
         staticRadius = 3,
-        bodyColor = 3,
         bodyLength = 10,
         staticTaraxacumSpawnTile = { 97 },
 

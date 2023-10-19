@@ -19,7 +19,7 @@ function enemyFactory.create(tileX, tileY, tileID)
     if type == 'Enemy' then
         return Enemy:new(x, y)
     elseif type == 'StaticTaraxacum' then
-        return StaticTaraxacum:new(x, y, config.radius, config.bodyLength), {noCollisions = true}
+        return StaticTaraxacum:new(x, y, config), {noCollisions = true}
     elseif type == 'Snowman' then
         return SnowmanBox:new(x, y), {noCollisions = true}
     elseif type == 'MusicRose' then
@@ -31,6 +31,4 @@ function enemyFactory.create(tileX, tileY, tileID)
         musicBulletHell:tuning(config.music.beatMap, config.music.sfxMap)
         return musicBulletHell
     end
-    trace("!!!!!!")
-    trace(tileID)
 end
