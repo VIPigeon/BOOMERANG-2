@@ -36,11 +36,16 @@ end
 
 local Fruit = table.copy(Body)
 
-function Fruit:new(sprite, x, y)
+function Fruit:new(id, x, y)
+    local sprite1 = Sprite:new({id}, 1)
+    local sprite2 = Sprite:new({id+1}, 1)
+
     local obj = {
         x = x,
         y = y,
-        sprite = sprite,
+        sprite = sprite1,
+        sprite1 = sprite1,
+        sprite2 = sprite2,
         hitbox = Hitbox:new(x, y, x+8, y+8),
     }
 
@@ -49,7 +54,16 @@ function Fruit:new(sprite, x, y)
     return obj
 end
 
+
 function Fruit:update()
+    if game.metronome.beat4 then
+        if self.sprite == self.sprite1 then
+            self.sprite = self.sprite2
+        else
+            self.sprite = self.sprite1
+        end
+    end
+
     if self.hitbox:collide(game.player.hitbox) then
         FruitPopup:show(2000) -- 2 Секунды, ни больше ни меньше 😎
         fruitsCollection.collected = fruitsCollection.collected + 1
@@ -75,7 +89,7 @@ function createFruits()
         for y = 0, MAP_HEIGHT do
             local id = mget(x, y)
             if isFruit(id) then
-                local fruit = Fruit:new(getFruitSprite(id), 8*x, 8*y)
+                local fruit = Fruit:new(id, 8*x, 8*y)
                 table.insert(fruits, fruit)
                 mset(x, y, 0)
             end
