@@ -50,6 +50,17 @@ function MusicAutoBulletHell:onBeat()
     self.i_beatMap = (self.i_beatMap % #self.beatMap) + 1
 end
 
+local trash = Sprite:new({379}, 1)
+function MusicAutoBulletHell:_createShootBullet()
+    local bull = Bullet:new(0, 0, trash)
+    bull.speed = self.bulletSpeed
+    
+    table.insert(game.drawables, bull)
+    table.insert(game.updatables, bull)
+
+    return bull
+end
+
 function MusicAutoBulletHell:update()
     if self.status == 'dying' then
         self.deathTick()
