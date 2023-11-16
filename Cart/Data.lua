@@ -272,13 +272,14 @@ data.EnemyConfig = {
     -- dict: [tileId : EnemyConfigLol]
     [98] = {},
     [32] = {
-        name = 'BulletHell',
+        name = 'MusicAutoBulletHell',
         circleDiameter = 5,
         bulletSpreadRadius = 5,
         bulletRotateSpeed = 1,
         bulletCount = 8,
         bulletSpeed = 0.8,
         deathBulletSpeed = 0.3,
+        music = drums[48],
         hp = 12,
         autoAim = true,
     },
