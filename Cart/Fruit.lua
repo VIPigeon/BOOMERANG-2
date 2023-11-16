@@ -13,7 +13,14 @@ function FruitPopup:show(stayTimeMilliseconds)
     self.timeToStay = stayTimeMilliseconds
 end
 
+local goToBikeSprite = Sprite:new({308}, 4)
+
 function FruitPopup:draw()
+    if fruitsCollection.collected == fruitsCollection.needed then
+        goToBikeSprite:draw(2, MAP_HEIGHT-36)
+        return
+    end
+
     if self.timeOnScreen < self.timeToStay then
         print(
             fruitsCollection.collected .. '/' .. fruitsCollection.needed,
@@ -29,12 +36,11 @@ end
 
 local Fruit = table.copy(Body)
 
-function Fruit:new(sprite, x, y, respawn)
+function Fruit:new(sprite, x, y)
     local obj = {
         x = x,
         y = y,
         sprite = sprite,
-        respawn = respawn,
         hitbox = Hitbox:new(x, y, x+8, y+8),
     }
 
@@ -43,22 +49,12 @@ function Fruit:new(sprite, x, y, respawn)
     return obj
 end
 
-fruitRespawn = {}
-
-function showGotoBike()
-    error('todo')
-end
-
 function Fruit:update()
     if self.hitbox:collide(game.player.hitbox) then
         FruitPopup:show(2000) -- 2 Секунды, ни больше ни меньше 😎
         fruitsCollection.collected = fruitsCollection.collected + 1
 
-        if fruitsCollection.collected == fruitsCollection.needed then
-            showGotoBike()
-        end
-
-        table.removeElement(fruitRespawn, self.respawn) -- Чтобы не респавнился после смерти игрока 👍
+        table.removeElement(game.fruits, self) -- Чтобы не респавнился после смерти игрока 👍
 
         table.insert(game.deleteSchedule, self)
     end
@@ -75,22 +71,15 @@ end
 
 function createFruits()
     local fruits = {}
-    if #fruitRespawn == 0 then
-        for x = 0, MAP_WIDTH do
-            for y = 0, MAP_HEIGHT do
-                local id = mget(x, y)
-                if isFruit(id) then
-                    table.insert(fruitRespawn, {x=x, y=y, id=id})
-                    mset(x, y, 0)
-                end
+    for x = 0, MAP_WIDTH do
+        for y = 0, MAP_HEIGHT do
+            local id = mget(x, y)
+            if isFruit(id) then
+                local fruit = Fruit:new(getFruitSprite(id), 8*x, 8*y)
+                table.insert(fruits, fruit)
+                mset(x, y, 0)
             end
         end
     end
-
-    for _, fruitInfo in ipairs(fruitRespawn) do
-        local fruit = Fruit:new(getFruitSprite(fruitInfo.id), 8*fruitInfo.x, 8*fruitInfo.y, fruitInfo)
-        table.insert(fruits, fruit)
-    end
-
     return fruits
 end
