@@ -372,6 +372,9 @@ data.EnemyConfig = {
 
         deathBulletSprite = Sprite:new({378}, 1),
     }, -- mb static idk
+    [98] = {
+        name = 'Enemy',
+    },
     [150] = {},
     [151] = {},
     [152] = {},
