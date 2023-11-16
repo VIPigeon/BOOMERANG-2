@@ -279,6 +279,7 @@ data.EnemyConfig = {
         bulletCount = 8,
         bulletSpeed = 0.8,
         deathBulletSpeed = 0.3,
+        color = 13,
         music = drums[48],
         hp = 12,
         autoAim = true,
@@ -291,6 +292,7 @@ data.EnemyConfig = {
         bulletCount = 12,
         bulletSpeed = 0.7,
         deathBulletSpeed = 0.2,
+        color = 13,
         hp = 25,
         autoAim = true,
     },
@@ -302,6 +304,8 @@ data.EnemyConfig = {
         bulletCount = 16,
         bulletSpeed = 0.8,
         deathBulletSpeed = 0.1,
+        color = 13,
+        hp = 50,
         autoAim = true,
     },
     [48] = {
@@ -312,6 +316,7 @@ data.EnemyConfig = {
         bulletCount = 8,
         bulletSpeed = 0.8,
         deathBulletSpeed = 0.3,
+        color = 14,
         music = drums[48],
         hp = 12,
     },
@@ -323,6 +328,7 @@ data.EnemyConfig = {
         bulletCount = 12,
         bulletSpeed = 0.7,
         deathBulletSpeed = 0.2,
+        color = 14,
         hp = 25,
     }, -- bullet help pls
     [50] = {
@@ -333,6 +339,7 @@ data.EnemyConfig = {
         bulletCount = 16,
         bulletSpeed = 0.8,
         deathBulletSpeed = 0.1,
+        color = 14,
         hp = 40,
     },
     -- [65] = {

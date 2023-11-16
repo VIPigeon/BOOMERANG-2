@@ -6,8 +6,6 @@ function BulletHell:new(x, y, config) -- type, color, bulletSprite, config)
         bullets[i] = HellBullet:new()
     end
 
-    local color = 14
-
     local object = {
         x = x,
         y = y,
@@ -23,7 +21,7 @@ function BulletHell:new(x, y, config) -- type, color, bulletSprite, config)
         hitbox = HitCircle:new(x, y, config.circleDiameter),
         time = 0,
         status = '',
-        color = color,
+        color = config.color,
 
         reloadingBullets = {},
         currentAnimations = {},
