@@ -17,16 +17,18 @@ local goToBikeSprite = Sprite:new({308}, 4)
 
 function FruitPopup:draw()
     if fruitsCollection.collected == fruitsCollection.needed then
-        goToBikeSprite:draw(2, MAP_HEIGHT-36)
+        rect(0, MAP_HEIGHT-40, 40, 40, 8)
+        goToBikeSprite:draw(4, MAP_HEIGHT-36)
         return
     end
 
     if self.timeOnScreen < self.timeToStay then
+        rect(0, MAP_HEIGHT-16, 40, 20, 8)
         print(
             fruitsCollection.collected .. '/' .. fruitsCollection.needed,
-            0,
+            3,
             MAP_HEIGHT-12,
-            5,
+            1,
             true,
             2
         )
@@ -65,7 +67,7 @@ function Fruit:update()
     end
 
     if self.hitbox:collide(game.player.hitbox) then
-        FruitPopup:show(2000) -- 2 Секунды, ни больше ни меньше 😎
+        FruitPopup:show(1000) -- 2 Секунды, ни больше ни меньше 😎
         fruitsCollection.collected = fruitsCollection.collected + 1
 
         table.removeElement(game.fruits, self) -- Чтобы не респавнился после смерти игрока 👍
