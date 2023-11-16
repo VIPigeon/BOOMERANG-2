@@ -135,7 +135,6 @@ function BulletHell:update()
 end
 
 function BulletHell._moveBullets(bullethell, offset)
-    trace(bullethell.spread)
     local step = 2 * math.pi / bullethell.bulletCount
     for i = 1, #bullethell.bullets do
         local x = math.round(bullethell.spread * math.cos((i + offset) * step))

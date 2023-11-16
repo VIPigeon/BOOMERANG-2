@@ -70,7 +70,6 @@ function Enemy:die()
     table.removeElement(game.updatables, self)
     table.removeElement(game.drawables, self)
     table.removeElement(game.collideables, self)
-    --table.removeElement(game.enemies, self)
 end
 
 function Enemy:isDeadCheck()
@@ -82,8 +81,6 @@ function Enemy:takeDamage(damage)
         AnimationOver:new(table.chooseRandomElement(data.Enemy.sprites.hurtEffect), 'randomOn', 'activeOnes')
     )
     -- это может оказаться неэффективно
-
-    trace(self.hp)
 
     self.hp = math.fence(self.hp - damage, 0, self.hp)
 end

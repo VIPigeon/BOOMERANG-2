@@ -1,8 +1,6 @@
 enemyFactory = {}
 
 function enemyFactory.getConfig(tileID)
-    trace(tileID)
-    trace(data.EnemyConfig[tileID])
     return data.EnemyConfig[tileID]
 end
 
