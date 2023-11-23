@@ -270,7 +270,6 @@ data.SettingLever.sprites = {
 --IEnemyable
 data.EnemyConfig = {
     -- dict: [tileId : EnemyConfigLol]
-    [98] = {},
     [32] = {
         name = 'MusicAutoBulletHell',
         circleDiameter = 5,

@@ -45,6 +45,7 @@ function Fruit:new(id, x, y)
     local obj = {
         x = x,
         y = y,
+        collected = false,
         sprite = sprite1,
         sprite1 = sprite1,
         sprite2 = sprite2,
@@ -66,13 +67,19 @@ function Fruit:update()
         end
     end
 
-    if self.hitbox:collide(game.player.hitbox) then
-        FruitPopup:show(1000) -- 2 Секунды, ни больше ни меньше 😎
+    if self.collected then
+        table.insert(game.deleteSchedule, self) -- Чтобы не респавнился после смерти игрока 👍
+    end
+
+    if not self.collected and self.hitbox:collide(game.player.hitbox) then
         fruitsCollection.collected = fruitsCollection.collected + 1
 
         table.removeElement(game.fruits, self) -- Чтобы не респавнился после смерти игрока 👍
-
         table.insert(game.deleteSchedule, self)
+
+        self.collected = true
+
+        FruitPopup:show(1000) -- 2 Секунды, ни больше ни меньше 😎
     end
 end
 
