@@ -122,7 +122,6 @@ local function createDoors(levers)
     return doors
 end
 
-
 game.enemyRespawn = {}
 local function createEnemies()
     local enemies = {}
@@ -149,7 +148,6 @@ local function createEnemies()
         if additionalInfo and additionalInfo.noCollisions then
             table.insert(game.drawables, enemy)
             table.insert(game.updatables, enemy)
-            trace(enemy)
             goto continue
         end
 
@@ -248,6 +246,8 @@ game.areas, game.transitionTiles = MapAreas.generate()
 local levers = createLevers()
 game.doors = createDoors(levers)
 local settingLevers = createSettingLevers()
+game.fruits = createFruits()
+fruitsCollection.needed = #game.fruits
 
 -- Все элементы игры, которые появляются 
 -- заново после смерти игрока.
@@ -263,6 +263,7 @@ function game.restart()
     local boomerang = createBoomerang(spawnpoint.x, spawnpoint.y)
     local player = createPlayer(spawnpoint.x, spawnpoint.y - 1, boomerang)
     local camera = createCamera(player)
+    local fruitPopup = FruitPopup
 
     table.insert(game.updatables, metronome)
     table.concatTable(game.updatables, checkpoints)
@@ -273,14 +274,17 @@ function game.restart()
     table.concatTable(game.updatables, levers)
     table.concatTable(game.updatables, game.doors)
     table.concatTable(game.updatables, settingLevers)
+    table.concatTable(game.updatables, game.fruits)
 
     table.concatTable(game.drawables, checkpoints)
     table.concatTable(game.drawables, levers)
     table.concatTable(game.drawables, settingLevers)
     table.concatTable(game.drawables, enemies)
+    table.concatTable(game.drawables, game.fruits)
     table.insert(game.drawables, player)
     table.insert(game.drawables, boomerang)
     table.concatTable(game.drawables, game.doors)
+    table.insert(game.drawables, fruitPopup)
 
     table.concatTable(game.collideables, enemies)
     table.concatTable(game.collideables, game.doors)

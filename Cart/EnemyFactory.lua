@@ -43,5 +43,9 @@ function enemyFactory.create(tileX, tileY, tileID)
         local musicBulletHell = MusicBulletHell:new(x, y, config)
         musicBulletHell:tuning(config.music.beatMap, config.music.sfxMap)
         return musicBulletHell
+    elseif type == 'MusicAutoBulletHell' then
+        local musicAutoBulletHell = MusicAutoBulletHell:new(x, y, config)
+        musicAutoBulletHell:tuning(config.music.beatMap, config.music.sfxMap)
+        return musicAutoBulletHell
     end
 end
