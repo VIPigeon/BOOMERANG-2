@@ -99,14 +99,14 @@ function aim.bfs(startPos)
             if (y < 0) or (y > 135) then
                 break
             end
-            
+
             if (x == px) and (y == py) then
                 trace('I chased you 🤗'..' '..x..' '..y..' !!') -- 🤗
                 table.insert(cur.path, {x = x, y = y})
                 return cur.path
             elseif not visited[x][y] then --🤗
                 --trace('enq '..x..' '..y) --🤭
-                
+
                 local newPath = table.copy(cur.path)
                 --trace(newPath)
                 table.insert(newPath, {x = x, y = y})
@@ -184,7 +184,7 @@ function aim.bfsMapAdaptedV2x2(startPos)
                     visited[x + 1][y + 1] = true
                     goto continue
                 end
-                
+
 
             if math.inRangeIncl(x, px - 1, px + 1) and math.inRangeIncl(y, py - 1, py + 1) then
                 --trace('I chased you 🤗'..' '..x..' '..y..' !!') -- 🤗

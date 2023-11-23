@@ -7,7 +7,7 @@ function Taraxacum:new(x, y, radius, speed, count, countSlow, countFast, spread)
     countSlow = countSlow or data.Taraxacum.deathBulletSlowCount
     countFast = countFast or data.Taraxacum.deathBulletFastCount
     spread = spread or data.Taraxacum.deathBulletSpread
-    local deathBulletSpeed = error('No way!')
+    --local deathBulletSpeed = error('No way!')
     local object = {
         x = x,
         y = y,
@@ -51,18 +51,18 @@ function Taraxacum:_launchBullets()
 
     for i = 1, self.countSlow do
         local bullet = createBulletAtRandomPoint()
-        bullet.speed = self.config.deathSlowBulletSpeed
+        bullet.speed = data.Taraxacum.deathSlowBulletSpeed
     end
 
     for i = 1, self.countFast do
         local bullet = createBulletAtRandomPoint()
-        bullet.speed = self.config.deathFastBulletSpeed
+        bullet.speed = data.Taraxacum.deathFastBulletSpeed
     end
 end
 
 function Taraxacum:_createBullet(x, y)
     local bullet = Bullet:new(x, y, data.Taraxacum.deathBulletSprite)
-    bullet.speed = self.deathBulletSpeed
+    bullet.speed = data.Taraxacum.deathBulletSpeed
     table.insert(game.updatables, bullet)
     table.insert(game.drawables, bullet)
 

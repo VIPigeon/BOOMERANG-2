@@ -42,7 +42,7 @@ function gm.isBlockingBfs(x, y)
     elseif table.contains(data.bfs.solidTiles, tileId) then
         return true
     else
-        for _, entile in ipairs(game.enemyRespawnTiles) do -- проверяем на столкновение с врагами.（づ￣3￣）づ╭(они тоже твердые)～
+        for _, entile in ipairs(game.enemyRespawn) do -- проверяем на столкновение с врагами.（づ￣3￣）づ╭(они тоже твердые)～
             --trace(entile.x..' '..entile.y..' '..x..' '..y..' ')
             if (entile.x == x) and (entile.y == y) then
                 return true

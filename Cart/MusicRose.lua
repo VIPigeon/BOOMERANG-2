@@ -1,6 +1,4 @@
-
 MusicRose = table.copy(LongRose)
-
 
 function MusicRose:tuning(beatMap, sfxMap)
     -- обязательно вызывается после new для настройки музыки
@@ -46,8 +44,6 @@ function MusicRose:onBeat()
         if not game.metronome.beat8 then
             return
         end
-        self:_full_shot()
-    elseif #self.beatMap == 24 then
         self:_full_shot()
     elseif #self.beatMap == 6 then
         if not game.metronome.beat6 then

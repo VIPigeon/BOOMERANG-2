@@ -1,8 +1,9 @@
 SnowmanBox = table.copy(Body)
 
-function SnowmanBox:new(x, y)
+function SnowmanBox:new(x, y, config)
     local object = {
         sprite = data.SnowmanBox.sleepSprite:copy(),
+        snowmanConfig = config,
         x = x,
         y = y,
         playerCheckTimeMs = data.SnowmanBox.playerCheckFrequencyMs,
@@ -35,7 +36,8 @@ function SnowmanBox:_distanceToPlayer()
 end
 
 function SnowmanBox:_spawnSnowman()
-    local snowman = Snowman:new(self.x, self.y, true)
+    local snowman = MusicSnowman:new(self.x, self.y, self.snowmanConfig)
+    snowman:tuning(self.snowmanConfig.music.beatMap, self.snowmanConfig.music.sfxMap); -- Затюнил 🏎сноумена ☃
     table.insert(game.updatables, snowman)
     table.insert(game.drawables, snowman)
     table.insert(game.collideables, snowman)

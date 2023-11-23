@@ -4,6 +4,7 @@ function HellBullet:new()
     local object = {
         x = 0,
         y = 0,
+        speed = data.Bullet.defaultSpeed,
         sprite = data.Bullet.reloadAnimation:copy(),
         hitbox = Hitbox:new_with_shift(0, 0, 2, 2, 1, 1),
         status = 'idle',

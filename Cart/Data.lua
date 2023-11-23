@@ -180,23 +180,23 @@ data.Door.sprite = {
 
 data.Taraxacum = {
     color = 12,
-    -- speed = 2,
+    speed = 2,
 
-    -- radius = 2,
-    -- staticRadius = 3,
-    -- bodyColor = 3,
-    -- staticBodyLength = 10,
-    -- staticTaraxacumSpawnTile = { 97 },
+    radius = 2,
+    staticRadius = 3,
+    bodyColor = 3,
+    staticBodyLength = 10,
+    staticTaraxacumSpawnTile = { 97 },
 
-    -- deathBulletCount = 6,
-    -- deathBulletSlowCount = 3,
-    -- deathBulletFastCount = 3,
+    deathBulletCount = 6,
+    deathBulletSlowCount = 3,
+    deathBulletFastCount = 3,
 
-    -- deathBulletSpeed = 0.37,
-    -- deathSlowBulletSpeed = 0.2,
-    -- deathFastBulletSpeed = 0.5,
+    deathBulletSpeed = 0.37,
+    deathSlowBulletSpeed = 0.2,
+    deathFastBulletSpeed = 0.5,
 
-    -- deathBulletSpread = 2.5,
+    deathBulletSpread = 2.5,
 
     deathBulletSprite = Sprite:new({378}, 1),
 }
@@ -342,22 +342,48 @@ data.EnemyConfig = {
         color = 14,
         hp = 40,
     },
-    -- [65] = {
-    --     name = 'Snowman',
-    --     color = 12,
-    --     speed = data.Player.speed - 0.41,
-    --     speedWithWhirl = data.Player.speed - 0.61,
-    --     hp = 10,
-    --     prepareJumpTime = 20,
-    --     --jumpTime = 20,
-    --     resetJumpTime = 24,
-    --     deathParticleCountMin = 100,
-    --     deathParticleCountMax = 300,
-    --     deathAnimationParticleSpeed = 1,
-    --     deathAnimationParticleSpeedNormalizer = 0.4,
-    --     deathParticleMinSpeed = 1,
-    --     deathParticleSprite = Sprite:new({378}, 1),
-    -- },
+    [65] = {
+        name = 'Snowman',
+        color = 12,
+        speed = 12, -- data.Player.speed - 0.41,
+        speedWithWhirl = 0.8, --data.Player.speed - 0.61,
+        hp = 100,
+        prepareJumpTime = 20,
+        --jumpTime = 20,
+        resetJumpTime = 24,
+
+        deathParticleCountMin = 100,
+        deathParticleCountMax = 300,
+        deathAnimationParticleSpeed = 1,
+        deathAnimationParticleSpeedNormalizer = 0.4,
+        deathParticleMinSpeed = 1,
+        deathParticleSprite = Sprite:new({378}, 1),
+
+        specialTaraxacum = {
+            radius = 3,
+            bodyLength = 15,
+            shiftForCenterX = 12,
+            shiftForCenterY = -3,
+            startStickX = 0,
+            startStickY = 0,
+            bodyColor = 10,
+            color = 12,
+            reloadAnimationTime = 18, -- in tics should divide by 3
+        },
+
+        music = {
+            beatMap = {0, 0, 0, 1, 1, 1},
+            sfxMap = bassLine.rose.D2.sfxMap,
+        },
+
+        sprites = {
+            chill = Sprite:new({312}, 2),
+            prepareJump = Sprite:new({312, 344}, 2),
+            flyJump = Sprite:new(anim.gen60({346,348,346}), 2),
+            resetJump = Sprite:new({348,344,312}, 2),
+            death = Sprite:new(anim.gen60({312,314,312,314,312}), 2)
+        },
+    },
     [97] = {
         name = 'StaticTaraxacum',
         speed = 2,
@@ -563,7 +589,6 @@ data.MusicRose.spawnTiles = {
     Gd2 = {186, 187, 188, 190},
 }
 
-
 data.Rose.spawnTiles = {150, 151, 152, 153}
 data.Rose.anotherRoseFlagTile = 15
 data.Rose.sprites = {
@@ -575,35 +600,7 @@ data.Rose.sprites = {
 data.Rose.animation_frame_duration_ms = 16
 data.Rose.rose_animation_duration_ms = data.Rose.animation_frame_duration_ms * #data.Rose.sprites.transition.animation
 
-
-
-data.Snowman = {
-    -- color = 12,
-    -- speed = data.Player.speed - 0.41,
-    -- speedWithWhirl = data.Player.speed - 0.61,
-    -- hp = 10,
-    -- prepareJumpTime = 20,
-    -- --jumpTime = 20,
-    -- resetJumpTime = 24,
-    -- deathParticleCountMin = 100,
-    -- deathParticleCountMax = 300,
-    -- deathAnimationParticleSpeed = 1,
-    -- deathAnimationParticleSpeedNormalizer = 0.4,
-    -- deathParticleMinSpeed = 1,
-    -- deathParticleSprite = Sprite:new({378}, 1),
-}
-
-data.Snowman.specialTaraxacum = {
-    radius = 3,
-    bodyLength = 15,
-    shiftForCenterX = 12,
-    shiftForCenterY = -3,
-    startStickX = 0,
-    startStickY = 0,
-    bodyColor = 10,
-    color = 12,
-    reloadAnimationTime = 18, -- in tics should divide by 3
-}
+data.Snowman = {}
 
 data.Snowman.whirl = {
     fadeTimeMs = 150, -- Время до исчезания частички вихря
@@ -620,18 +617,19 @@ data.Snowman.whirl = {
     endTaraxacumSpeed = 1.5, -- Скорость одуванчика, который запускается после конца атаки.
 }
 
-data.Snowman.spawnTiles = {65}
+-- Выделил 😎
+        data.Snowman.specialTaraxacum = {
+            radius = 3,
+            bodyLength = 15,
+            shiftForCenterX = 12,
+            shiftForCenterY = -3,
+            startStickX = 0,
+            startStickY = 0,
+            bodyColor = 10,
+            color = 12,
+            reloadAnimationTime = 18, -- in tics should divide by 3
+        }
 
-data.Snowman.sprites = {
-    chill = Sprite:new({312}, 2),
-    prepareJump = Sprite:new({312, 344}, 2),
-    flyJump = Sprite:new(anim.gen60({346,348,346}), 2),
-    resetJump = Sprite:new({348,344,312}, 2),
-    death = Sprite:new(anim.gen60({312,314,312,314,312}), 2)
-}
-
-
--- Я дурак 😫
 data.SnowmanBox = {}
 data.SnowmanBox.playerCheckFrequencyMs = 1000
 data.SnowmanBox.wakeUpDistanceToPlayer = 48

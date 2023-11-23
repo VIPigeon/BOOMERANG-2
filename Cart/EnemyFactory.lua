@@ -34,7 +34,7 @@ function enemyFactory.create(tileX, tileY, tileID)
     elseif type == 'StaticTaraxacum' then
         return StaticTaraxacum:new(x, y, config), {noCollisions = true}
     elseif type == 'Snowman' then
-        return SnowmanBox:new(x, y), {noCollisions = true}
+        return SnowmanBox:new(x, y, config, music), {noCollisions = true}
     elseif type == 'MusicRose' then
         local musicRose = MusicRose:new(x, y, config.direction)
         musicRose:tuning(config.music.beatMap, config.music.sfxMap)

@@ -31,7 +31,7 @@ end
 
 function SnowmanWhirlAttack:endAttack()
     local taraxacum = Taraxacum:new(
-        self.x, self.y, 
+        self.x, self.y,
         data.Snowman.whirl.taraxacum.radius,
         data.Snowman.whirl.endTaraxacumSpeed,
         data.Snowman.whirl.taraxacum.deathBulletCount,

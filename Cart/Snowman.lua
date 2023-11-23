@@ -1,28 +1,29 @@
 Snowman = table.copy(Enemy)
 
-function Snowman:new(x, y, hasTaraxacum)
+function Snowman:new(x, y, config)
     local startTaraxacum = nil
-    if hasTaraxacum then
+    --if hasTaraxacum then  -- А зачем это условие нужно было 😫
         startTaraxacum = SpecialTaraxacum:new(
-            x + data.Snowman.specialTaraxacum.shiftForCenterX,
-            y + data.Snowman.specialTaraxacum.shiftForCenterY,
-            data.Snowman.specialTaraxacum.radius,
-            data.Snowman.specialTaraxacum.bodyLength,
-            data.Snowman.specialTaraxacum.shiftForCenterX,
-            data.Snowman.specialTaraxacum.shiftForCenterY
+            x + config.specialTaraxacum.shiftForCenterX,
+            y + config.specialTaraxacum.shiftForCenterY,
+            config.specialTaraxacum.radius,
+            config.specialTaraxacum.bodyLength,
+            config.specialTaraxacum.shiftForCenterX,
+            config.specialTaraxacum.shiftForCenterY
         )
-    end
+    --end
 
     local object = {
         x = x,
         y = y,
-        speed = data.Snowman.speed,
-        hp = data.Snowman.hp,
-        sprite = data.Snowman.sprites.chill:copy(),
+        speed = config.speed,
+        config = config,
+        hp = config.hp,
+        sprite = config.sprites.chill:copy(),
         hitbox = Hitbox:new(x, y, x + 16, y + 16),
 
         taraxacum = startTaraxacum,
-        
+
         theWay = nil,
 
         status = 'idle',
@@ -30,7 +31,7 @@ function Snowman:new(x, y, hasTaraxacum)
         chaseStatus = 'no chase 🙄',
 
         currentAnimations = {},
-        
+
         outOfChaseTime = 0,
         forJumpTime = 0,
 
@@ -47,7 +48,7 @@ end
 function Snowman:_prepareJumpActivate()
     self.status = 'steady'
     if not (self.attackStatus == 'whirl') then
-        self.sprite = data.Snowman.sprites.prepareJump:copy()
+        self.sprite = self.config.sprites.prepareJump:copy()
     end
     self.forJumpTime = 0
 end
@@ -55,7 +56,7 @@ end
 function Snowman:_jumpActivate()
     self.status = 'go'
     if not (self.attackStatus == 'whirl') then
-        self.sprite = data.Snowman.sprites.flyJump:copy()
+        self.sprite = self.config.sprites.flyJump:copy()
     end
     self.forJumpTime = 0
 end
@@ -63,7 +64,7 @@ end
 function Snowman:_resetJumpActivate()
     self.status = 'ready'
     if not (self.attackStatus == 'whirl') then
-        self.sprite = data.Snowman.sprites.resetJump:copy()
+        self.sprite = self.config.sprites.resetJump:copy()
     end
     self.forJumpTime = 0
     --error('not implemented error on Snowman:_resetJumpActivate()')
@@ -96,12 +97,12 @@ function Snowman:_moveOneTile() -- оптимизируем вычисления
             return false
         end
         -- Честно говоря, я тоже боюсь того, что написал
-    elseif self.outOfChaseTime < #self.theWay - 2 and self.chaseStatus == 'lost him 😠' then 
+    elseif self.outOfChaseTime < #self.theWay - 2 and self.chaseStatus == 'lost him 😠' then
         --trace(tostring(table.contains(data.bfs.solidTiles, mget(self.theWay[2 + self.outOfChaseTime].x, self.theWay[2 + self.outOfChaseTime].y))))
         if self.area == game.playerArea then -- провяем, на одной ли зоне 🐓
             local vec = {x = 8 * self.theWay[2 + self.outOfChaseTime].x - self.x, y = 8 * self.theWay[2 + self.outOfChaseTime].y - self.y}
             return self:_slowMoveOneTile(math.vecNormalize(vec), {x = 8 * self.theWay[2 + self.outOfChaseTime].x, y = 8 * self.theWay[2 + self.outOfChaseTime].y})
-        else 
+        else
             trace('damn you, player the sandass')
             return false
         end
@@ -125,7 +126,7 @@ function Snowman:_moveWhirlAttack()
     --
     if self.whirlAttack then
         self.whirlAttack.x = self.hitbox:get_center().x
-        self.whirlAttack.y = self.hitbox:get_center().y 
+        self.whirlAttack.y = self.hitbox:get_center().y
     end
 end
 
@@ -167,7 +168,7 @@ function Snowman:_onBeat()
     end
 end
 
-function Snowman:_setPath() 
+function Snowman:_setPath()
     local way = aim.bfsMapAdaptedV2x2({x = self.x // 8, y = self.y // 8})
     if way then
         self.chaseStatus = 'chasing 🧐'
@@ -184,17 +185,17 @@ function Snowman:update()
         local damage = game.boomer.dpMs * Time.dt()
         self:takeDamage(damage)
     end
-    
+
     if not game.metronome.onBass and self.attackStatus == 'whirl' then
-        self.speed = data.Snowman.speed
+        self.speed = self.config.speed
         self.attackStatus = 'idle'
         self.whirlAttack:endAttack()
         self.whirlAttack = nil -- Чтобы жесткие ошибки 😱😱😷
     end
-    
+
     if game.metronome.onBass and self.attackStatus ~= 'whirl' then
         self.attackStatus = 'whirl'
-        self.speed = data.Snowman.speedWithWhirl
+        self.speed = self.config.speedWithWhirl
         -- DO: Тут костыль +8
         -- Готово 🤠
         self.whirlAttack = SnowmanWhirlAttack:new(self.hitbox:get_center().x, self.hitbox:get_center().y, self.taraxacum.h)
@@ -213,21 +214,14 @@ function Snowman:update()
     end
 
     if self:isDeadCheck() then
-        self.sprite = data.Snowman.sprites.death:copy()
+        self.sprite = self.config.sprites.death:copy()
         self.status = 'dying'
         return
     end
 
-    if game.metronome.on_beat then
-        --if game.metronome.onOddBeat then
-            self:_setPath() -- перенести на оддБит
-        --end
-        self:_onBeat()
-    end
-
     if self.attackStatus == 'whirl' then
         self.whirlAttack:update()
-        self.sprite = data.Snowman.sprites.chill:copy()
+        self.sprite = self.config.sprites.chill:copy()
         if self.theWay then
             self:_moveOneTile()
         end
@@ -236,9 +230,9 @@ function Snowman:update()
     --разбили время на прыжок на две равные части, фрейм меняем в соответствующее время
     if self.status == 'steady' then
         self.forJumpTime = self.forJumpTime + 1
-        if self.forJumpTime == data.Snowman.prepareJumpTime then
+        if self.forJumpTime == self.config.prepareJumpTime then
             self.status = 'idle'
-        elseif self.forJumpTime == data.Snowman.prepareJumpTime // 2 then
+        elseif self.forJumpTime == self.config.prepareJumpTime // 2 then
             self.sprite:nextFrame()
         end
     end
@@ -252,11 +246,11 @@ function Snowman:update()
 
     if self.status == 'ready' then
         self.forJumpTime = self.forJumpTime + 1
-        if self.forJumpTime == data.Snowman.resetJumpTime then
+        if self.forJumpTime == self.config.resetJumpTime then
             self.status = 'idle'
-        elseif self.forJumpTime == data.Snowman.resetJumpTime // 3 then
+        elseif self.forJumpTime == self.config.resetJumpTime // 3 then
             self.sprite:nextFrame()
-        elseif self.forJumpTime == 2 * data.Snowman.resetJumpTime // 3 then
+        elseif self.forJumpTime == 2 * self.config.resetJumpTime // 3 then
             self.sprite:nextFrame()
         end
     end
@@ -273,15 +267,15 @@ function Snowman:_createDeathEffect()
     local x = self.x
     local y = self.y
 
-    local particleCount = math.random(data.Snowman.deathParticleCountMin, data.Snowman.deathParticleCountMax)
-    local particleSpeed = data.Snowman.deathAnimationParticleSpeed
+    local particleCount = math.random(self.config.deathParticleCountMin, self.config.deathParticleCountMax)
+    local particleSpeed = self.config.deathAnimationParticleSpeed
 
     local function randomSide()
         return 2 * math.random() - 1
     end
 
     local function randomSpeed()
-        return math.random(50, 150) / 100 
+        return math.random(50, 150) / 100
     end
 
     particles = {}
@@ -289,16 +283,16 @@ function Snowman:_createDeathEffect()
         local spawnx = x + randomSide()
         local spawny = y + randomSide()
         --particles are weak, bullets here
-        particles[i] = Bullet:new(spawnx, spawny, data.Snowman.deathParticleSprite)
+        particles[i] = Bullet:new(spawnx, spawny, self.config.deathParticleSprite)
         table.insert(game.updatables, particles[i])
         table.insert(game.drawables, particles[i])
 
         local dx = randomSide() * randomSpeed()
         local dy = randomSide() * randomSpeed()
         local vecLen = math.sqrt(dx * dx + dy * dy)
-        if vecLen < data.Snowman.deathAnimationParticleSpeedNormalizer then
-            dx = dx * data.Snowman.deathAnimationParticleSpeedNormalizer / vecLen
-            dy = dy * data.Snowman.deathAnimationParticleSpeedNormalizer / vecLen
+        if vecLen < self.config.deathAnimationParticleSpeedNormalizer then
+            dx = dx * self.config.deathAnimationParticleSpeedNormalizer / vecLen
+            dy = dy * self.config.deathAnimationParticleSpeedNormalizer / vecLen
         end
         particles[i]:setVelocity(particleSpeed * dx, particleSpeed * dy)
     end
