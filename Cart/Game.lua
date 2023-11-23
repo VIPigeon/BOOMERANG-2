@@ -203,6 +203,10 @@ local function createPlayer(x, y, boomerang)
     return Player:new(x, y, boomerang)
 end
 
+local function createBike(x, y)
+    return Bike:new(x,y)
+end
+
 local checkpoints = createCheckpoints()
 game.startingCheckpoint = {x = PLAYER_START_X, y = PLAYER_START_Y}
 game.checkpoints = checkpoints
@@ -253,6 +257,8 @@ fruitsCollection.needed = #game.fruits
 -- заново после смерти игрока.
 function game.restart()
     local spawnpoint = game.load()
+    -- \/ аналогично спавнпоинту, а если вы захотите мне что-то сказать: @^_^@ - в наушниках
+    local terminationpoint = {x = PLAYER_END_X, y = PLAYER_END_Y}
 
     game.drawables = {}
     game.updatables = {}
@@ -262,12 +268,14 @@ function game.restart()
     local enemies = createEnemies()
     local boomerang = createBoomerang(spawnpoint.x, spawnpoint.y)
     local player = createPlayer(spawnpoint.x, spawnpoint.y - 1, boomerang)
+    local bike = createBike(terminationpoint.x, terminationpoint.y)
     local camera = createCamera(player)
     local fruitPopup = FruitPopup
 
     table.insert(game.updatables, metronome)
     table.concatTable(game.updatables, checkpoints)
     table.insert(game.updatables, player)
+    table.insert(game.updatables, bike)
     table.insert(game.updatables, camera)
     table.insert(game.updatables, boomerang)
     table.concatTable(game.updatables, enemies)
@@ -282,6 +290,7 @@ function game.restart()
     table.concatTable(game.drawables, enemies)
     table.concatTable(game.drawables, game.fruits)
     table.insert(game.drawables, player)
+    table.insert(game.drawables, bike)
     table.insert(game.drawables, boomerang)
     table.concatTable(game.drawables, game.doors)
     table.insert(game.drawables, fruitPopup)

@@ -27,6 +27,8 @@ MAP_HEIGHT = 135
 
 PLAYER_START_Y = 76 * 8 -- 128 * 8 -- 😋😋
 PLAYER_START_X = 105 * 8 -- 42 * 8  -- 😲😲
+PLAYER_END_Y = 89 * 8 -- BYKE 😎😎
+PLAYER_END_X = 118 * 8 -- G🤠T🤠 BYKE
 
 DECORATION_IDS = {
     100,
@@ -81,7 +83,6 @@ data.Player.sprites = {
     runBack = Sprite:new(anim.gen60({464, 465, 466, 467, 464, 465, 466, 467, 464, 465, 466, 467}), 1),
 }
 
-
 data.Boomerang = {
     flightNormalizerStraight = 1,
     flightNormalizerDiagonal = 1 / math.sqrt(2),
@@ -93,6 +94,22 @@ data.Boomerang.sprites = {
     spinning = Sprite:new(anim.gen60({264, 265, 266, 264, 265, 266, 264, 265, 266, 264, 265, 266}), 1),
     hurtingHorizontal = Sprite:new(anim.gen60({473, 474, 475, 476, 477, 478, 479}), 1),
     hurtingVertical = Sprite:new(anim.gen60({473 + 16, 474 + 16, 475 + 16, 476 + 16, 477 + 16, 478 + 16, 479 + 16}), 1),
+}
+
+data.Bike = {}
+
+data.Bike.sprites = {
+    waitingForHero = Sprite:new({138},2),
+    himAgain = Sprite:new({140}, 2),
+    sparklualCycleModifier = 10,
+}
+data.Bike.sprites.animations = {
+    sparkingWhileWaitingMyBoy = Sprite:new(anim.gen60({505, 506, 507}, 2), 1),
+    sparklingWhileExhaustedWaitingMyBoy = Sprite:new(anim.gen60({508, 509, 510}, 2), 1),
+    notSparklingBecauseSandnessComeAgain = Sprite:new({0}, 1),
+    notSparklingBecauseSandnessCameAgain = Sprite:new({0}, 1),
+    notSparklingBecauseBoring = Sprite:new({0}, 1),
+    notSparkling = Sprite:new({0}, 1),
 }
 
 --Map и mapConstants должны быть уничтожены
