@@ -83,7 +83,7 @@ function SnowmanWhirlAttack:draw()
     
     -- МАГИЧЕСКИЕ ЧИСЛА 👽👽👽👺
     -- left arm
-    line (x - 2, y - 2, armX, armY, data.Snowman.color)
+    line(x - 2, y - 2, armX, armY, data.Snowman.color)
     -- right arm
-    line (x + 2, y - 2, armX, armY, data.Snowman.color)
+    line(x + 2, y - 2, armX, armY, data.Snowman.color)
 end

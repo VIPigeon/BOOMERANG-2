@@ -6,7 +6,7 @@ data = {}
 
 -- 14, 15, 30, 31 - Резервные тайлы (почему бы и нет)
 
-GAME_BPM = 140
+GAME_BPM = 160
 
 C0 = 0
 
@@ -51,7 +51,7 @@ M44 = 24  -- константа для Metronome4_4
 data.Player = {
     movementNormalizerStraight = 1,
     movementNormalizerDiagonal = 1 / math.sqrt(2),
-    speed = 0.7,
+    speed = 0.9,
     deathParticleSprite = Sprite:new({377}, 1),
     deathAnimationDurationMs = 1000,
     deathParticleCountMin = 10,
@@ -372,7 +372,7 @@ data.EnemyConfig = {
         },
 
         music = {
-            beatMap = {0, 0, 0, 1, 1, 1},
+            beatMap = {0, 0, 1, 1, 1, 1},
             sfxMap = bassLine.rose.D2.sfxMap,
         },
 

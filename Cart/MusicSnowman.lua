@@ -7,6 +7,7 @@ function MusicSnowman:tuning(beatMap, sfxMap)
     self.sfxMapIndex = 1
     self.beatMap = beatMap
     self.beatMapIndex = 1
+    self.pastAngle = 0
 end
 
 function MusicSnowman:update()
@@ -19,6 +20,7 @@ function MusicSnowman:update()
        if (self.beatMap[self.beatMapIndex] ~= 0) then
            --- АХХАХАХАХ ДУббяж кода 😜😋😱🤪🤪🤪
             self.whirlAttack = SnowmanWhirlAttack:new(self.hitbox:get_center().x, self.hitbox:get_center().y, self.taraxacum.h)
+            self.whirlAttack.angle = self.pastAngle
             self.whirlAttack.snowman = self
             self.attackStatus = 'whirl'
             self.speed = self.config.speedWithWhirl
@@ -33,10 +35,15 @@ function MusicSnowman:update()
            self.speed = self.config.speed
            self.attackStatus = 'idle'
            if self.whirlAttack then
+               self.pastAngle = self.whirlAttack.angle
                self.whirlAttack:endAttack()
                self.whirlAttack = nil -- Чтобы жесткие ошибки 😱😱😷
            end
        end
+    end
+
+    if self.whirlAttack then
+        self.pastAngle = self.whirlAttack.angle
     end
 
     self:_focusAnimations()
