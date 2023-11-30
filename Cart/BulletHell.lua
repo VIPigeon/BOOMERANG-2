@@ -1,8 +1,8 @@
 BulletHell = table.copy(Enemy)
 
-function BulletHell:new(x, y, config) -- type, color, bulletSprite, config)
+function BulletHell:new(x, y, config)
     local bullets = {}
-    for i = 1, config.bulletCount do -- data.BulletHell.bulletCount[type] do
+    for i = 1, config.bulletCount do
         bullets[i] = HellBullet:new()
     end
 
@@ -15,8 +15,8 @@ function BulletHell:new(x, y, config) -- type, color, bulletSprite, config)
         bulletCount = config.bulletCount,
         bulletSpeed = config.bulletSpeed,
         bulletSprite = bulletSprite,
+        rotationSpeed = config.bulletRotationSpeed,
         deathBulletSpeed = config.deathBulletSpeed,
-        bulletRotateSpeed = config.bulletRotateSpeed,
         hp = config.hp,
         hitbox = HitCircle:new(x, y, config.circleDiameter),
         time = 0,
@@ -50,13 +50,19 @@ function BulletHell:_selectBullet()
     end
 
     local byTouchId = (minId + self.bulletCount - self.bulletCount // 4 - 1) % self.bulletCount + 1
-    table.insert(self.reloadingBullets, self.bullets[(byTouchId - 1) % 8 + 1])
-
     return byTouchId
 end
 
 function BulletHell:_shoot()
     local byTouchId = self:_selectBullet()
+    while table.contains(self.reloadingBullets, self.bullets[byTouchId]) do
+        byTouchId = byTouchId + 1
+        if byTouchId > #self.bullets then
+            byTouchId = 1
+        end
+    end
+    table.insert(self.reloadingBullets, self.bullets[(byTouchId - 1) % 8 + 1])
+
     local bull = self:_createShootBullet()
     bull.x = self.bullets[byTouchId].x
     bull.y = self.bullets[byTouchId].y
@@ -70,7 +76,7 @@ end
 function BulletHell:_createShootBullet()
     local bull = Bullet:new(0, 0, self.bulletSprite)
     bull.speed = self.bulletSpeed
-    
+
     table.insert(game.drawables, bull)
     table.insert(game.updatables, bull)
 
@@ -135,8 +141,9 @@ end
 function BulletHell._moveBullets(bullethell, offset)
     local step = 2 * math.pi / bullethell.bulletCount
     for i = 1, #bullethell.bullets do
-        local x = math.round(bullethell.spread * math.cos((i + offset) * step))
-        local y = math.round(bullethell.spread * math.sin((i + offset) * step))
+        local pheta = i * step + bullethell.rotationSpeed * offset
+        local x = math.round(bullethell.spread * math.cos(pheta))
+        local y = math.round(bullethell.spread * math.sin(pheta))
         local bullet = bullethell.bullets[i]
         bullet:setPos(bullethell.x + x, bullethell.y + y) --не настоящие пули
     end
@@ -148,24 +155,20 @@ function BulletHell:draw()
         return
     end
 
-    if true then
-        local progress = 1 - (game.metronome:msBeforeNextBeat() / game.metronome.msPerBeat)
+    self:_moveBullets(Time.t)
 
-        self:_moveBullets(progress)
-
-        if #self.reloadingBullets > 0 then
-            deletedBullet = nil
-            for _, bullet in ipairs(self.reloadingBullets) do
-                bullet:nextFrame()
-                if bullet.sprite:animationEnd() then
-                    deletedBullet = bullet
-                end
+    if #self.reloadingBullets > 0 then
+        deletedBullet = nil
+        for _, bullet in ipairs(self.reloadingBullets) do
+            bullet:nextFrame()
+            if bullet.sprite:animationEnd() then
+                deletedBullet = bullet
             end
+        end
 
-            if deletedBullet then
-                deletedBullet:nextFrame()
-                table.removeElement(self.reloadingBullets, deletedBullet)
-            end
+        if deletedBullet then
+            deletedBullet:nextFrame()
+            table.removeElement(self.reloadingBullets, deletedBullet)
         end
     end
 
