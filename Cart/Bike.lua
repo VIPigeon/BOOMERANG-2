@@ -22,12 +22,18 @@ function Bike:sparkle()
 end
 
 function Bike:_drawAnimations()
+    trace('yay2')
     for _, anime in ipairs(self.currentAnimations) do
         anime:play()
     end
 end
 
 function Bike:draw()
+    trace('yay')
+    trace(self.x)
+    trace(self.y)
+    trace(self.x - gm.x*8 + gm.sx)
+    trace(self.y - gm.y*8 + gm.sy)
 	self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
     self:_drawAnimations()
 end
@@ -49,12 +55,17 @@ end
 
 function Bike:onStatus()
     trace('heyday')
-    table.insert(self.currentAnimations, 
-            AnimationOver:new(table.chooseRandomElement(data.Bike.sprites.animations), 'randomOn', 'activeOnes')
-        )
+    
+    rand = math.random(20)
+    if rand == 7 then
+        table.insert(self.currentAnimations, 
+                AnimationOver:new(table.chooseRandomElement(data.Bike.sprites.animations), 'randomOn', 'activeOnes')
+            )
+    end
 end
 
 function Bike:update()
+    trace('yay1')
 	if self.hitbox:collide(game.player.hitbox) then
         self.sprite = data.Bike.sprites.himAgain:copy()
 		trace('Ugh, rolled around in the sandbox again, drunkard!😞')

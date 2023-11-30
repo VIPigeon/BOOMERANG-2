@@ -203,8 +203,35 @@ local function createPlayer(x, y, boomerang)
     return Player:new(x, y, boomerang)
 end
 
-local function createBike(x, y)
-    return Bike:new(x,y)
+local YOUFORGOTYOURBIKEHERE = {-1, -1}
+
+local function createBike(my_bike_was_here)
+    local bikex = my_bike_was_here.x
+    local bikey = my_bike_was_here.y
+    local numbikes = 0
+
+    for x = 0, 239 do
+        for y = 0, 135 do
+            local tileType = gm.getTileId(x, y)
+            if data.mapConstants.bikeTiles['comparader'] == tileType then
+                --из этого кода следует, что байк сам осободит пространство для своего водителя
+                mset(x, y, 0)
+                mset(x + 1, y, 0)
+                mset(x, y + 1, 0)
+                mset(x + 1, y + 1, 0)
+                --для кого костыль, для меня, лично, оптимизация
+                bikex = (x) * 8
+                bikey = (y - 1) * 8
+                numbikes = numbikes + 1
+            end
+        end
+    end
+    if numbikes > 1 then
+        trace('boiks~')
+        return nil
+    end
+    YOUFORGOTYOURBIKEHERE = {x = bikex, y = bikey}
+    return Bike:new(bikex, bikey)
 end
 
 local checkpoints = createCheckpoints()
@@ -259,6 +286,7 @@ function game.restart()
     local spawnpoint = game.load()
     -- \/ аналогично спавнпоинту, а если вы захотите мне что-то сказать: @^_^@ - в наушниках
     local terminationpoint = {x = PLAYER_END_X, y = PLAYER_END_Y}
+    -- если вас волнует неиспользуемая переменная, то идите и жалуйтесь своему ( ﹁ ﹁ ) ~→ Михалковичу 
 
     game.drawables = {}
     game.updatables = {}
@@ -268,7 +296,7 @@ function game.restart()
     local enemies = createEnemies()
     local boomerang = createBoomerang(spawnpoint.x, spawnpoint.y)
     local player = createPlayer(spawnpoint.x, spawnpoint.y - 1, boomerang)
-    local bike = createBike(terminationpoint.x, terminationpoint.y)
+    local bike = createBike(YOUFORGOTYOURBIKEHERE)
     local camera = createCamera(player)
     local fruitPopup = FruitPopup
 

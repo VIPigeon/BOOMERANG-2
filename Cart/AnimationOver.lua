@@ -1,3 +1,7 @@
+--Эпикграф
+
+    -- " --А я не дурак 😉"
+
 AnimationOver = {}
 
 function AnimationOver:new(sprite, focusStatus, preInitStatus)
