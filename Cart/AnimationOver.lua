@@ -18,6 +18,7 @@ function AnimationOver:new(sprite, focusStatus, preInitStatus)
         rotate = 0, -- for sprite drawing
         status = startStatus,
         focusStatus = focusStatus,
+        is_focused = false,
     }
 
     -- чистая магия!
@@ -58,12 +59,17 @@ function AnimationOver:activateSingleTimeWithDelitionFlag() -- можете зв
 end
 
 function AnimationOver:focus(x1, y1, x2, y2) -- focusing on target area
+    if self.is_focused then
+        return
+    end
     if self.focusStatus == 'static' then
         self.x = x1
         self.y = y1
+        self.is_focused = true
     elseif self.focusStatus == 'randomOn' then
         self.x = x1 + math.random(math.ceil(x2 - x1))
         self.y = y1 + math.random(math.ceil(y2 - y1))
+        self.is_focused = true
     end
     
 end

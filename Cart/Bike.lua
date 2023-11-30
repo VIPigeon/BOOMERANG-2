@@ -43,7 +43,7 @@ function Bike:_focusAnimations()
     local x1 = center.x - width / 4
     local x2 = center.x + width / 4
     local y1 = center.y - height / 4
-    local y2 = center.y + width / 4
+    local y2 = center.y + height / 4
     for _, anime in ipairs(self.currentAnimations) do
         anime:focus(x1, y1, x2, y2)
     end
@@ -55,7 +55,7 @@ function Bike:onStatus()
     rand = math.random(20)
     if rand == 7 then
         table.insert(self.currentAnimations, 
-                AnimationOver:new(table.chooseRandomElement(data.Bike.sprites.animations), 'static', 'activeOnes')
+                AnimationOver:new(table.chooseRandomElement(data.Bike.sprites.animations), 'randomOn', 'activeOnes')
             )
         self:_focusAnimations()
     end
