@@ -23,6 +23,7 @@ function BulletHell:new(x, y, config)
         status = '',
         color = config.color,
 
+        reloadingTimer = 0,
         reloadingBullets = {},
         currentAnimations = {},
 
@@ -155,9 +156,8 @@ function BulletHell:draw()
         return
     end
 
-    self:_moveBullets(Time.t)
-
     if #self.reloadingBullets > 0 then
+        self:_moveBullets(self.reloadingTimer)
         deletedBullet = nil
         for _, bullet in ipairs(self.reloadingBullets) do
             bullet:nextFrame()
@@ -170,6 +170,10 @@ function BulletHell:draw()
             deletedBullet:nextFrame()
             table.removeElement(self.reloadingBullets, deletedBullet)
         end
+
+        self.reloadingTimer = self.reloadingTimer + Time.dt()
+    else
+        self.reloadingTimer = 0
     end
 
     self.hitbox:draw(self.color)
