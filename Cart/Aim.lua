@@ -105,10 +105,7 @@ function aim.bfs(startPos)
                 table.insert(cur.path, {x = x, y = y})
                 return cur.path
             elseif not visited[x][y] then --🤗
-                --trace('enq '..x..' '..y) --🤭
-
                 local newPath = table.copy(cur.path)
-                --trace(newPath)
                 table.insert(newPath, {x = x, y = y})
 
                 queue:enqueue({x = x, y = y, path = newPath})
@@ -123,7 +120,6 @@ end
 function aim.visualizePath(path)
     if path then
         for _, tile in ipairs(path) do
-            --trace(tile.x..' '..tile.y)
             rect(8 * tile.x - gm.x*8 + gm.sx, 8 * tile.y - gm.y*8 + gm.sy, 8, 8, 7)
         end
     end
@@ -160,39 +156,34 @@ function aim.bfsMapAdaptedV2x2(startPos)
             local y = cur.y + step.y
 
             if (x < 0) or (x > 240 - 1) then
-                --trace('wops'..x..' '..y)
                 break
             end
             if (y < 0) or (y > 135 - 1) then
-                --trace("(("..x..' '..y)
                 break
             end
 
             if gm.isBlockingBfs(x, y) then --двери не твердые 🙈 потому что на карте их нет
-                    visited[x][y] = true
-                    goto continue
+                visited[x][y] = true
+                goto continue
             end
-                if gm.isBlockingBfs(x + 1, y) then
-                    visited[x + 1][y] = true
-                    goto continue
-                end
-                if gm.isBlockingBfs(x, y + 1) then
-                    visited[x][y + 1] = true
-                    goto continue
-                end
-                if gm.isBlockingBfs(x + 1, y + 1) then
-                    visited[x + 1][y + 1] = true
-                    goto continue
-                end
+            if gm.isBlockingBfs(x + 1, y) then
+                visited[x + 1][y] = true
+                goto continue
+            end
+            if gm.isBlockingBfs(x, y + 1) then
+                visited[x][y + 1] = true
+                goto continue
+            end
+            if gm.isBlockingBfs(x + 1, y + 1) then
+                visited[x + 1][y + 1] = true
+                goto continue
+            end
 
 
             if math.inRangeIncl(x, px - 1, px + 1) and math.inRangeIncl(y, py - 1, py + 1) then
-                --trace('I chased you 🤗'..' '..x..' '..y..' !!') -- 🤗
                 table.insert(cur.path, {x = x, y = y})
                 return cur.path
             elseif not visited[x][y] then --🤗
-                --trace('enq '..x..' '..y) --🤭
-
                 local newPath = table.copy(cur.path)
                 table.insert(newPath, {x = x, y = y})
 

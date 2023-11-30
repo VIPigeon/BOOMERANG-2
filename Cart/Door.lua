@@ -14,7 +14,7 @@ function Door:new(x, y) --калитка только из двух частей
         hitboxLeft = Hitbox:new(rectangleLeft:left(), rectangleLeft:up(), rectangleLeft:right(), rectangleLeft:down()),
         hitboxRight = Hitbox:new(rectangleRight:left(), rectangleRight:up(), rectangleRight:right(), rectangleRight:down()),
 
-        solidTilesSpawned = true, 
+        solidTilesSpawned = true,
     }
 
     --shit code
@@ -40,7 +40,6 @@ function Door:statusUpdate(leverStatus)
 end
 
 function Door:_colliding()
-    --if self:willCollideAfter(0,0) then 0x0
     if self.hitboxLeft:collide(game.player.hitbox) and self.hitboxRight:collide(game.player.hitbox) then
         game.player:die()
     elseif self.hitboxLeft:collide(game.player.hitbox) and math.inRangeNotIncl(game.player.y, self.hitboxLeft.y1, self.hitboxLeft.y2) then
@@ -52,13 +51,10 @@ function Door:_colliding()
     for _, collider in ipairs(game.enemies) do
         if self.hitboxLeft:collide(collider.hitbox) and self.hitboxRight:collide(collider.hitbox) then
             collider:die()
-            --trace('xxxxxxdddddddddd')
         elseif self.hitboxLeft:collide(collider.hitbox) and math.inRangeNotIncl(collider.y, self.hitboxLeft.y1, self.hitboxLeft.y2) then
             collider:move(self.speed, 0)
-            --trace('bbbbbbbbbbbb')
         elseif self.hitboxRight:collide(collider.hitbox) and math.inRangeNotIncl(collider.y, self.hitboxRight.y1, self.hitboxRight.y2) then
             collider:move(-self.speed, 0)
-            --trace('cccccccccccccc')
         end
     end
 end
@@ -91,7 +87,7 @@ function Door:_closing()
     if not (self.status == 'closedFromStart') then
         if self.hitboxLeft:collide(self.hitboxRight) then
             if self.shakeTimer >= data.Door.shakeTimeTics then
-                game.camera:shakeStop() 
+                game.camera:shakeStop()
             else
                 game.camera:shake(0.7)
                 self.shakeTimer = self.shakeTimer + 1
@@ -112,12 +108,9 @@ function Door:_opening() -- whers ending, i like it more!
     if math.floor(self.hitboxLeft.x2) > boarderLeft then
         self.rectL:move(-self.speed, 0)
         self.hitboxLeft:set_xy(self.rectL:left(), self.y)
-        --trace('cace'..self.hitboxLeft.x2..' '..self.x)
     elseif math.floor(self.hitboxLeft.x2) < boarderLeft then
-        --trace(self.x)
         self.rectL:moveRightTo(boarderLeft, 0)
         self.hitboxLeft:set_xy(self.rectL:left(), self.y)
-        --trace('lol'..self.hitboxLeft.x2..' '..self.x)
     end
 
     if self.hitboxRight.x1 < boarderRight then
@@ -157,22 +150,16 @@ function Door:drawUpdate()
     spr(UpperLeftTileX2, xright + w // 6, ydownHalf, C0, 1, 3, 0, 2, 2)
     spr(BottomRightTile, xright, ydownHalf, C0, 1, 3, 0, 1, 1)
     spr(UpperRightTile, xright, ydownHalf + 8 * 1, C0, 1, 3, 0, 1, 1)
-    --self.rectL:drawDebug()
-    --self.rectR:drawDebug()
-    
-    --self.hitboxLeft:draw(1)
-    --self.hitboxRight:draw(2)
 end
 
 function Door:draw()
-    
+
 end
 
 function Door:_spawnBlockingTiles()
     if not self.solidTilesSpawned then
         for addX = 0, data.Door.widthTiles - 1 do
             for addY = 0, data.Door.heightTiles - 1 do
-                --trace('st^:^'..self.x + 8 * addX..' '..self.y + 8 * addY)
                 mset(self.x // 8 + addX, self.y // 8 + addY, data.Door.solidTileId)
             end
         end
@@ -184,7 +171,6 @@ function Door:_despawnBlockingTiles()
     if self.solidTilesSpawned then
         for addX = 0, data.Door.widthTiles - 1 do
             for addY = 0, data.Door.heightTiles - 1 do
-                --trace('setting...')
                 mset(self.x // 8 + addX, self.y // 8 + addY, 0)
             end
         end
