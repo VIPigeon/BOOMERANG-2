@@ -23,7 +23,6 @@ function Door:new(x, y) --калитка только из двух частей
             mset(x // 8 + addX, y // 8 + addY, data.Door.solidTileId)
         end
     end
-    --
 
     setmetatable(object1, self)
     self.__index = self
@@ -34,8 +33,10 @@ end
 function Door:statusUpdate(leverStatus)
     if leverStatus == 'off' then
         self.status = 'close'
+        self:_spawnBlockingTiles()
     elseif leverStatus == 'on' then
         self.status = 'open'
+        self:_despawnBlockingTiles()
     end
 end
 
@@ -46,6 +47,12 @@ function Door:_colliding()
         game.player:move(self.speed, 0)
     elseif self.hitboxRight:collide(game.player.hitbox) and math.inRangeNotIncl(game.player.y, self.hitboxRight.y1, self.hitboxRight.y2) then
         game.player:move(-self.speed, 0)
+    end
+
+    local boarderLeft = self.rectL.x + self.rectL.w
+    local boarderRight = self.rectR.x
+    if boarderRight - boarderLeft < 0.01 then
+        return
     end
 
     for _, collider in ipairs(game.enemies) do
@@ -68,12 +75,9 @@ function Door:_closing()
     if math.floor(self.hitboxLeft.x2) < boarderLeft then
         self.rectL:moveLeftTo(self.rectL:left() + self.speed, 0)
         self.hitboxLeft:set_xy(self.rectL:left(), self.y)
-        --trace('cace'..self.hitboxLeft.x2..' '..self.x)
     elseif math.floor(self.hitboxLeft.x2) > boarderLeft then
-        --trace(self.x)
         self.rectL:moveLeftTo(self.x, 0)
         self.hitboxLeft:set_xy(self.rectL:left(), self.y)
-        --trace('lol'..self.hitboxLeft.x2..' '..self.x)
     end
 
     if self.hitboxRight.x1 > boarderRight then
@@ -182,9 +186,9 @@ function Door:update()
     self:drawUpdate()
     if self.status == 'close' then
         self:_closing()
-        self:_spawnBlockingTiles()
+        --self:_spawnBlockingTiles()
     elseif self.status == 'open'then
         self:_opening()
-        self:_despawnBlockingTiles()
+        --self:_despawnBlockingTiles()
     end
 end

@@ -2,16 +2,14 @@ Snowman = table.copy(Enemy)
 
 function Snowman:new(x, y, config)
     local startTaraxacum = nil
-    --if hasTaraxacum then  -- А зачем это условие нужно было 😫
-        startTaraxacum = SpecialTaraxacum:new(
-            x + config.specialTaraxacum.shiftForCenterX,
-            y + config.specialTaraxacum.shiftForCenterY,
-            config.specialTaraxacum.radius,
-            config.specialTaraxacum.bodyLength,
-            config.specialTaraxacum.shiftForCenterX,
-            config.specialTaraxacum.shiftForCenterY
-        )
-    --end
+    startTaraxacum = SpecialTaraxacum:new(
+        x + config.specialTaraxacum.shiftForCenterX,
+        y + config.specialTaraxacum.shiftForCenterY,
+        config.specialTaraxacum.radius,
+        config.specialTaraxacum.bodyLength,
+        config.specialTaraxacum.shiftForCenterX,
+        config.specialTaraxacum.shiftForCenterY
+    )
 
     local object = {
         x = x,
@@ -170,6 +168,7 @@ end
 
 function Snowman:_setPath()
     local way = aim.bfsMapAdaptedV2x2({x = self.x // 8, y = self.y // 8})
+
     if way then
         self.chaseStatus = 'chasing 🧐'
         self.theWay = way

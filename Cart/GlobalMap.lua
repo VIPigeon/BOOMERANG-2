@@ -30,6 +30,8 @@ function gm.getTileType8(x, y)  -- x, y даются как координаты
 
     if table.contains(data.solidTiles, tileId) then --двери не твердые 🙈
         return TileType.Solid
+    elseif table.contains(data.bfs.solidTiles, tileId) then -- теперь твёрдые 🙉
+        return TileType.Solid
     end
     return TileType.Void
 end
