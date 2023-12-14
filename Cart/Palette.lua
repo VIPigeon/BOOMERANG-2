@@ -3,14 +3,19 @@ ADDR = 0x3FC0
 palette = {
     defaultColors={},
     whiteColor = {r=255, g=255, b=255},
+    bgColor = {r=63, g=31, b=60},
     isOneBit = false
 }
 
 function palette.toggle1Bit()
     for id = 1, 15 do
         local color
-        if not palette.isOneBit and id ~= 6 then
-            color = palette.whiteColor
+        if not palette.isOneBit then
+            if id == 6 then
+                color = palette.bgColor
+            else
+                color = palette.whiteColor
+            end
         else
             color = palette.defaultColors[id]
         end
