@@ -23,12 +23,16 @@ function FruitPopup:draw()
     end
 
     if self.timeOnScreen < self.timeToStay then
-        rect(0, MAP_HEIGHT-16, 40, 20, 8)
+        local digitCount = math.ceil(math.log(fruitsCollection.collected + 1, 10)) +
+                           math.ceil(math.log(fruitsCollection.needed, 10))
+        width = 16 + 12 * digitCount
+        rect(0, MAP_HEIGHT-16, width, 20, 8)
+
         print(
             fruitsCollection.collected .. '/' .. fruitsCollection.needed,
             3,
             MAP_HEIGHT-12,
-            1,
+            0,
             true,
             2
         )
