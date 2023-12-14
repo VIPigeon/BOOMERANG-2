@@ -9,7 +9,7 @@ palette = {
 function palette.toggle1Bit()
     for id = 1, 15 do
         local color
-        if not palette.isOneBit then
+        if not palette.isOneBit and id ~= 6 then
             color = palette.whiteColor
         else
             color = palette.defaultColors[id]
