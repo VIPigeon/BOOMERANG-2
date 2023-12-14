@@ -66,7 +66,8 @@ function Bike:update()
 	if self.hitbox:collide(game.player.hitbox) then
         self.sprite = data.Bike.sprites.himAgain:copy()
 		trace('Ugh, rolled around in the sandbox again, drunkard!😞')
-		game.player:die()
+        game.finish()
+        return
 	end
 
     

@@ -349,6 +349,11 @@ end
 game.deleteSchedule = {}
 
 function game.update()
+    if game.ended then
+        game.drawGameEndScreen()
+        return
+    end
+
     for _, updatable in ipairs(game.updatables) do
         updatable:update()
     end
@@ -364,11 +369,58 @@ function game.update()
     Time.update()
 
     game.draw()
+end
 
-    --debug
-    -- for i, tile in ipairs(game.transitionTiles) do
-    --     rect(8 * tile.x - gm.x*8 + gm.sx, 8 * tile.y - gm.y*8 + gm.sy, 8, 8, 1)
-    -- end
+function game.finish()
+    game.completionTimeSeconds = Time.t / 1000.0
+    game.ended = true
+end
+
+local textYs = {20, 100, 130}
+
+function game.drawGameEndScreen()
+    local backgroundColor = 8
+    local textColor = 6
+    local textX = 10
+
+    local scrollAmount = 10
+    local minScroll = 20 - 4 * scrollAmount
+    local maxScroll = 130
+
+    if key(KEY_W) and textYs[3] + scrollAmount <= maxScroll then
+        for i = 1, 3 do
+            textYs[i] = textYs[i] + scrollAmount
+        end
+    end
+    if key(KEY_S) and textYs[1] - scrollAmount >= minScroll then
+        for i = 1, 3 do
+            textYs[i] = textYs[i] - scrollAmount
+        end
+    end
+
+
+    rect(0, 0, MAP_WIDTH, MAP_HEIGHT, backgroundColor)
+    print(
+        'Fruits collected:\n\n       ' .. fruitsCollection.collected .. ' / ' .. fruitsCollection.needed,
+        textX, textYs[1],
+        textColor,
+        false,
+        2
+    )
+    print(
+        'Your time: ' .. game.completionTimeSeconds .. 's',
+        textX, textYs[2],
+        textColor,
+        false,
+        2
+    )
+    print(
+        'Dev time: ' .. 100 .. 's',
+        textX, textYs[3],
+        textColor,
+        false,
+        2
+    )
 end
 
 return game
