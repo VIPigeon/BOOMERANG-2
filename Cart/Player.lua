@@ -216,7 +216,6 @@ function Player:update()
     if keyp(KEY_R) then
         -- Smert :)
         self:die()
-        game.finish()
         return
     end
 
