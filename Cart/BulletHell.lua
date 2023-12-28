@@ -176,6 +176,12 @@ function BulletHell:draw()
         self.reloadingTimer = 0
     end
 
+    self.hitbox.x = self.hitbox.x - 1
+    self.hitbox.y = self.hitbox.y - 1
+    self.hitbox:draw(3)
+
+    self.hitbox.x = self.hitbox.x + 1
+    self.hitbox.y = self.hitbox.y + 1
     self.hitbox:draw(self.color)
 
     for i = 1, #self.bullets do
