@@ -17,8 +17,8 @@ local goToBikeSprite = Sprite:new({308}, 4)
 
 function FruitPopup:draw()
     if fruitsCollection.collected == fruitsCollection.needed then
-        rect(0, MAP_HEIGHT-40, 40, 40, 8)
-        goToBikeSprite:draw(4, MAP_HEIGHT-36)
+        rect(0, MAP_HEIGHT-30, 54, 40, 8)
+        print('GoTo\nBike', 4, MAP_HEIGHT-26, 0, true, 2)
         return
     end
 
