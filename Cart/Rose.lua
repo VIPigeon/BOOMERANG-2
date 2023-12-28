@@ -1,12 +1,10 @@
 Rose = table.copy(Enemy)
 
-Rose.sprite = Sprite:new({389, 391, 393, 395, 397, 421}, 2)
-
 local ANIMATION_FRAME_DURATION_MS = 16
-local ROSE_ANIMATION_DURATION_MS = ANIMATION_FRAME_DURATION_MS * #Rose.sprite.animation
+local ROSE_ANIMATION_DURATION_MS = 69
 local LASER_WIDTH = 3
 
-function Rose:new(x, y, direction)
+function Rose:new(x, y, direction, sprites, laserColor, config)
     -- direction:
     -- 0 - up
     -- 1 - down
@@ -62,7 +60,9 @@ function Rose:new(x, y, direction)
     end
 
     local obj = {
-        sprite = Rose.sprite:copy(),
+        sprite = sprites.idle,
+        sprites = sprites,
+        laserColor = laserColor,
         x = x,
         y = y,
         flip = flip,
@@ -77,7 +77,7 @@ function Rose:new(x, y, direction)
         laserHitbox = Hitbox:new(x + 7, y + 11 - 20, x + 7 + 3, y + 11),
         direction = direction,
 
-        hp = data.Rose.startingHealth,
+        hp = config.startingHealth,
 
         status = 'idle',
 
@@ -124,7 +124,7 @@ function Rose:update()
         local damage = game.boomer.dpMs * Time.dt()
         self:takeDamage(damage)
     end
-    
+
     if self.status == 'dying' then
         self.sprite:nextFrame()
         if self.sprite:animationEnd() then
@@ -181,7 +181,7 @@ end
 
 function Rose:draw()
     if self.status == 'shooting' then
-        self.laserHitbox:draw(1)
+        self.laserHitbox:draw(self.laserColor)
     end
 
     self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)

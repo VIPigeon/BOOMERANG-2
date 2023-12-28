@@ -35,6 +35,5 @@ function HellBullet:draw(color)
     local x = self.x - gm.x*8 + gm.sx
     local y = self.y - gm.y*8 + gm.sy
 
-    self.hitbox:draw(4)
     self.sprite:draw(self.x - 2 - 8*gm.x + gm.sx, self.y - 2 - 8*gm.y + gm.sy, self.flip, self.rotate)
 end

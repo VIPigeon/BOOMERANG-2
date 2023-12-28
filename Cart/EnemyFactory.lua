@@ -18,6 +18,10 @@ local function addDebugValidation(t)
     return wrapper
 end
 
+-- Move to data
+Rose.sprite = Sprite:new({389, 391, 393, 395, 397, 421}, 2)
+Rose2sprite = Sprite:new({393, 395, -1, -1, -1, 275}, 2)
+
 function enemyFactory.create(tileX, tileY, tileID)
     local x = 8 * tileX;
     local y = 8 * tileY;
@@ -37,7 +41,11 @@ function enemyFactory.create(tileX, tileY, tileID)
     elseif type == 'Snowman' then
         return SnowmanBox:new(x, y, config, music), {noCollisions = true}
     elseif type == 'MusicRose' then
-        local musicRose = MusicRose:new(x, y, config.direction)
+        local musicRose = MusicRose:new(x, y, config.direction, data.Rose.sprites, 1, config)
+        musicRose:tuning(config.music.beatMap, config.music.sfxMap)
+        return musicRose
+    elseif type == 'MusicWeakRose' then
+        local musicRose = MusicRose:new(x, y, config.direction, data.WeakRose.sprites, 11, config)
         musicRose:tuning(config.music.beatMap, config.music.sfxMap)
         return musicRose
     elseif type == 'MusicBulletHell' then

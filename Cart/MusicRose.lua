@@ -15,11 +15,11 @@ end
 function MusicRose:_full_shot()
     if self.beatMap[self.i_beatMap] == 0 then
         self.status = 'idle'
-        self.sprite = data.Rose.sprites.idle
+        self.sprite = self.sprites.idle
         return
     end
     self.status = 'shooting'
-    self.sprite = data.Rose.sprites.shooting
+    self.sprite = self.sprites.shooting
     self:shoot()
 
     local sound = self.sfxMap[self.i_sfxMap]
@@ -60,7 +60,7 @@ function MusicRose:update()
         local damage = game.boomer.dpMs * Time.dt()
         self:takeDamage(damage)
     end
-    
+
     if self.status == 'dying' then
         self.sprite:nextFrame()
         if self.sprite:animationEnd() then
@@ -72,7 +72,7 @@ function MusicRose:update()
     self:_focusAnimations()
 
     if self:isDeadCheck() then
-        self.sprite = data.Rose.sprites.death:copy()
+        self.sprite = self.sprites.death:copy()
         self.status = 'dying'
         return
     end
