@@ -4,7 +4,7 @@
 
 AnimationOver = {}
 
-function AnimationOver:new(sprite, focusStatus, preInitStatus)
+function AnimationOver:new(sprite, focusStatus, preInitStatus, right_sided)
     local startStatus = 'waiting'
     if preInitStatus ~= nil then
         startStatus = preInitStatus
@@ -19,6 +19,12 @@ function AnimationOver:new(sprite, focusStatus, preInitStatus)
         status = startStatus,
         focusStatus = focusStatus,
         is_focused = false,
+        
+        --need for hardcode
+        --left top classic🐼
+        left_sided = true, -- for silly animations that start at the left edge of tile
+        --shit 🦧
+        right_sided = false, -- for silly animations that start at the right edge of tile
     }
 
     -- чистая магия!
@@ -66,10 +72,16 @@ function AnimationOver:focus(x1, y1, x2, y2) -- focusing on target area
         self.x = x1
         self.y = y1
         self.is_focused = true
+        if self.right_sided then
+            self.x = self.x - 8
+        end
     elseif self.focusStatus == 'randomOn' then
         self.x = x1 + math.random(math.ceil(x2 - x1))
         self.y = y1 + math.random(math.ceil(y2 - y1))
         self.is_focused = true
+        if self.right_sided then
+            self.x = self.x - 8
+        end
     end
     
 end

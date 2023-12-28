@@ -107,7 +107,6 @@ data.Bike.sprites = {
 }
 data.Bike.sprites.animations = {
     sparkingWhileWaitingMyBoy = Sprite:new(anim.gen({505, 506, 507, 508, 509, 510}, 20), 1),
-    --sparklingWhileExhaustedWaitingMyBoy = Sprite:new(anim.gen({508, 509, 510}, 20), 1),
     notSparklingBecauseSandnessComeAgain = Sprite:new({0}, 1),
     notSparklingBecauseSandnessCameAgain = Sprite:new({0}, 1),
     notSparklingBecauseBoring = Sprite:new({0}, 1),
@@ -116,6 +115,7 @@ data.Bike.sprites.animations = {
     notSparklingAndAgain = Sprite:new({0}, 1),
     notSparklingAgainAgain = Sprite:new({0}, 1),
     notSparklingAgainAndAgain = Sprite:new({0}, 1),
+    sparklingWhileExhaustedWaitingMyBoy = Sprite:new(anim.gen({457, 458, 459, 460, 461, 462, 463}, 20), 1),
     notSparklingAgainAgainAgain = Sprite:new({0}, 1),
     notSparklingAgainAgainAgainAndAgain = Sprite:new({0}, 1),
     notSparklingAgainAgainAgainAgainAgain = Sprite:new({0}, 1),

@@ -40,23 +40,31 @@ function Bike:_focusAnimations()
     local height = self.hitbox:getHeight()
     -- чтобы анимация проигрывалась вокруг байканура где-то
 
-    local x1 = center.x - width / 4
-    local x2 = center.x + width / 4
-    local y1 = center.y - height / 4
-    local y2 = center.y + height / 4
+    local x1 = center.x - width / 2
+    local x2 = center.x + width / 2
+    local y1 = center.y - height / 2
+    local y2 = center.y + height / 2
+    trace(center.x..' '..center.y..' '..x1..' '..y1..' '..x2..' '..y2)
+    -- self.hitbox:draw(2)
+    rect(x1,y1, x2 - x1, y2 - y1, 2)
     for _, anime in ipairs(self.currentAnimations) do
-        anime:focus(x1, y1, x2, y2)
+        anime:focus(x1, y1, x2, y2 - 8)
     end
 end
 
 function Bike:onStatus()
     --trace('heyday')
 
-    rand = math.random(20)
+    rand = math.random(14)
     if rand == 7 then
-        table.insert(self.currentAnimations, 
-                AnimationOver:new(table.chooseRandomElement(data.Bike.sprites.animations), 'randomOn', 'activeOnes')
-            )
+        local anime = AnimationOver:new(table.chooseRandomElement(data.Bike.sprites.animations), 'randomOn', 'activeOnes')
+        --need refactoring
+        if anime.sprite.animation[1] == 457 then
+            anime.right_sided = true
+            anime.left_sided = false
+        end
+        table.insert(self.currentAnimations, anime)
+
         self:_focusAnimations()
     end
 end
