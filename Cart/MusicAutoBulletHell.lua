@@ -1,5 +1,43 @@
 MusicAutoBulletHell = table.copy(AutoBulletHell)
 
+function MusicAutoBulletHell:new(x, y, config)
+    local bullets = {}
+    for i = 1, config.bulletCount do
+        bullets[i] = AutoHellBullet:new()
+    end
+
+    local object = {
+        x = x,
+        y = y,
+        type = type,
+        spread = config.bulletSpreadRadius,
+        bullets = bullets,
+        bulletCount = config.bulletCount,
+        bulletSpeed = config.bulletSpeed,
+        bulletSprite = bulletSprite,
+        rotationSpeed = config.bulletRotationSpeed,
+        deathBulletSpeed = config.deathBulletSpeed,
+        hp = config.hp,
+        hitbox = HitCircle:new(x, y, config.circleDiameter),
+        time = 0,
+        status = '',
+        color = config.color,
+
+        reloadingTimer = 0,
+        reloadingBullets = {},
+        currentAnimations = {},
+
+        isActive = false,
+    }
+
+    BulletHell._moveBullets(object, 0)
+
+    setmetatable(object, self)
+    self.__index = self
+    return object
+end
+
+
 function MusicAutoBulletHell:tuning(beatMap, sfxMap)
     -- обязательно вызывается после new для настройки музыки
     
@@ -36,6 +74,11 @@ function MusicAutoBulletHell:onBeat()
         self:_full_shot()
     elseif #self.beatMap == 8 then
         if not game.metronome.beat8 then
+            return
+        end
+        self:_full_shot()
+    elseif #self.beatMap == 16 then
+        if not game.metronome.beat16 then
             return
         end
         self:_full_shot()

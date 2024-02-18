@@ -313,13 +313,13 @@ data.EnemyConfig = {
         name = 'MusicAutoBulletHell',
         circleDiameter = 5,
         bulletSpreadRadius = 5,
-        bulletRotationSpeed = 0.001,
+        bulletRotationSpeed = 0.002,
         bulletCount = 8,
-        bulletSpeed = 0.8,
-        deathBulletSpeed = 0.3,
+        bulletSpeed = 1,
+        deathBulletSpeed = 0.2,
         color = 13,
         music = drums[48],
-        hp = 12,
+        hp = 20,
         autoAim = true,
     },
     [33] = {
@@ -685,17 +685,17 @@ data.Snowman.whirl = {
 }
 
 -- Выделил 😎
-        data.Snowman.specialTaraxacum = {
-            radius = 3,
-            bodyLength = 15,
-            shiftForCenterX = 12,
-            shiftForCenterY = -3,
-            startStickX = 0,
-            startStickY = 0,
-            bodyColor = 10,
-            color = 12,
-            reloadAnimationTime = 18, -- in tics should divide by 3
-        }
+    data.Snowman.specialTaraxacum = {
+        radius = 3,
+        bodyLength = 15,
+        shiftForCenterX = 12,
+        shiftForCenterY = -3,
+        startStickX = 0,
+        startStickY = 0,
+        bodyColor = 10,
+        color = 12,
+        reloadAnimationTime = 18, -- in tics should divide by 3
+    }
 
 data.SnowmanBox = {}
 data.SnowmanBox.playerCheckFrequencyMs = 1000

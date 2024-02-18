@@ -44,8 +44,8 @@ function MusicBulletHell:onBeat()
             return
         end
         self:_full_shot()
-    -- elseif #self.beatMap == 24 then
-    --     self:_full_shot()
+    elseif #self.beatMap == 24 then
+        self:_full_shot()
     elseif #self.beatMap == 6 then
         if not game.metronome.beat6 then
             return
