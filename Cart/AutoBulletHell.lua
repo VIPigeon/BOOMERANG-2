@@ -10,6 +10,9 @@ function AutoBulletHell:_shoot()
     local kawaiiCode = aim.superAim(bull.x, bull.y, self.bulletSpeed)
     bull:setVelocity(kawaiiCode.x, kawaiiCode.y)
     bull.speed = self.bulletSpeed
+
+    table.insert(self.reloadingBullets, self.bullets[(byTouchId - 1) % 8 + 1])
+
 end
 
 function aim.superAim(startX, startY, bulletSpeed)

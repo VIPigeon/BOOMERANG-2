@@ -44,7 +44,6 @@ function Bike:_focusAnimations()
     local x2 = center.x + width / 2
     local y1 = center.y - height / 2
     local y2 = center.y + height / 2
-    trace(center.x..' '..center.y..' '..x1..' '..y1..' '..x2..' '..y2)
     -- self.hitbox:draw(2)
     rect(x1,y1, x2 - x1, y2 - y1, 2)
     for _, anime in ipairs(self.currentAnimations) do

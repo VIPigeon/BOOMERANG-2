@@ -1,6 +1,6 @@
 AutoHellBullet = table.copy(Body)
 
-local trash = Sprite:new({379, 382, 381, 380}, 1)
+local trash = Sprite:new(anim.gen({379, 0, 380, 381, 382}, 4), 1)
 function AutoHellBullet:new()
     local object = {
         x = 0,
