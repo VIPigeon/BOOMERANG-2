@@ -1,9 +1,10 @@
 game = {}
--- assert(false)
+
 local function createMetronome()
-    -- return Metronome:new(GAME_BPM)
     return Metronome4_4:new(GAME_BPM)
 end
+
+Decorations.init()
 
 local function createCheckpoints()
     local checkpoints = {}
@@ -49,9 +50,7 @@ local function createSettingLevers()
                 mset(x, y, 0)
                 table.insert(leverTiles, {x=x, y=y})
                 local lwr = SettingLever:new(x * 8, y * 8)
-                
                 local doorWiresLever = DoorMechanic.findConnectionWithoutDoor(x, y) -- подыщем провода и коорды недвери
-                
                 lwr.wires = doorWiresLever.wires
 
                 table.insert(slevers, lwr)
@@ -311,6 +310,7 @@ function game.restart()
     table.concatTable(game.updatables, game.doors)
     table.concatTable(game.updatables, settingLevers)
     table.concatTable(game.updatables, game.fruits)
+    table.insert(game.updatables, Decorations)
 
     table.concatTable(game.drawables, checkpoints)
     table.concatTable(game.drawables, levers)

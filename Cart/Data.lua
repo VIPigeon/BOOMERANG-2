@@ -305,7 +305,7 @@ data.SettingLever.sprites = {
 }
 
 
-BASIC_ROSE_HP = 7
+BASIC_ROSE_HP = 50
 --IEnemyable
 data.EnemyConfig = {
     -- dict: [tileId : EnemyConfigLol]
@@ -571,6 +571,14 @@ data.EnemyConfig = {
         metronomeTicksSpentShooting = 1,
         direction = 3,
     },
+    [198] = {
+        name = 'MusicWeakRose',
+        music = bassLine.rose.D2,
+        startingHealth = 1,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+        direction = 0,
+    },
 }
 
 data.BulletHell = {
@@ -651,6 +659,13 @@ data.Rose.sprites = {
 }
 data.Rose.animation_frame_duration_ms = 16
 data.Rose.rose_animation_duration_ms = data.Rose.animation_frame_duration_ms * #data.Rose.sprites.transition.animation
+
+data.WeakRose = {}
+data.WeakRose.sprites = {
+    death = Sprite:new(anim.gen60({277, 279, 281, 283}), 2),
+    idle = Sprite:new({393}, 2),
+    shooting = Sprite:new({395}, 2),
+}
 
 data.Snowman = {}
 
