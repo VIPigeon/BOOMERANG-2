@@ -42,19 +42,23 @@ function enemyFactory.create(tileX, tileY, tileID)
         return SnowmanBox:new(x, y, config, music), {noCollisions = true}
     elseif type == 'MusicRose' then
         local musicRose = MusicRose:new(x, y, config.direction, data.Rose.sprites, 1, config)
-        musicRose:tuning(config.music.beatMap, config.music.sfxMap)
+        -- musicRose:tuning(config.music.beatMap, config.music.sfxMap)
+        musicRose:tuning(config.music)
         return musicRose
     elseif type == 'MusicWeakRose' then
         local musicRose = MusicRose:new(x, y, config.direction, data.WeakRose.sprites, 11, config)
-        musicRose:tuning(config.music.beatMap, config.music.sfxMap)
+        -- musicRose:tuning(config.music.beatMap, config.music.sfxMap)
+        musicRose:tuning(config.music)
         return musicRose
     elseif type == 'MusicBulletHell' then
         local musicBulletHell = MusicBulletHell:new(x, y, config)
-        musicBulletHell:tuning(config.music.beatMap, config.music.sfxMap)
+        -- musicBulletHell:tuning(config.music.beatMap, config.music.sfxMap)
+        musicBulletHell:tuning(config.music)
         return musicBulletHell
     elseif type == 'MusicAutoBulletHell' then
         local musicAutoBulletHell = MusicAutoBulletHell:new(x, y, config)
-        musicAutoBulletHell:tuning(config.music.beatMap, config.music.sfxMap)
+        -- musicAutoBulletHell:tuning(config.music.beatMap, config.music.sfxMap)
+        musicAutoBulletHell:tuning(config.music)
         return musicAutoBulletHell
     end
 end

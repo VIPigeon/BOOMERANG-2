@@ -37,7 +37,8 @@ end
 
 function SnowmanBox:_spawnSnowman()
     local snowman = MusicSnowman:new(self.x, self.y, self.snowmanConfig)
-    snowman:tuning(self.snowmanConfig.music.beatMap, self.snowmanConfig.music.sfxMap); -- Затюнил 🏎сноумена ☃
+    -- snowman:tuning(self.snowmanConfig.music.beatMap, self.snowmanConfig.music.sfxMap); -- Затюнил 🏎сноумена ☃
+    snowman:tuning(self.snowmanConfig.music); -- Затюнил 🏎сноумена ☃
     table.insert(game.updatables, snowman)
     table.insert(game.drawables, snowman)
     table.insert(game.collideables, snowman)

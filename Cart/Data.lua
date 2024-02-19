@@ -319,7 +319,21 @@ data.EnemyConfig = {
         bulletSpeed = 1,
         deathBulletSpeed = 0.2,
         color = 13,
-        music = drums[48],
+        -- music = drums[48],
+        music = {
+            beatMap = {0,0,0,0, 0,0,0,1, 1,0,0,0, 0,0,0,0,},
+            sfxMap = {
+            {2, 'C#3', -1, 1, 4, 0},
+            {1, 'B-6', -1, 1, 6, 0},
+            },
+            intro = {
+                beatMap = {1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1,},
+                sfxMap = {
+                {2, 'C#5', -1, 1, 4, 0},
+                {1, 'B-5', -1, 1, 6, 0},
+                },  
+            }
+        },
         hp = 20,
         autoAim = true,
     },
@@ -357,7 +371,20 @@ data.EnemyConfig = {
         bulletSpeed = 1.1,
         deathBulletSpeed = 0.1,
         color = 14,
-        music = drums[48],
+        music = {
+            beatMap = {0,0,0,0, 0,0,0,1, 1,0,0,0, 0,0,0,0,},
+            sfxMap = {
+                {2, 'C#3', -1, 1, 4, 0},
+                {1, 'B-6', -1, 1, 6, 0},
+            },
+            intro = {
+                beatMap = {1,1,1,1, 1,1,1,1, 1,1,1,1, 1,1,1,1,},
+                sfxMap = {
+                    {2, 'C#3', -1, 1, 4, 0},
+                    {1, 'B-6', -1, 1, 6, 0},
+                },
+            }
+        },
         hp = 16,
     },
     [49] = {
@@ -425,8 +452,12 @@ data.EnemyConfig = {
         },
 
         music = {
-            beatMap = {0, 0, 1, 1, 1, 1},
+            beatMap = {0, 0, 0, 1, 1, 1},
             sfxMap = bassLine.rose.D2.sfxMap,
+            intro = {
+                beatMap = {0, 0, 0, 0},
+                sfxMap = bassLine.rose.D2.sfxMap,
+            }
         },
 
         sprites = {
@@ -542,7 +573,14 @@ data.EnemyConfig = {
 
     [186] = {
         name = 'MusicRose',
-        music = bassLine.rose.Gd2,
+        music = {
+            beatMap = {0,0,0,0,1,0,0,0},
+            sfxMap = {{0, 'G#3', -1, 0, 12, 0}},
+            intro = {
+                beatMap = {0, 0, 0, 0},
+                sfxMap = {0, 'G#1', -1, 3, 12, 0}
+            }
+        },
         startingHealth = RoseHP.strong,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,

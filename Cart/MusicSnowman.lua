@@ -2,7 +2,21 @@ MusicSnowman = table.copy(Snowman)
 
 -- И Сноумен ⛄ говорит:
 -- ноль ноль один один один ноль
-function MusicSnowman:tuning(beatMap, sfxMap)
+-- function MusicSnowman:tuning(beatMap, sfxMap)
+function MusicSnowman:tuning(music)
+    -- local sfxMap = music.sfxMap
+    -- local beatMap = music.beatMap
+    local sfxMap, beatMap
+    if music.intro then
+        sfxMap = music.intro.sfxMap
+        beatMap = music.intro.beatMap
+        self.reserveMusic = {}
+        self.reserveMusic.sfxMap = music.sfxMap
+        self.reserveMusic.beatMap = music.beatMap
+    else
+        sfxMap = music.sfxMap
+        beatMap = music.beatMap
+    end
     self.sfxMap = sfxMap
     self.sfxMapIndex = 1
     self.beatMap = beatMap
@@ -15,29 +29,37 @@ function MusicSnowman:update()
        (#self.beatMap == 6 and game.metronome.beat6) or
        (#self.beatMap == 8 and game.metronome.beat8) then
 
-       self.beatMapIndex = (self.beatMapIndex % #self.beatMap) + 1
+        if not self.reserveMusic then
+            self.beatMapIndex = (self.beatMapIndex % #self.beatMap) + 1
+        else
+            self.beatMapIndex = self.beatMapIndex + 1
+            if self.beatMapIndex > #self.beatMap then
+                self:tuning(self.reserveMusic)
+                self.reserveMusic = false
+            end
+        end
 
-       if (self.beatMap[self.beatMapIndex] ~= 0) then
-           --- АХХАХАХАХ ДУббяж кода 😜😋😱🤪🤪🤪
+        if (self.beatMap[self.beatMapIndex] ~= 0) then
+            --- АХХАХАХАХ ДУббяж кода 😜😋😱🤪🤪🤪
             self.whirlAttack = SnowmanWhirlAttack:new(self.hitbox:get_center().x, self.hitbox:get_center().y, self.taraxacum.h)
             self.whirlAttack.angle = self.pastAngle
             self.whirlAttack.snowman = self
             self.attackStatus = 'whirl'
             self.speed = self.config.speedWithWhirl
 
-           local sound = self.sfxMap[self.sfxMapIndex]
-           sfx(sound[1], sound[2], sound[3], sound[4], sound[5], sound[6])
+            local sound = self.sfxMap[self.sfxMapIndex]
+            sfx(sound[1], sound[2], sound[3], sound[4], sound[5], sound[6])
 
-           self:_setPath()
-           self.sfxMapIndex = (self.sfxMapIndex % #self.sfxMap) + 1
-           self:_moveOneTile()
+            self:_setPath()
+            self.sfxMapIndex = (self.sfxMapIndex % #self.sfxMap) + 1
+            self:_moveOneTile()
        else
-           self.speed = self.config.speed
-           self.attackStatus = 'idle'
-           if self.whirlAttack then
-               self.pastAngle = self.whirlAttack.angle
-               self.whirlAttack:endAttack()
-               self.whirlAttack = nil -- Чтобы жесткие ошибки 😱😱😷
+            self.speed = self.config.speed
+            self.attackStatus = 'idle'
+            if self.whirlAttack then
+                self.pastAngle = self.whirlAttack.angle
+                self.whirlAttack:endAttack()
+                self.whirlAttack = nil -- Чтобы жесткие ошибки 😱😱😷
            end
        end
     end

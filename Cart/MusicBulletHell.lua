@@ -1,6 +1,20 @@
 MusicBulletHell = table.copy(BulletHell)
 
-function MusicBulletHell:tuning(beatMap, sfxMap)
+-- function MusicBulletHell:tuning(beatMap, sfxMap)
+function MusicBulletHell:tuning(music)
+    -- local sfxMap = music.sfxMap
+    -- local beatMap = music.beatMap
+    local sfxMap, beatMap
+    if music.intro then
+        sfxMap = music.intro.sfxMap
+        beatMap = music.intro.beatMap
+        self.reserveMusic = {}
+        self.reserveMusic.sfxMap = music.sfxMap
+        self.reserveMusic.beatMap = music.beatMap
+    else
+        sfxMap = music.sfxMap
+        beatMap = music.beatMap
+    end
     -- обязательно вызывается после new для настройки музыки
     
     self.sfxMap = sfxMap
@@ -52,7 +66,16 @@ function MusicBulletHell:onBeat()
         end
         self:_full_shot()
     end
-    self.i_beatMap = (self.i_beatMap % #self.beatMap) + 1
+    -- self.i_beatMap = (self.i_beatMap % #self.beatMap) + 1
+    if not self.reserveMusic then
+        self.i_beatMap = (self.i_beatMap % #self.beatMap) + 1
+        return
+    end
+    self.i_beatMap = self.i_beatMap + 1
+    if self.i_beatMap > #self.beatMap then
+        self:tuning(self.reserveMusic)
+        self.reserveMusic = false
+    end
 end
 
 function MusicBulletHell:update()
