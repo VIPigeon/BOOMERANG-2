@@ -329,7 +329,7 @@ data.EnemyConfig = {
     [36] = {
         name = 'MusicRose',
         music = {
-            beatMap = {1,0,0,0, 0,0,0,0,},
+            beatMap = {1,0,0,0, },
             sfxMap = {
             {1, 'A-2', 16, 1, 4, 0},
             {1, 'A-2', 8, 1, 4, 0},
