@@ -54,6 +54,11 @@ function MusicRose:onBeat()
             return
         end
         self:_full_shot()
+    elseif #self.beatMap == 16 then
+        if not game.metronome.beat16 then
+            return
+        end
+        self:_full_shot()
     elseif #self.beatMap == 8 then
         if not game.metronome.beat8 then
             return
