@@ -49,6 +49,7 @@ function Fruit:new(id, x, y)
     local obj = {
         x = x,
         y = y,
+        id = id,
         collected = false,
         sprite = sprite1,
         sprite1 = sprite1,
@@ -77,6 +78,10 @@ function Fruit:update()
 
     if not self.collected and self.hitbox:collide(game.player.hitbox) then
         fruitsCollection.collected = fruitsCollection.collected + 1
+
+        -- 🔊🤯
+        local sound = data.fruitSFX[self.id]
+        sfx(sound[1], sound[2], sound[3], sound[4], sound[5], sound[6])
 
         table.removeElement(game.fruits, self) -- Чтобы не респавнился после смерти игрока 👍
         table.insert(game.deleteSchedule, self)

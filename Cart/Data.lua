@@ -52,6 +52,13 @@ MAP_HEIGHT = 135
 
 M44 = 24  -- константа для Metronome4_4
 
+data.fruitSFX = {
+    [144] = {1, 'B-6', -1, 1, 6, 0},
+    [160] = {1, 'B-6', -1, 1, 6, 0},
+    [176] = {1, 'B-6', -1, 1, 6, 0},
+    [192] = {0, 'G#1', -1, 3, 12, 0},
+}
+
 data.Player = {
     movementNormalizerStraight = 1,
     movementNormalizerDiagonal = 1 / math.sqrt(2),
