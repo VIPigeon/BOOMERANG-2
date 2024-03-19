@@ -9,7 +9,7 @@ function Bullet:new(x, y, sprite)
         x = x,
         y = y,
         vector = {x = 0, y = 0},
-        hitbox = HitCircle:new(x, y, 2), -- Hitbox:new_with_shift(x, y, x + 2, y + 2, 2, 2),
+        hitbox = Hitbox:new_with_shift(x, y, x + 2, y + 2, 2, 2), --,HitCircle:new(x, y, 2), -- 
         speed = data.Bullet.defaultSpeed,
         sprite = sprite:copy(),
     }
@@ -59,6 +59,6 @@ function Bullet:update()
 end
 
 function Bullet:draw()
-    --self.hitbox:draw(4)
     self.sprite:draw(self.x - 1 - gm.x*8 + gm.sx, self.y - 1 - gm.y*8 + gm.sy, self.flip, self.rotate)
+    self.hitbox:draw(4)
 end
