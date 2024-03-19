@@ -60,4 +60,5 @@ end
 
 function Bullet:draw()
     self.sprite:draw(self.x - 1 - gm.x*8 + gm.sx, self.y - 1 - gm.y*8 + gm.sy, self.flip, self.rotate)
+    self.hitbox:draw(4)
 end

@@ -105,6 +105,7 @@ end
 function Door:_opening() -- whers ending, i like it more!
     self.speed = data.Door.speed
     self.shakeTimer = 1
+    game.camera:shakeStop()
 
     local boarderLeft = self.x + data.Door.closedGapInPixels
     local boarderRight = self.x + 2 * self.rectR.w - data.Door.closedGapInPixels
