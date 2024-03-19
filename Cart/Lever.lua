@@ -41,6 +41,9 @@ function Lever:_turn()
         self.sprite = Lever.spriteOn
         self.status = 'justOn'
 
+        local sound = data.Player.sfx.leverOn
+        sfx(sound[1], sound[2], sound[3], sound[4], sound[5], sound[6])
+
         self:_toogleWires()
         self.door:statusUpdate('on')
 
@@ -48,6 +51,10 @@ function Lever:_turn()
     elseif self.status == 'on' then
         self.sprite = Lever.spriteOff
         self.status = 'justOff'
+
+        -- 🔊🤯
+        local sound = data.Player.sfx.leverOff
+        sfx(sound[1], sound[2], sound[3], sound[4], sound[5], sound[6])
 
         self:_toogleWires()
         self.door:statusUpdate('off')

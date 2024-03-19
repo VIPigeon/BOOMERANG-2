@@ -49,6 +49,9 @@ end
 
 function Checkpoint:update()
     if self.status == status.disabled and self.hitbox:collide(game.boomer.hitbox) then
+        -- 🔊 😍
+        local sound = data.Player.sfx.checkpoint
+        sfx(sound[1], sound[2], sound[3], sound[4], sound[5], sound[6])
         self:enableBeatiful()
         game.save(self)
     end

@@ -40,6 +40,8 @@ function Door:statusUpdate(leverStatus)
     end
 end
 
+local crutch = false;
+
 function Door:_colliding()
     if self.hitboxLeft:collide(game.player.hitbox) and self.hitboxRight:collide(game.player.hitbox) then
         game.player:die()
@@ -52,6 +54,12 @@ function Door:_colliding()
     local boarderLeft = self.rectL.x + self.rectL.w
     local boarderRight = self.rectR.x
     if boarderRight - boarderLeft < 0.01 then
+        -- 🔊🤯
+        if not crutch then
+            local sound = data.Player.sfx.closeDoor
+            sfx(sound[1], sound[2], sound[3], sound[4], sound[5], sound[6])
+            crutch = true
+        end
         return
     end
 
@@ -103,6 +111,7 @@ function Door:_closing()
 end
 
 function Door:_opening() -- whers ending, i like it more!
+    crutch = false
     self.speed = data.Door.speed
     self.shakeTimer = 1
     game.camera:shakeStop()

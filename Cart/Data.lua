@@ -61,6 +61,13 @@ data.Player = {
     deathParticleCountMin = 10,
     deathParticleCountMax = 20,
     deathAnimationParticleSpeed = 0.4,
+
+    sfx = {
+        leverOn = {1, 'B-6', -1, 1, 6, 0},
+        leverOff = {0, 'G#1', -1, 3, 12, 0},
+        closeDoor = {1, 'B-6', -1, 1, 6, 0},
+        checkpoint = {1, 'B-6', -1, 1, 6, 0},
+    }
 }
 
 function plr_death_anim()
