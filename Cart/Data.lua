@@ -324,6 +324,76 @@ BulletHellHP = {small=25, medium=50, big=100}
 --IEnemyable
 data.EnemyConfig = {
     -- dict: [tileId : EnemyConfigLol]
+
+    [35] = {
+        name = 'MusicRose',
+        music = {
+            beatMap = {1,0,0,0, },
+            sfxMap = {
+            {1, 'A-2', 16, 1, 4, 0},
+            {1, 'C-3', 16, 1, 4, 0},
+            },
+        },
+        startingHealth = RoseHP.strong,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+        direction = 0,
+    },
+
+    [36] = {
+        name = 'MusicRose',
+        music = {
+            beatMap = {1,0,0,0, },
+            sfxMap = {
+            {1, 'A-2', 16, 1, 4, 0},
+            {1, 'A-2', 8, 1, 4, 0},
+            },
+        },
+        startingHealth = RoseHP.strong,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+        direction = 0,
+    },
+
+    [19] = {
+        name = 'MusicRose',
+        music = {
+            beatMap = {0,0,0,0, 0,0,0,0, 1,0,1,0, 1,0,1,0,},
+            sfxMap = {
+            {1, 'A-4', -1, 2, 4, 0},
+            {1, 'G-4', -1, 2, 4, 0},
+            {1, 'A-4', -1, 2, 4, 0},
+            {1, 'G-4', -1, 2, 4, 0},
+            },
+        },
+        startingHealth = RoseHP.strong,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+        direction = 0,
+    },
+
+    [20] = {
+        name = 'MusicRose',
+        music = {
+            beatMap = {1,0,1,0, 1,0,1,0,},
+            sfxMap = {
+            {1, 'A-4', 8, 2, 4, 0},
+            {1, 'A#4', 8, 2, 4, 0},
+            {1, 'A-4', 8, 2, 4, 0},
+            {1, 'A#4', 8, 2, 4, 0},
+
+            {1, 'C-5', 8, 2, 4, 0},
+            {1, 'A#4', 8, 2, 4, 0},
+            {1, 'A-4', 8, 2, 4, 0},
+            {1, 'A#4', 8, 2, 4, 0},
+            },
+        },
+        startingHealth = RoseHP.strong,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+        direction = 0,
+    },
+
     [32] = {
         name = 'MusicAutoBulletHell',
         circleDiameter = 5,
