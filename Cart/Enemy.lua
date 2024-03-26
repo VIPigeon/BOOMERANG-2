@@ -76,6 +76,8 @@ function Enemy:isDeadCheck()
     return self.hp == 0
 end
 
+local soundsQueue = Queue:new()
+
 function Enemy:takeDamage(damage)
     table.insert(self.currentAnimations, 
         AnimationOver:new(table.chooseRandomElement(data.Enemy.sprites.hurtEffect), 'randomOn', 'activeOnes')
@@ -83,4 +85,26 @@ function Enemy:takeDamage(damage)
     -- это может оказаться неэффективно
 
     self.hp = math.fence(self.hp - damage, 0, self.hp)
+
+    if self.hp >= 0 and self.damageSound ~= nil then
+        -- kawaii-Code@boomerang2.com:
+        -- Я сначала копипастил код звука в update каждому врагу отдельно, и вот
+        -- какие комментарии я при этом оставлял (в хронологическом порядке):
+        --
+        -- 1. А может это отправить в takeDamage?
+        --
+        -- 2. Ну, по-хорошему нужно отправить, чтобы переиспользовать важный код.
+        --
+        -- 3. Можно даже использовать вместо EnemyDeathSounds EnemyConfig!
+        -- Тогда takeDamage будет универсальным для всех! Какая отличная
+        -- идея! 😊
+
+        soundsQueue:enqueue(self.damageSound)
+        if game.metronome.beat16 then
+            if soundsQueue:count() > 0 then
+                local sound = soundsQueue:dequeue()
+                sfx(sound[1], sound[2], sound[3], sound[4], sound[5], sound[6])
+            end
+        end
+    end
 end

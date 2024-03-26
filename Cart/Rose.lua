@@ -63,6 +63,7 @@ function Rose:new(x, y, direction, sprites, laserColor, config)
         sprite = sprites.idle,
         sprites = sprites,
         laserColor = laserColor,
+        damageSound = data.EnemyDeathSounds.BulletHell,
         x = x,
         y = y,
         flip = flip,

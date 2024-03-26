@@ -15,6 +15,7 @@ function BulletHell:new(x, y, config)
         bulletCount = config.bulletCount,
         bulletSpeed = config.bulletSpeed,
         bulletSprite = bulletSprite,
+        damageSound = data.EnemyDeathSounds.BulletHell,
         rotationSpeed = config.bulletRotationSpeed,
         deathBulletSpeed = config.deathBulletSpeed,
         hp = config.hp,

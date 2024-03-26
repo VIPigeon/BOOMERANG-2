@@ -318,6 +318,12 @@ data.SettingLever.sprites = {
     off = Sprite:new({5}, 1),
 }
 
+data.EnemyDeathSounds = {
+    WeakRose = {1, 'B-6', -1, 1, 6, 0},
+    Rose = {1, 'B-6', -1, 1, 6, 0},
+    BulletHell = {1, 'B-6', -1, 1, 6, 0},
+    Snowman = {1, 'B-6', -1, 1, 6, 0},
+}
 
 RoseHP = {weak=15, strong=200}
 BulletHellHP = {small=25, medium=50, big=100}

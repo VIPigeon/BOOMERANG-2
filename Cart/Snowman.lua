@@ -16,6 +16,7 @@ function Snowman:new(x, y, config)
         y = y,
         speed = config.speed,
         config = config,
+        damageSound = data.EnemyDeathSounds.Snowman,
         hp = config.hp,
         sprite = config.sprites.chill:copy(),
         hitbox = Hitbox:new(x, y, x + 16, y + 16),
