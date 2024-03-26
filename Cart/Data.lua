@@ -326,7 +326,7 @@ data.EnemyDeathSounds = {
 }
 data.EnemyDamageSounds = {
     WeakRose = {1, 'A#4', 8, 2, 4, 0},
-    Rose = {1, 'B-6', -1, 1, 6, 0},
+    Rose = {1, 'B-6', -1, 3, 6, 0},
     BulletHell = { 63, 'G-5', -1, 3, 5, 0  },
     Snowman = { 63, 'G-5', -1, 3, 5, 0  },
 }

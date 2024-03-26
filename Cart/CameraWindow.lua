@@ -66,10 +66,9 @@ function CameraWindow:getDirectionToTarget()
 end
 
 function CameraWindow:shakeByDoor(magnitude)
-    --trace('ajajajajajaja')
     if not self.statuses['doork'] then
         self.statuses['doork'] = true
-        --trace('uwuwuwuwuwuwuuwu')
+        trace('uwuwuwuwuwuwuuwu')
     end
     self.shakeMagnitude['doork'] = magnitude
 end
@@ -130,7 +129,6 @@ function CameraWindow:update()
     ::move::
 
     if self.statuses['doork'] then
-        trace('ahahahahahahhahahahaha')
         self.area:move(
             self.shakeMagnitude['doork'] * oneOrMinusOne(),
             self.shakeMagnitude['doork'] * oneOrMinusOne()

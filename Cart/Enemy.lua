@@ -103,6 +103,13 @@ function Enemy:takeDamage(damage)
         -- 3. Можно даже использовать вместо EnemyDeathSounds EnemyConfig!
         -- Тогда takeDamage будет универсальным для всех! Какая отличная
         -- идея! 😊
-        game.soundsQueue:enqueue(self.damageSound)
+
+        if game.metronome.beat16 then
+            -- Этот код у меня компилировался!!! Что? 😫
+            -- local sound game.soundsQueue:dequeue()
+            local sound = self.damageSound
+            sfx(sound[1], sound[2], sound[3], sound[4], sound[5], sound[6])
+        end
     end
+
 end
