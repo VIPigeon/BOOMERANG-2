@@ -7,7 +7,8 @@ function CameraWindow:new(deadZoneRect, target, targetWidth, targetHeight)
         targetWidth = targetWidth,
         targetHeight = targetHeight,
 
-        shakeMagnitude = 1,
+        shakeMagnitude = {},
+        statuses = {},
         status = 'normal',
     }
 
@@ -64,14 +65,42 @@ function CameraWindow:getDirectionToTarget()
     return dx, dy
 end
 
-function CameraWindow:shake(magnitude)
-    self.status = 'shake'
-    self.shakeMagnitude = magnitude
+function CameraWindow:shakeByDoor(magnitude)
+    --trace('ajajajajajaja')
+    if not self.statuses['doork'] then
+        self.statuses['doork'] = true
+        --trace('uwuwuwuwuwuwuuwu')
+    end
+    self.shakeMagnitude['doork'] = magnitude
 end
 
-function CameraWindow:shakeStop() -- TODO fix conflict with many shakes
-    self.status = 'normal'
+function CameraWindow:shakeByBoomer(magnitude)
+    if not self.statuses['boomer'] then
+        self.statuses['boomer'] = true
+    end
+    self.shakeMagnitude['boomer'] = magnitude
 end
+
+function CameraWindow:shake(magnitude)
+    --self.status = 'shake'
+    --self.shakeMagnitude = magnitude
+    if not self.statuses['shake'] then
+        self.statuses['shake'] = true
+    end
+    self.shakeMagnitude['shake'] = magnitude
+end
+
+function CameraWindow:shakeByDoorStop()
+    self.statuses['doork'] = false
+end
+
+function CameraWindow:shakeByBoomerStop()
+    self.statuses['boomer'] = false
+end
+
+--function CameraWindow:shakeStop() -- TODO fix conflict with many shakes 😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑😑
+--    self.status = 'normal'
+--end
 
 local function oneOrMinusOne()
     return math.random(0, 1) == 0 and -1 or 1
@@ -99,12 +128,30 @@ function CameraWindow:update()
     end
 
     ::move::
-    if self.status == 'shake' then
+
+    if self.statuses['doork'] then
+        trace('ahahahahahahhahahahaha')
         self.area:move(
-            self.shakeMagnitude * oneOrMinusOne(),
-            self.shakeMagnitude * oneOrMinusOne()
+            self.shakeMagnitude['doork'] * oneOrMinusOne(),
+            self.shakeMagnitude['doork'] * oneOrMinusOne()
+        )
+    elseif self.statuses['boomer'] then
+        self.area:move(
+            self.shakeMagnitude['boomer'] * oneOrMinusOne(),
+            self.shakeMagnitude['boomer'] * oneOrMinusOne()
+        )
+    elseif self.statuses['shake'] then
+        self.area:move(
+            self.shakeMagnitude['shake'] * oneOrMinusOne(),
+            self.shakeMagnitude['shake'] * oneOrMinusOne()
         )
     end
+    --if self.status == 'shake' then
+    --    self.area:move(
+    --        self.shakeMagnitude['shake'] * oneOrMinusOne(),
+    --        self.shakeMagnitude['shake'] * oneOrMinusOne()
+    --    )
+    --end
     self:moveCamera()
 end
 

@@ -53,10 +53,10 @@ MAP_HEIGHT = 135
 M44 = 24  -- константа для Metronome4_4
 
 data.fruitSFX = {
-    [144] = {1, 'B-6', -1, 1, 6, 0},
-    [160] = {1, 'B-6', -1, 1, 6, 0},
-    [176] = {1, 'B-6', -1, 1, 6, 0},
-    [192] = {0, 'G#1', -1, 3, 12, 0},
+    [144] = {63, 'A-5', -1, 3, 5, 0},
+    [160] = {63, 'B-5', -1, 3, 5, 0},
+    [176] = {63, 'G-5', -1, 3, 5, 0},
+    [192] = {63, 'D-5', -1, 3, 5, 0},
 }
 
 data.Player = {
@@ -330,6 +330,76 @@ BulletHellHP = {small=25, medium=50, big=100}
 --IEnemyable
 data.EnemyConfig = {
     -- dict: [tileId : EnemyConfigLol]
+
+    [35] = {
+        name = 'MusicRose',
+        music = {
+            beatMap = {1,0,0,0, },
+            sfxMap = {
+            {1, 'A-2', 16, 1, 4, 0},
+            {1, 'C-3', 16, 1, 4, 0},
+            },
+        },
+        startingHealth = RoseHP.strong,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+        direction = 0,
+    },
+
+    [36] = {
+        name = 'MusicRose',
+        music = {
+            beatMap = {1,0,0,0, },
+            sfxMap = {
+            {1, 'A-2', 16, 1, 4, 0},
+            {1, 'A-2', 8, 1, 4, 0},
+            },
+        },
+        startingHealth = RoseHP.strong,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+        direction = 0,
+    },
+
+    [19] = {
+        name = 'MusicRose',
+        music = {
+            beatMap = {0,0,0,0, 0,0,0,0, 1,0,1,0, 1,0,1,0,},
+            sfxMap = {
+            {1, 'A-4', -1, 2, 4, 0},
+            {1, 'G-4', -1, 2, 4, 0},
+            {1, 'A-4', -1, 2, 4, 0},
+            {1, 'G-4', -1, 2, 4, 0},
+            },
+        },
+        startingHealth = RoseHP.strong,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+        direction = 0,
+    },
+
+    [20] = {
+        name = 'MusicRose',
+        music = {
+            beatMap = {1,0,1,0, 1,0,1,0,},
+            sfxMap = {
+            {1, 'A-4', 8, 2, 4, 0},
+            {1, 'A#4', 8, 2, 4, 0},
+            {1, 'A-4', 8, 2, 4, 0},
+            {1, 'A#4', 8, 2, 4, 0},
+
+            {1, 'C-5', 8, 2, 4, 0},
+            {1, 'A#4', 8, 2, 4, 0},
+            {1, 'A-4', 8, 2, 4, 0},
+            {1, 'A#4', 8, 2, 4, 0},
+            },
+        },
+        startingHealth = RoseHP.strong,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+        direction = 0,
+    },
+
     [32] = {
         name = 'MusicAutoBulletHell',
         circleDiameter = 5,

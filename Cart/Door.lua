@@ -41,6 +41,7 @@ function Door:statusUpdate(leverStatus)
 end
 
 local crutch = false;
+local Crutch = false;
 
 function Door:_colliding()
     if self.hitboxLeft:collide(game.player.hitbox) and self.hitboxRight:collide(game.player.hitbox) then
@@ -99,9 +100,9 @@ function Door:_closing()
     if not (self.status == 'closedFromStart') then
         if self.hitboxLeft:collide(self.hitboxRight) then
             if self.shakeTimer >= data.Door.shakeTimeTics then
-                game.camera:shakeStop()
+                game.camera:shakeByDoorStop()
             else
-                game.camera:shake(0.7)
+                game.camera:shakeByDoor(0.7)
                 self.shakeTimer = self.shakeTimer + 1
             end
         end
@@ -114,7 +115,7 @@ function Door:_opening() -- whers ending, i like it more!
     crutch = false
     self.speed = data.Door.speed
     self.shakeTimer = 1
-    game.camera:shakeStop()
+    game.camera:shakeByDoorStop()
 
     local boarderLeft = self.x + data.Door.closedGapInPixels
     local boarderRight = self.x + 2 * self.rectR.w - data.Door.closedGapInPixels
