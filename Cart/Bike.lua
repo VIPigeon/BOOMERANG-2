@@ -68,12 +68,48 @@ function Bike:onStatus()
     end
 end
 
+function Bike:beef_preparation()
+    game.player.sprite = Sprite:new(anim.gen60({0}), 1)
+    game.player.like_0xDEADBEEF = true
+end
+
+--TODO: CUT scene
+function Bike:scene()
+    self:beef_preparation()
+
+    local crutchy = make_smoke_ps(game.bike.x, game.bike.y)
+    
+    --😈😈😈😈😈😈😈😈😈 - a bit laggy
+    --for i = 1, 10000000 do
+    --    if (true) then
+    --        local lol = 1
+    --    end
+    --end
+    --😈😈😈😈😈😈😈😈😈
+    --game.player:die()
+end
+
+function Bike:endspiel()
+    update_psystems()
+    cls(0)
+    draw_psystems()
+end
+
 function Bike:update()
-    --trace('yay1')
-    if self.hitbox:collide(game.player.hitbox) then
+    --trace('yay1')\
+
+    if self.status == 'endgame' then
+        self:endspiel()
+        return
+    end
+
+    if self.status ~= 'endgame' and self.hitbox:collide(game.player.hitbox) then
         self.sprite = data.Bike.sprites.himAgain:copy()
         trace('Ugh, rolled around in the sandbox again, drunkard!😞')
-        game.player:die()
+        
+        self:scene()
+        self.status = 'endgame' --yose
+        return
     end
 
     

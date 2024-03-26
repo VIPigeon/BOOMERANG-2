@@ -329,6 +329,7 @@ function game.restart()
     game.mode = 'action' -- Зачем это? :|  -- это было для меню и создания паузы
     game.metronome = metronome
     game.player = player
+    game.bike = bike
     game.boomer = boomerang
     game.camera = camera
     game.enemies = enemies
