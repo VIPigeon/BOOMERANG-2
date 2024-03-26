@@ -66,7 +66,14 @@ function Enemy:update()
 end
 
 function Enemy:die()
+    -- Это самый древний trace в нашей кодовой базе! 🦖
     trace("I AM DEAD!!!")
+    if self.deathSound ~= nil then
+        local sound = self.deathSound
+        sfx(sound[1], sound[2], sound[3], sound[4], sound[5], sound[6])
+    else
+        trace('Возможно ошибка: У врага нету звука смерти')
+    end
     table.removeElement(game.updatables, self)
     table.removeElement(game.drawables, self)
     table.removeElement(game.collideables, self)
@@ -76,10 +83,8 @@ function Enemy:isDeadCheck()
     return self.hp == 0
 end
 
-local soundsQueue = Queue:new()
-
 function Enemy:takeDamage(damage)
-    table.insert(self.currentAnimations, 
+    table.insert(self.currentAnimations,
         AnimationOver:new(table.chooseRandomElement(data.Enemy.sprites.hurtEffect), 'randomOn', 'activeOnes')
     )
     -- это может оказаться неэффективно
@@ -98,13 +103,6 @@ function Enemy:takeDamage(damage)
         -- 3. Можно даже использовать вместо EnemyDeathSounds EnemyConfig!
         -- Тогда takeDamage будет универсальным для всех! Какая отличная
         -- идея! 😊
-
-        soundsQueue:enqueue(self.damageSound)
-        if game.metronome.beat16 then
-            if soundsQueue:count() > 0 then
-                local sound = soundsQueue:dequeue()
-                sfx(sound[1], sound[2], sound[3], sound[4], sound[5], sound[6])
-            end
-        end
+        game.soundsQueue:enqueue(self.damageSound)
     end
 end

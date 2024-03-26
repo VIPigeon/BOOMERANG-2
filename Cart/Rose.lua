@@ -59,11 +59,22 @@ function Rose:new(x, y, direction, sprites, laserColor, config)
         hitboxy2 = hitboxy1 + 8
     end
 
+    local damageSound
+    local deathSound
+    if config.isWeak then
+        damageSound = data.EnemyDamageSounds.WeakRose
+        deathSound = data.EnemyDeathSounds.WeakRose
+    else
+        damageSound = data.EnemyDamageSounds.Rose
+        deathSound = data.EnemyDeathSounds.Rose
+    end
+
     local obj = {
         sprite = sprites.idle,
         sprites = sprites,
         laserColor = laserColor,
-        damageSound = data.EnemyDeathSounds.BulletHell,
+        damageSound = damageSound,
+        deathSound = deathSound,
         x = x,
         y = y,
         flip = flip,
@@ -91,6 +102,7 @@ function Rose:new(x, y, direction, sprites, laserColor, config)
 
         isActive = false,
     }
+    trace(obj.damageSound)
 
     setmetatable(obj, self)
     self.__index = self

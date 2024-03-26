@@ -348,6 +348,9 @@ end
 
 game.deleteSchedule = {}
 
+-- Такого костыля мир ещё не видывал - 👴
+game.soundsQueue = Queue:new()
+
 function game.update()
     if game.ended then
         game.drawGameEndScreen()
@@ -364,6 +367,14 @@ function game.update()
         game.deleteSchedule = {}
     end
 
+    if game.metronome.onBeat then
+        if game.soundsQueue:count() > 0 then
+            -- Этот код у меня компилировался!!! Что? 😫
+            -- local sound game.soundsQueue:dequeue()
+            local sound = game.soundsQueue:dequeue()
+            sfx(sound[1], sound[2], sound[3], sound[4], sound[5], sound[6])
+        end
+    end
     game.updatePlayerArea()
 
     Time.update()

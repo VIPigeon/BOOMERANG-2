@@ -319,10 +319,16 @@ data.SettingLever.sprites = {
 }
 
 data.EnemyDeathSounds = {
-    WeakRose = {1, 'B-6', -1, 1, 6, 0},
+    WeakRose = { 1, 'A-2', 16, 1, 4, 0 },
     Rose = {1, 'B-6', -1, 1, 6, 0},
     BulletHell = {1, 'B-6', -1, 1, 6, 0},
     Snowman = {1, 'B-6', -1, 1, 6, 0},
+}
+data.EnemyDamageSounds = {
+    WeakRose = {1, 'A#4', 8, 2, 4, 0},
+    Rose = {1, 'B-6', -1, 1, 6, 0},
+    BulletHell = { 63, 'G-5', -1, 3, 5, 0  },
+    Snowman = { 63, 'G-5', -1, 3, 5, 0  },
 }
 
 RoseHP = {weak=15, strong=200}
@@ -344,6 +350,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 0,
+        isWeak = false,
     },
 
     [36] = {
@@ -359,6 +366,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 0,
+        isWeak = false,
     },
 
     [19] = {
@@ -376,6 +384,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 0,
+        isWeak = false,
     },
 
     [20] = {
@@ -398,6 +407,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 0,
+        isWeak = false,
     },
 
     [32] = {
@@ -602,6 +612,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 0,
+        isWeak = false,
     },
     [171] = {
         name = 'MusicRose',
@@ -610,6 +621,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 1,
+        isWeak = false,
     },
     [172] = {
         name = 'MusicRose',
@@ -618,6 +630,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 2,
+        isWeak = false,
     },
     [173] = {
         name = 'MusicRose',
@@ -625,6 +638,7 @@ data.EnemyConfig = {
         startingHealth = RoseHP.strong,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
+        isWeak = false,
         direction = 3,
     },
 
@@ -635,6 +649,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 0,
+        isWeak = false,
     },
     [183] = {
         name = 'MusicRose',
@@ -643,6 +658,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 1,
+        isWeak = false,
     },
     [184] = {
         name = 'MusicRose',
@@ -651,6 +667,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 2,
+        isWeak = false,
     },
     [185] = {
         name = 'MusicRose',
@@ -659,6 +676,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 3,
+        isWeak = false,
     },
 
     [186] = {
@@ -675,6 +693,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 0,
+        isWeak = false,
     },
     [187] = {
         name = 'MusicRose',
@@ -683,6 +702,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 1,
+        isWeak = false,
     },
     [188] = {
         name = 'MusicRose',
@@ -691,6 +711,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 2,
+        isWeak = false,
     },
     [189] = {
         name = 'MusicRose',
@@ -699,6 +720,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 3,
+        isWeak = false,
     },
     [198] = {
         name = 'MusicWeakRose',
@@ -707,6 +729,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 0,
+        isWeak = true,
     },
 }
 
