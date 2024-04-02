@@ -102,10 +102,14 @@ function Door:_closing()
     if not (self.status == 'closedFromStart') then
         if self.hitboxLeft:collide(self.hitboxRight) then
             if self.shakeTimer >= data.Door.shakeTimeTics then
-                game.camera:shakeByDoorStop()
+                if not self.Crutch then
+                    game.camera:shakeByDoorStop()
+                    self.Crutch = true;
+                end
             else
                 trace('shaking by door')
                 game.camera:shakeByDoor(0.7)
+                self.Crutch = false;
                 self.shakeTimer = self.shakeTimer + 1
             end
         end
