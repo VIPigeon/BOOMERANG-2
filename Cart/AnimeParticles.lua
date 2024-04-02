@@ -409,9 +409,9 @@ function make_explosparks_ps(ex,ey)
 		}
 	)
 end
-
-function make_explosion_ps(ex,ey)
-	local ps = make_psystem(100,500, 9,14,1,3)
+--100,500, 9,14,1,3
+function make_explosion_ps(ex,ey, min_time, max_time, min_start_size, max_start_size, min_end_size, max_end_size)
+	local ps = make_psystem(min_time, max_time, min_start_size, max_start_size, min_end_size, max_end_size)
 	
 	table.insert(ps.emittimers,
 		{
@@ -432,7 +432,7 @@ function make_explosion_ps(ex,ey)
 		}
 	)
 end
-
+--200, 2000, 1, 2, 2, 3
 function make_smoke_ps(ex,ey, min_time, max_time, min_start_size, max_start_size, min_end_size, max_end_size)
 	trace("smokeweeeeb")
 	local ps = make_psystem(min_time, max_time, min_start_size, max_start_size, min_end_size, max_end_size)

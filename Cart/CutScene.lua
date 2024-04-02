@@ -25,8 +25,10 @@ function CutScene:updateGMXGMSXGMYGMSY()
     self.bike_y = (game.bike.y) + 8 - gm.y*8 + gm.sy
 end
 --todo сделать дымок, заволакивающий глаза и весь экран в конце
+--сделать дым больше
 function CutScene:make_smokkkkk()
 	local crutchy = make_smoke_ps(self.bike_x, self.bike_y, 200, 2000, 1, 2, 2, 3)
+	local cringy = make_explosion_ps(self.bike_x, self.bike_y, 100,500, 9,14,1,3)
 end
 
 function CutScene:init()
