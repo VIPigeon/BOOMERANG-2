@@ -77,6 +77,8 @@ end
 function Bike:scene()
     self:beef_preparation()
 
+    trace("sceeeeeeeeeeeeeeee")
+
     local crutchy = make_smoke_ps(game.bike.x, game.bike.y)
     
     --😈😈😈😈😈😈😈😈😈 - a bit laggy
@@ -91,7 +93,7 @@ end
 
 function Bike:endspiel()
     update_psystems()
-    cls(0)
+    --cls(0)
     draw_psystems()
 end
 

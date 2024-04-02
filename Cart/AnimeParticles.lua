@@ -155,6 +155,7 @@ end
 -- This is just a convinience function, you probably want to draw the individual particles,
 -- if you want to control the draw order in relation to the other game objects for example
 function draw_psystems()
+	--trace("bib")
 	for key,ps in pairs(particle_systems) do
 		draw_ps(ps)
 	end
@@ -432,6 +433,7 @@ function make_explosion_ps(ex,ey)
 end
 
 function make_smoke_ps(ex,ey)
+	trace("smokeweeeeb")
 	local ps = make_psystem(200,2000, 1,3, 6,9)
 	
 	ps.autoremove = false
