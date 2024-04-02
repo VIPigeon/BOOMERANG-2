@@ -48,9 +48,13 @@ end
 function Door:_colliding()
     if self.hitboxLeft:collide(game.player.hitbox) and self.hitboxRight:collide(game.player.hitbox) then
         game.player:die()
-    elseif self.hitboxLeft:collide(game.player.hitbox) and math.inRangeNotIncl(game.player.y, self.hitboxLeft.y1, self.hitboxLeft.y2) then
+    elseif self.hitboxLeft:collide(game.player.hitbox) and
+           (math.inRangeNotIncl(game.player.y, self.hitboxLeft.y1, self.hitboxLeft.y2) or
+           (math.inRangeNotIncl(game.player.y + 8, self.hitboxLeft.y1, self.hitboxLeft.y2))) then
         game.player:move(self.speed, 0)
-    elseif self.hitboxRight:collide(game.player.hitbox) and math.inRangeNotIncl(game.player.y, self.hitboxRight.y1, self.hitboxRight.y2) then
+    elseif self.hitboxRight:collide(game.player.hitbox) and
+           (math.inRangeNotIncl(game.player.y, self.hitboxRight.y1, self.hitboxRight.y2) or
+           (math.inRangeNotIncl(game.player.y + 8, self.hitboxRight.y1, self.hitboxRight.y2))) then
         game.player:move(-self.speed, 0)
     end
 
