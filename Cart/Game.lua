@@ -371,6 +371,7 @@ function game.update()
     game.updatePlayerArea()
 
     Time.update()
+    GameTimers.update()
 
     game.draw()
 end
