@@ -10,6 +10,9 @@ function Bike:new(x, y)
         status = 'forgotten',
 
         area = MapAreas.findAreaWithTile(x // 8, y // 8),
+        cutscene = nil,
+        beforeCutsceneTime = 0,
+        beforeCutsceneMaxTime = 120,
     }
 
     setmetatable(obj, self)
@@ -32,6 +35,9 @@ function Bike:draw()
     --trace('yay')
     self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
     self:_drawAnimations()
+    if self.cutscene then
+        self.cutscene:draw()
+    end
 end
 
 function Bike:_focusAnimations()
@@ -68,18 +74,11 @@ function Bike:onStatus()
     end
 end
 
-function Bike:beef_preparation()
-    game.player.sprite = Sprite:new(anim.gen60({0}), 1)
-    game.player.like_0xDEADBEEF = true
-end
+
 
 --TODO: CUT scene
 function Bike:scene()
-    self:beef_preparation()
-
-    trace("sceeeeeeeeeeeeeeee")
-
-    local crutchy = make_smoke_ps(game.bike.x, game.bike.y)
+    
     
     --😈😈😈😈😈😈😈😈😈 - a bit laggy
     --for i = 1, 10000000 do
@@ -92,16 +91,20 @@ function Bike:scene()
 end
 
 function Bike:endspiel()
-    update_psystems()
-    --cls(0)
-    draw_psystems()
+    
 end
 
 function Bike:update()
     --trace('yay1')\
 
     if self.status == 'endgame' then
-        self:endspiel()
+        self.beforeCutsceneTime = self.beforeCutsceneTime + 1
+        if (self.beforeCutsceneTime > self.beforeCutsceneMaxTime and self.cutscene.TIMERCRUTCH) then --useless bigdata
+            self.cutscene:updateGMXGMSXGMYGMSY()
+            self.cutscene:make_smokkkkk()
+            self.cutscene.TIMERCRUTCH = false
+        end
+        self.cutscene:update()
         return
     end
 
@@ -109,12 +112,11 @@ function Bike:update()
         self.sprite = data.Bike.sprites.himAgain:copy()
         trace('Ugh, rolled around in the sandbox again, drunkard!😞')
         
-        self:scene()
+        self.cutscene = CutScene:new(game.player, game.bike)
+        self.cutscene:init()
         self.status = 'endgame' --yose
         return
     end
-
-    
 
     if self.area == game.playerArea then
         self.status = 'blossomed'

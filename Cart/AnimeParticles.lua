@@ -102,6 +102,7 @@ end
 -- most of the time, you don't have to deal with this, the above function is sufficient
 -- but you can call this if you want (for example fast forwarding a particle system before first draw)
 function update_ps(ps, timenow)
+	trace("updting~")
 	for key,et in pairs(ps.emittimers) do
 		local keep = et.timerfunc(ps, et.params)
 		if (keep==false) then
@@ -432,9 +433,9 @@ function make_explosion_ps(ex,ey)
 	)
 end
 
-function make_smoke_ps(ex,ey)
+function make_smoke_ps(ex,ey, min_time, max_time, min_start_size, max_start_size, min_end_size, max_end_size)
 	trace("smokeweeeeb")
-	local ps = make_psystem(200,2000, 1,3, 6,9)
+	local ps = make_psystem(min_time, max_time, min_start_size, max_start_size, min_end_size, max_end_size)
 	
 	ps.autoremove = false
 
@@ -447,7 +448,8 @@ function make_smoke_ps(ex,ey)
 	table.insert(ps.emitters, 
 		{
 			emitfunc = emitter_box,
-			params = { minx = ex-4, maxx = ex+4, miny = ey, maxy= ey+2, minstartvx = 0, maxstartvx = 0, minstartvy = 0, maxstartvy=0 }
+			--params = { minx = ex-4, maxx = ex+4, miny = ey, maxy= ey+2, minstartvx = 0, maxstartvx = 0, minstartvy = 0, maxstartvy=0 }
+			params = { minx = ex-2, maxx = ex+2, miny = ey, maxy= ey+2, minstartvx = 0, maxstartvx = 0, minstartvy = 0, maxstartvy=0 }
 		}
 	)
 	table.insert(ps.drawfuncs,
@@ -459,7 +461,7 @@ function make_smoke_ps(ex,ey)
 	table.insert(ps.affectors,
 		{ 
 			affectfunc = affect_force,
-			params = { fx = 0.003, fy = -0.009 }
+			params = { fx = -0.003, fy = -0.009 }
 		}
 	)
 	trace('ahahahahahahhhhhhhhhhahahhahahahahhaha')
