@@ -26,6 +26,7 @@ function Player:new(x, y, boomerang)
         boomerangActive = false,
         status = 'alive',
         deathDurationMs = data.Player.deathAnimationDurationMs,
+        like_0xDEADBEEF = false,
     }
 
     setmetatable(obj, self)
@@ -240,18 +241,20 @@ function Player:update()
     -- if keyp(31) then
     --     sfx(0, 'D-2', 60, 0, 10, 0)
     -- end
+    if not self.like_0xDEADBEEF then
 
-    self:_willMoveCheck() -- wanna move?~
+        self:_willMoveCheck() -- wanna move?~
 
-    self:_verticalFlipCalculator() -- will flip?
+        self:_verticalFlipCalculator() -- will flip?
 
-    self:_horizontalFlipCalculator() -- will flip??
+        self:_horizontalFlipCalculator() -- will flip??
 
-    self.sprite:nextFrame()
+        self.sprite:nextFrame()
 
-    self:_tryMove(self:_movementNormalizerGen()) -- MOVED‼
+        self:_tryMove(self:_movementNormalizerGen()) -- MOVED‼
 
-    self:boomerangHandle() -- Boomer go brrrrr
+        self:boomerangHandle() -- Boomer go brrrrr
+    end
 end
 
 return Player

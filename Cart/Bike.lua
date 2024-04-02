@@ -10,6 +10,9 @@ function Bike:new(x, y)
         status = 'forgotten',
 
         area = MapAreas.findAreaWithTile(x // 8, y // 8),
+        cutscene = nil,
+        beforeCutsceneTime = 0,
+        beforeCutsceneMaxTime = 120,
     }
 
     setmetatable(obj, self)
@@ -32,6 +35,9 @@ function Bike:draw()
     --trace('yay')
     self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
     self:_drawAnimations()
+    if self.cutscene then
+        self.cutscene:draw()
+    end
 end
 
 function Bike:_focusAnimations()
@@ -68,15 +74,49 @@ function Bike:onStatus()
     end
 end
 
+
+
+--TODO: CUT scene
+function Bike:scene()
+    
+    
+    --😈😈😈😈😈😈😈😈😈 - a bit laggy
+    --for i = 1, 10000000 do
+    --    if (true) then
+    --        local lol = 1
+    --    end
+    --end
+    --😈😈😈😈😈😈😈😈😈
+    --game.player:die()
+end
+
+function Bike:endspiel()
+    
+end
+
 function Bike:update()
-    --trace('yay1')
-    if self.hitbox:collide(game.player.hitbox) then
-        self.sprite = data.Bike.sprites.himAgain:copy()
-        trace('Ugh, rolled around in the sandbox again, drunkard!😞')
-        game.player:die()
+    --trace('yay1')\
+
+    if self.status == 'endgame' then
+        self.beforeCutsceneTime = self.beforeCutsceneTime + 1
+        if (self.beforeCutsceneTime > self.beforeCutsceneMaxTime and self.cutscene.TIMERCRUTCH) then --useless bigdata
+            self.cutscene:updateGMXGMSXGMYGMSY()
+            self.cutscene:make_smokkkkk()
+            self.cutscene.TIMERCRUTCH = false
+        end
+        self.cutscene:update()
+        return
     end
 
-    
+    if self.status ~= 'endgame' and self.hitbox:collide(game.player.hitbox) then
+        self.sprite = data.Bike.sprites.himAgain:copy()
+        trace('Ugh, rolled around in the sandbox again, drunkard!😞')
+        
+        self.cutscene = CutScene:new(game.player, game.bike)
+        self.cutscene:init()
+        self.status = 'endgame' --yose
+        return
+    end
 
     if self.area == game.playerArea then
         self.status = 'blossomed'

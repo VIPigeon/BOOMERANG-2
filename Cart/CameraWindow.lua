@@ -3,6 +3,7 @@ CameraWindow = {}
 function CameraWindow:new(deadZoneRect, target, targetWidth, targetHeight)
     local obj = {
         area = deadZoneRect,
+        deadbeef = nil,
         target = target,
         targetWidth = targetWidth,
         targetHeight = targetHeight,
