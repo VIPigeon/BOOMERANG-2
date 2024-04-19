@@ -742,8 +742,10 @@ data.EnemyConfig = {
         deathBulletSpeed = 0.1,
         color = 14,
         music = {
-            beatMap = {1, 0, 0, 0},
+            beatMap = {0,0, 1,0, 0,1, 1,0},
             sfxMap = {
+                {12, 'D-7', -1, 0, 5, 0},
+                {12, 'E-7', -1, 0, 5, 0},
                 {12, 'D-7', -1, 0, 5, 0},
             },
             intro = {
