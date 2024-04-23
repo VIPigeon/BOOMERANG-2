@@ -9,8 +9,8 @@ function CutScene:new(plr, bk)
         status = '0xDEADC0DE',
         TIMERCRUTCH = true,
         THENBIKEGOAWAY = false,
-        bike_speed = 0.1,
-        bike_acceleration = 1.06,
+        bike_speed = 0.01,
+        bike_acceleration = 0.001,
         bike_dx = 1,
         bike_dy = 0,
     }
@@ -38,7 +38,7 @@ function CutScene:make_smokkkkk()
 end
 
 function CutScene:go_away()
-    self.bike_speed = self.bike_speed * self.bike_acceleration
+    self.bike_speed = self.bike_speed + self.bike_acceleration
     local ddx = self.bike_speed * self.bike_dx
     local ddy = self.bike_speed * self.bike_dy
     self.bike:moveUnclamped(ddx, ddy)
