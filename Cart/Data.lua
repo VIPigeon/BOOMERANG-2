@@ -731,7 +731,7 @@ data.EnemyConfig = {
         direction = 0,
         isWeak = true,
     },
-    [27] = {
+    [43] = {
         name = 'MusicBulletHell',
         circleDiameter = 5,
         bulletSpreadRadius = 5,
@@ -808,6 +808,28 @@ data.EnemyConfig = {
         metronomeTicksSpentShooting = 1,
         direction = 0,
         isWeak = true,
+    },
+    [27] = {
+        name = 'MusicBulletHell',
+        circleDiameter = 5,
+        bulletSpreadRadius = 5,
+        -- bulletRotationSpeed = 0.001,
+        bulletRotationSpeed = 0.002,
+        bulletCount = 8,
+        bulletSpeed = 1.1,
+        deathBulletSpeed = 0.1,
+        color = 14,
+        music = {
+            beatMap = {1,0, 0,0, 1,0, 0,0},
+            sfxMap = {
+                {12, 'A-1', -1, 0, 7, 0},
+            },
+            intro = {
+                beatMap = {0, 0, 0, 0},
+                sfxMap = {},
+            }
+        },
+        hp = 16,
     },
 }
 
