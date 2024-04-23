@@ -10,6 +10,7 @@ function CutScene:new(plr, bk)
         TIMERCRUTCH = true,
         THENBIKEGOAWAY = false,
         bike_speed = 0.1,
+        bike_acceleration = 1.06,
         bike_dx = 1,
         bike_dy = 0,
     }
@@ -33,10 +34,11 @@ end
 --подключить таймер
 function CutScene:make_smokkkkk()
 	local crutchy = make_smoke_ps(self.x, self.y, 200, 2000, 1, 2, 2, 3)
-	local cringy = make_explosion_ps(self.x, self.y, 200,2000, 9,14,1,3) --100, 500
+	local cringy = make_explosion_ps(self.x, self.y, 200,500, 9,14,1,3) --100, 500
 end
 
 function CutScene:go_away()
+    self.bike_speed = self.bike_speed * self.bike_acceleration
     local ddx = self.bike_speed * self.bike_dx
     local ddy = self.bike_speed * self.bike_dy
     self.bike:moveUnclamped(ddx, ddy)
