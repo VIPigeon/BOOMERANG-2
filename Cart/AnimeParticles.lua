@@ -102,7 +102,7 @@ end
 -- most of the time, you don't have to deal with this, the above function is sufficient
 -- but you can call this if you want (for example fast forwarding a particle system before first draw)
 function update_ps(ps, timenow)
-	trace("updting~")
+	--trace("updting~")
 	for key,et in pairs(ps.emittimers) do
 		local keep = et.timerfunc(ps, et.params)
 		if (keep==false) then

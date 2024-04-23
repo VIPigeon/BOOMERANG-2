@@ -13,6 +13,8 @@ function Bike:new(x, y)
         cutscene = nil,
         beforeCutsceneTime = 0,
         beforeCutsceneMaxTime = 120,
+        beforeBikeGoBR = 480,
+        beforeBikeGoBRMaxTime = 640,
     }
 
     setmetatable(obj, self)
@@ -99,10 +101,15 @@ function Bike:update()
 
     if self.status == 'endgame' then
         self.beforeCutsceneTime = self.beforeCutsceneTime + 1
+        self.beforeBikeGoBR = self.beforeBikeGoBR + 1
         if (self.beforeCutsceneTime > self.beforeCutsceneMaxTime and self.cutscene.TIMERCRUTCH) then --useless bigdata
             self.cutscene:updateGMXGMSXGMYGMSY()
             self.cutscene:make_smokkkkk()
             self.cutscene.TIMERCRUTCH = false
+            self.cutscene.THENBIKEGOAWAY = true
+        end
+        if (self.beforeBikeGoBR > self.beforeBikeGoBRMaxTime and self.cutscene.THENBIKEGOAWAY) then
+            self.cutscene:go_away()
         end
         self.cutscene:update()
         return

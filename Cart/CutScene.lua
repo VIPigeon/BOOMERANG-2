@@ -4,10 +4,14 @@ function CutScene:new(plr, bk)
 	local obj = {
         player = plr,
         bike = bk,
-        bike_x = (game.bike.x) - gm.x*8 + gm.sx,
-        bike_y = (game.bike.y) + 8 - gm.y*8 + gm.sy,
+        x = (game.bike.x) - gm.x*8 + gm.sx,
+        y = (game.bike.y) + 8 - gm.y*8 + gm.sy,
         status = '0xDEADC0DE',
         TIMERCRUTCH = true,
+        THENBIKEGOAWAY = false,
+        bike_speed = 0.1,
+        bike_dx = 1,
+        bike_dy = 0,
     }
 
     setmetatable(obj, self)
@@ -21,15 +25,21 @@ function CutScene:beef_preparation()
 end
 
 function CutScene:updateGMXGMSXGMYGMSY()
-	self.bike_x = (game.bike.x) - gm.x*8 + gm.sx
-    self.bike_y = (game.bike.y) + 8 - gm.y*8 + gm.sy
+	self.x = (game.bike.x) - gm.x*8 + gm.sx
+    self.y = (game.bike.y) + 8 - gm.y*8 + gm.sy
 end
 --todo сделать дымок, заволакивающий глаза и весь экран в конце
 --сделать дым больше
 --подключить таймер
 function CutScene:make_smokkkkk()
-	local crutchy = make_smoke_ps(self.bike_x, self.bike_y, 200, 2000, 1, 2, 2, 3)
-	local cringy = make_explosion_ps(self.bike_x, self.bike_y, 100,500, 9,14,1,3)
+	local crutchy = make_smoke_ps(self.x, self.y, 200, 2000, 1, 2, 2, 3)
+	local cringy = make_explosion_ps(self.x, self.y, 200,2000, 9,14,1,3) --100, 500
+end
+
+function CutScene:go_away()
+    local ddx = self.bike_speed * self.bike_dx
+    local ddy = self.bike_speed * self.bike_dy
+    self.bike:moveUnclamped(ddx, ddy)
 end
 
 function CutScene:init()
