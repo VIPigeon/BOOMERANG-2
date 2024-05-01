@@ -70,10 +70,11 @@ data.Player = {
     deathAnimationParticleSpeed = 0.4,
 
     sfx = {
-        leverOn = {1, 'B-6', -1, 1, 6, 0},
-        leverOff = {0, 'G#1', -1, 3, 12, 0},
-        closeDoor = {1, 'B-6', -1, 1, 6, 0},
-        checkpoint = {1, 'B-6', -1, 1, 6, 0},
+        -- leverOn = {56, 'E-6', -1, 3, 1, -2},
+        leverOn = {57, 'E-6', -1, 3, 5, 0},
+        leverOff = {57, 'E-5', -1, 3, 5, 0},
+        closeDoor = {58, 'D-2', -1, 3, 8, 1},
+        checkpoint = {59, 'E-6', -1, 3, 2, -1},
     }
 }
 
@@ -318,17 +319,17 @@ data.SettingLever.sprites = {
     off = Sprite:new({5}, 1),
 }
 
-data.EnemyDeathSounds = {
-    WeakRose = { 62, 'A-1', 16, 1, 3, 0 },
-    Rose = {62, 'B-1', -1, 1, 3, 0},
-    BulletHell = {62, 'D-1', -1, 1, 3, 0},
-    Snowman = {62, 'E-1', -1, 1, 3, 0},
+data.EnemyDeathSounds = {  -- i cancel it :-<
+    WeakRose = {55, 'D-6', -1, 3, 0, 3},
+    Rose = {55, 'D-6', -1, 3, 0, 3},
+    BulletHell = {54, 'A-2', -1, 3, 0, 0},
+    Snowman = {62, 'E-1', -1, 3, 0, 0},
 }
 data.EnemyDamageSounds = {
-    WeakRose = {62, 'A-5', 8, 2, 3, 0},
-    Rose = {62, 'B-5', -1, 3, 3, 0},
-    BulletHell = { 62, 'D-4', -1, 3, 3, 0  },
-    Snowman = { 62, 'E-4', -1, 3, 3, 0  },
+    WeakRose = {62, 'A-4', 8, 3, 2, 0},
+    Rose = {62, 'B-4', -1, 3, 2, 0},
+    BulletHell = { 62, 'D-4', -1, 3, 2, 0  },
+    Snowman = { 62, 'E-4', -1, 3, 2, 0  },
 }
 
 RoseHP = {weak=15, strong=200}
@@ -686,7 +687,7 @@ data.EnemyConfig = {
             sfxMap = {{0, 'G#3', -1, 0, 12, 0}},
             intro = {
                 beatMap = {0, 0, 0, 0},
-                sfxMap = {0, 'G#1', -1, 3, 12, 0}
+                sfxMap = {0, 'G#1', -1, 1, 12, 0}
             }
         },
         startingHealth = RoseHP.strong,
@@ -780,10 +781,10 @@ data.EnemyConfig = {
         music = {
             beatMap = {0,0, 1,0, 0,1, 0,0},
             sfxMap = {
-                {1, 'C#5', -1, 3, 15, 0},
-                {1, 'C#5', -1, 3, 15, 0},
-                {1, 'B-4', -1, 3, 15, 0},
-                {1, 'B-4', -1, 3, 15, 0},
+                {1, 'C#5', -1, 2, 15, 0},
+                {1, 'C#5', -1, 2, 15, 0},
+                {1, 'B-4', -1, 2, 15, 0},
+                {1, 'B-4', -1, 2, 15, 0},
             },
         },
         startingHealth = RoseHP.weak,
