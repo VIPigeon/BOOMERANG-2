@@ -959,7 +959,9 @@ data.SnowmanBox.wokeupSprite = Sprite:new({487}, 2)
 data.Cutscene = {
     smoke_dx = -0.012,
     smoke_dy = -0.018,
-    smoke_frequency_ms = 3,
+    smoke_minlifetime = 300,
+    smoke_maxlifetime = 5000,
+    smoke_frequency = 3, -- More - less particles
 }
 
 return data

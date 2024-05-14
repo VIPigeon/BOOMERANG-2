@@ -59,8 +59,11 @@ function CutScene:go_away()
     local y = (game.bike.y) + 8 - gm.y*8 + gm.sy
 
     cccrutch = cccrutch + 1
-    if cccrutch == data.Cutscene.smoke_frequency_ms then
-        self.lol = make_smoke_ps(x, y, 300, 5000, 1, 7, 4, 6)
+    if cccrutch == data.Cutscene.smoke_frequency then
+        self.lol = make_smoke_ps(x, y,
+            data.Cutscene.smoke_minlifetime,
+            data.Cutscene.smoke_maxlifetime, 1, 7, 4, 6
+        )
         self.lol.autoremove = true
         cccrutch = 0
     end
@@ -73,8 +76,6 @@ end
 
 function CutScene:init()
 	self:beef_preparation()
-
-    trace("sceeeeeeeeeeeeeeee")
 end
 
 function CutScene:draw()

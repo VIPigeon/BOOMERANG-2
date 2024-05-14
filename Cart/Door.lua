@@ -111,7 +111,6 @@ function Door:_closing()
                     self.Crutch = true;
                 end
             else
-                trace('shaking by door')
                 game.camera:shakeByDoor(0.7)
                 self.Crutch = false;
                 self.shakeTimer = self.shakeTimer + 1

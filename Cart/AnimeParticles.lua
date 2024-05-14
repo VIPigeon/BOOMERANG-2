@@ -464,7 +464,7 @@ function make_smoke_ps(ex,ey, min_time, max_time, min_start_size, max_start_size
 	table.insert(ps.affectors,
 		{ 
 			affectfunc = affect_force,
-			params = { fx = -0.012, fy = -0.018}
+			params = { fx = data.Cutscene.smoke_dx, fy = data.Cutscene.smoke_dy }
 		}
 	)
 

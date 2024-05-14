@@ -8,7 +8,7 @@ Decorations.init()
 
 local function createCheckpoints()
     local checkpoints = {}
-
+    
     for x = 0, MAP_WIDTH do
         for y = 0, MAP_HEIGHT do
             if mget(x, y) == data.Checkpoint.flagTile then
@@ -17,32 +17,32 @@ local function createCheckpoints()
             end
         end
     end
-
+    
     return checkpoints
 end
 
 local function createCamera(player)
     local cameraRect = Rect:new(
-        player.x - 16,
-        player.y - 6,
-        CAMERA_WINDOW_WIDTH,
-        CAMERA_WINDOW_HEIGHT
+    player.x - 16,
+    player.y - 6,
+    CAMERA_WINDOW_WIDTH,
+    CAMERA_WINDOW_HEIGHT
     )
-
+    
     camera = CameraWindow:new(
-        cameraRect,
-        player,
-        8,
-        8
+    cameraRect,
+    player,
+    8,
+    8
     )
-
+    
     return camera
 end
 
 local function createSettingLevers()
     local slevers = {}
     local leverTiles = {}
-
+    
     for x = 0, 239 do
         for y = 0, 135 do
             local tileType = gm.getTileId(x, y)
@@ -52,27 +52,27 @@ local function createSettingLevers()
                 local lwr = SettingLever:new(x * 8, y * 8)
                 local doorWiresLever = DoorMechanic.findConnectionWithoutDoor(x, y) -- подыщем провода и коорды недвери
                 lwr.wires = doorWiresLever.wires
-
+                
                 table.insert(slevers, lwr)
             end
         end
     end
-
+    
     if table.length(slevers) ~= table.length(settings) then
         error('wheres no connection betw settings and togglers '..#slevers..' '..table.length(settings))
     end
-
+    
     for i, set in ipairs(settings) do
         slevers[i].setting = set
     end
-
+    
     return slevers
 end
 
 local function createLevers()
     local levers = {}
     local leverTiles = {}
-
+    
     for x = 0, 239 do
         for y = 0, 135 do
             local tileType = gm.getTileId(x, y)
@@ -80,35 +80,35 @@ local function createLevers()
                 mset(x, y, 0)
                 table.insert(leverTiles, {x=x, y=y})
                 local lwr = Lever:new(x * 8, y * 8)
-
+                
                 local doorWiresLever = DoorMechanic.findConnection(x, y) -- подыщем провода и коорды двери
-
+                
                 lwr.wires = doorWiresLever.wires
                 lwr.door = doorWiresLever.door  -- временные координаты, в создании дверей заменится на настоящую дверь
-
+                
                 table.insert(levers, lwr)
             end
         end
     end
-
+    
     return levers
 end
 
 local function createDoors(levers)
     local doors = {}
     local doorTiles = {}
-
+    
     for x = 0, 239 do
         for y = 0, 135 do
             local tileType = gm.getTileId(x, y)
             if table.contains(data.mapConstants.doorIds, tileType) then -- what is 204? 2004 maybe?
                 mset(x, y, 0)
-
+                
                 for _, lever in ipairs(levers) do -- подыскиваем рычаг для двери
                     if lever.door.x == x and lever.door.y == y then
                         local door = Door:new(x * 8, y * 8)
                         lever.door = door
-
+                        
                         table.insert(doorTiles, {x=x, y=y})
                         table.insert(doors, door)
                         break
@@ -117,7 +117,7 @@ local function createDoors(levers)
             end
         end
     end
-
+    
     return doors
 end
 
@@ -131,35 +131,35 @@ local function createEnemies()
                 if data.EnemyConfig[id] == nil then
                     goto continue
                 end
-
+                
                 mset(x, y, C0)
                 table.insert(game.enemyRespawn, {x=x, y=y, id=id})
-
+                
                 ::continue::
             end
         end
     end
-
+    
     for _, enemyInfo in ipairs(game.enemyRespawn) do
         local enemy, additionalInfo = enemyFactory.create(
-            enemyInfo.x, enemyInfo.y, enemyInfo.id
+        enemyInfo.x, enemyInfo.y, enemyInfo.id
         )
         if additionalInfo and additionalInfo.noCollisions then
             table.insert(game.drawables, enemy)
             table.insert(game.updatables, enemy)
             goto continue
         end
-
+        
         table.insert(enemies, enemy)
         ::continue::
     end
-
+    
     return enemies
 end
 
 function game.updateActiveEnemies()
     local plarea = game.playerArea
-
+    
     for _, enemy in ipairs(game.enemies) do
         if enemy.isActive ~= nil then
             -- TODO: OPTIMIZE PRIME
@@ -198,7 +198,7 @@ local function createPlayer(x, y, boomerang)
     local tilex = x // 8
     local tiley = y // 8
     game.playerArea = MapAreas.findAreaWithTile(tilex, tiley)
-
+    
     return Player:new(x, y, boomerang)
 end
 
@@ -208,7 +208,7 @@ local function createBike(my_bike_was_here)
     local bikex = my_bike_was_here.x
     local bikey = my_bike_was_here.y
     local numbikes = 0
-
+    
     for x = 0, 239 do
         for y = 0, 135 do
             local tileType = gm.getTileId(x, y)
@@ -226,7 +226,6 @@ local function createBike(my_bike_was_here)
         end
     end
     if numbikes > 1 then
-        trace('boiks~')
         return nil
     end
     YOUFORGOTYOURBIKEHERE = {x = bikex, y = bikey}
@@ -245,7 +244,7 @@ function game.save(checkpoint)
         game.checkpointStack:push(game.lastUsedCheckpoint)
         game.lastUsedCheckpoint = nil
     end
-
+    
     game.checkpointStack:push(checkpoint)
 end
 
@@ -254,16 +253,16 @@ function game.load()
         game.lastUsedCheckpoint:disable()
         game.lastUsedCheckpoint = nil
     end
-
+    
     if game.checkpointStack:count() == 0 then
         return game.startingCheckpoint
     end
-
+    
     local checkpoint = game.checkpointStack:pop()
     checkpoint:use()
-
+    
     game.lastUsedCheckpoint = checkpoint
-
+    
     return checkpoint
 end
 
@@ -286,11 +285,11 @@ function game.restart()
     -- \/ аналогично спавнпоинту, а если вы захотите мне что-то сказать: @^_^@ - в наушниках
     local terminationpoint = {x = PLAYER_END_X, y = PLAYER_END_Y}
     -- если вас волнует неиспользуемая переменная, то идите и жалуйтесь своему ( ﹁ ﹁ ) ~→ Михалковичу 
-
+    
     game.drawables = {}
     game.updatables = {}
     game.collideables = {}
-
+    
     local metronome = createMetronome()
     local enemies = createEnemies()
     local boomerang = createBoomerang(spawnpoint.x, spawnpoint.y)
@@ -298,7 +297,7 @@ function game.restart()
     local bike = createBike(YOUFORGOTYOURBIKEHERE)
     local camera = createCamera(player)
     local fruitPopup = FruitPopup
-
+    
     table.insert(game.updatables, metronome)
     table.concatTable(game.updatables, checkpoints)
     table.insert(game.updatables, player)
@@ -311,7 +310,7 @@ function game.restart()
     table.concatTable(game.updatables, settingLevers)
     table.concatTable(game.updatables, game.fruits)
     table.insert(game.updatables, Decorations)
-
+    
     table.concatTable(game.drawables, checkpoints)
     table.concatTable(game.drawables, levers)
     table.concatTable(game.drawables, settingLevers)
@@ -322,10 +321,10 @@ function game.restart()
     table.insert(game.drawables, boomerang)
     table.concatTable(game.drawables, game.doors)
     table.insert(game.drawables, fruitPopup)
-
+    
     table.concatTable(game.collideables, enemies)
     table.concatTable(game.collideables, game.doors)
-
+    
     game.mode = 'action' -- Зачем это? :|  -- это было для меню и создания паузы
     game.metronome = metronome
     game.player = player
@@ -333,7 +332,7 @@ function game.restart()
     game.boomer = boomerang
     game.camera = camera
     game.enemies = enemies
-
+    
     game.updateActiveEnemies()
 end
 
@@ -341,7 +340,7 @@ game.restart()
 
 function game.draw()
     map(gm.x, gm.y , 30, 17, gm.sx, gm.sy, C0)
-
+    
     for _, drawable in ipairs(game.drawables) do
         drawable:draw()
     end
@@ -358,22 +357,22 @@ function game.update()
         game.drawGameEndScreen()
         return
     end
-
+    
     for _, updatable in ipairs(game.updatables) do
         updatable:update()
     end
-
+    
     if #game.deleteSchedule > 0 then
         table.removeElements(game.updatables, game.deleteSchedule)
         table.removeElements(game.drawables, game.deleteSchedule)
         game.deleteSchedule = {}
     end
-
+    
     game.updatePlayerArea()
-
+    
     Time.update()
     GameTimers.update()
-
+    
     game.draw()
 end
 
@@ -388,11 +387,11 @@ function game.drawGameEndScreen()
     local backgroundColor = 8
     local textColor = 6
     local textX = 10
-
+    
     local scrollAmount = 10
     local minScroll = 20 - 4 * scrollAmount
     local maxScroll = 130
-
+    
     if key(KEY_W) and textYs[3] + scrollAmount <= maxScroll then
         for i = 1, 3 do
             textYs[i] = textYs[i] + scrollAmount
@@ -403,29 +402,29 @@ function game.drawGameEndScreen()
             textYs[i] = textYs[i] - scrollAmount
         end
     end
-
-
+    
+    
     rect(0, 0, MAP_WIDTH, MAP_HEIGHT, backgroundColor)
     print(
-        'Fruits collected:\n\n       ' .. fruitsCollection.collected .. ' / ' .. fruitsCollection.needed,
-        textX, textYs[1],
-        textColor,
-        false,
-        2
+    'Fruits collected:\n\n       ' .. fruitsCollection.collected .. ' / ' .. fruitsCollection.needed,
+    textX, textYs[1],
+    textColor,
+    false,
+    2
     )
     print(
-        'Your time: ' .. game.completionTimeSeconds .. 's',
-        textX, textYs[2],
-        textColor,
-        false,
-        2
+    'Your time: ' .. game.completionTimeSeconds .. 's',
+    textX, textYs[2],
+    textColor,
+    false,
+    2
     )
     print(
-        'Dev time: ' .. 100 .. 's',
-        textX, textYs[3],
-        textColor,
-        false,
-        2
+    'Dev time: ' .. 100 .. 's',
+    textX, textYs[3],
+    textColor,
+    false,
+    2
     )
 end
 
