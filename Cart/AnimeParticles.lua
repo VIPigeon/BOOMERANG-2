@@ -408,6 +408,8 @@ function make_explosparks_ps(ex,ey)
 			params = { fx = 0, fy = 0.1 }
 		}
 	)
+
+    return ps
 end
 --100,500, 9,14,1,3
 function make_explosion_ps(ex,ey, min_time, max_time, min_start_size, max_start_size, min_end_size, max_end_size)
@@ -431,10 +433,11 @@ function make_explosion_ps(ex,ey, min_time, max_time, min_start_size, max_start_
 			params = { colors = {15,0,14,9,9,4} }
 		}
 	)
+
+    return ps
 end
 --200, 2000, 1, 2, 2, 3
 function make_smoke_ps(ex,ey, min_time, max_time, min_start_size, max_start_size, min_end_size, max_end_size)
-	trace("smokeweeeeb")
 	local ps = make_psystem(min_time, max_time, min_start_size, max_start_size, min_end_size, max_end_size)
 	
 	ps.autoremove = false
@@ -461,10 +464,11 @@ function make_smoke_ps(ex,ey, min_time, max_time, min_start_size, max_start_size
 	table.insert(ps.affectors,
 		{ 
 			affectfunc = affect_force,
-			params = { fx = -0.003, fy = -0.009 }
+			params = { fx = -0.012, fy = -0.018}
 		}
 	)
-	trace('ahahahahahahhhhhhhhhhahahhahahahahhaha')
+
+    return ps
 end
 
 function make_explosmoke_ps(ex,ey)
@@ -494,5 +498,7 @@ function make_explosmoke_ps(ex,ey)
 			params = { fx = 0.003, fy = -0.01 }
 		}
 	)
+
+    return ps
 end
 

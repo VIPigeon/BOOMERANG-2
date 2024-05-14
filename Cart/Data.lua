@@ -826,4 +826,10 @@ data.SnowmanBox.wakeUpDistanceToPlayer = 48
 data.SnowmanBox.sleepSprite = Sprite:new({485}, 2)
 data.SnowmanBox.wokeupSprite = Sprite:new({487}, 2)
 
+data.Cutscene = {
+    smoke_dx = -0.012,
+    smoke_dy = -0.018,
+    smoke_frequency_ms = 3,
+}
+
 return data
