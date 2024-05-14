@@ -6,6 +6,10 @@ function Door:new(x, y) --калитка только из двух частей
     local object1 = {
         x = x,
         y = y,
+
+        crutch = false,
+        Crutch = false, -- Брат близнец 👼💘
+
         rectL = rectangleLeft,
         rectR = rectangleRight,
         speed = data.Door.speed,
@@ -34,21 +38,23 @@ function Door:statusUpdate(leverStatus)
     if leverStatus == 'off' then
         self.status = 'close'
         self:_spawnBlockingTiles()
+        game.camera:shakeByDoorStop()
     elseif leverStatus == 'on' then
         self.status = 'open'
         self:_despawnBlockingTiles()
     end
 end
 
-local crutch = false;
-local Crutch = false;
-
 function Door:_colliding()
     if self.hitboxLeft:collide(game.player.hitbox) and self.hitboxRight:collide(game.player.hitbox) then
         game.player:die()
-    elseif self.hitboxLeft:collide(game.player.hitbox) and math.inRangeNotIncl(game.player.y, self.hitboxLeft.y1, self.hitboxLeft.y2) then
+    elseif self.hitboxLeft:collide(game.player.hitbox) and
+           (math.inRangeNotIncl(game.player.y, self.hitboxLeft.y1, self.hitboxLeft.y2) or
+           (math.inRangeNotIncl(game.player.y + 8, self.hitboxLeft.y1, self.hitboxLeft.y2))) then
         game.player:move(self.speed, 0)
-    elseif self.hitboxRight:collide(game.player.hitbox) and math.inRangeNotIncl(game.player.y, self.hitboxRight.y1, self.hitboxRight.y2) then
+    elseif self.hitboxRight:collide(game.player.hitbox) and
+           (math.inRangeNotIncl(game.player.y, self.hitboxRight.y1, self.hitboxRight.y2) or
+           (math.inRangeNotIncl(game.player.y + 8, self.hitboxRight.y1, self.hitboxRight.y2))) then
         game.player:move(-self.speed, 0)
     end
 
@@ -56,10 +62,10 @@ function Door:_colliding()
     local boarderRight = self.rectR.x
     if boarderRight - boarderLeft < 0.01 then
         -- 🔊🤯
-        if not crutch then
+        if not self.crutch then
             local sound = data.Player.sfx.closeDoor
             sfx(sound[1], sound[2], sound[3], sound[4], sound[5], sound[6])
-            crutch = true
+            self.crutch = true
         end
         return
     end
@@ -100,9 +106,14 @@ function Door:_closing()
     if not (self.status == 'closedFromStart') then
         if self.hitboxLeft:collide(self.hitboxRight) then
             if self.shakeTimer >= data.Door.shakeTimeTics then
-                game.camera:shakeByDoorStop()
+                if not self.Crutch then
+                    game.camera:shakeByDoorStop()
+                    self.Crutch = true;
+                end
             else
+                trace('shaking by door')
                 game.camera:shakeByDoor(0.7)
+                self.Crutch = false;
                 self.shakeTimer = self.shakeTimer + 1
             end
         end
@@ -112,10 +123,9 @@ function Door:_closing()
 end
 
 function Door:_opening() -- whers ending, i like it more!
-    crutch = false
-    self.speed = data.Door.speed
+    self.crutch = false
     self.shakeTimer = 1
-    game.camera:shakeByDoorStop()
+    self.speed = data.Door.speed
 
     local boarderLeft = self.x + data.Door.closedGapInPixels
     local boarderRight = self.x + 2 * self.rectR.w - data.Door.closedGapInPixels

@@ -53,10 +53,10 @@ MAP_HEIGHT = 135
 M44 = 24  -- константа для Metronome4_4
 
 data.fruitSFX = {
-    [144] = {63, 'A-5', -1, 3, 5, 0},
-    [160] = {63, 'B-5', -1, 3, 5, 0},
-    [176] = {63, 'G-5', -1, 3, 5, 0},
-    [192] = {63, 'D-5', -1, 3, 5, 0},
+    [144] = {63, 'B-5', -1, 3, 5, 0},
+    [160] = {63, 'D-6', -1, 3, 5, 0},
+    [176] = {63, 'E-6', -1, 3, 5, 0},
+    [192] = {63, 'F-6', -1, 3, 5, 0},
 }
 
 data.Player = {
@@ -70,10 +70,11 @@ data.Player = {
     deathAnimationParticleSpeed = 0.4,
 
     sfx = {
-        leverOn = {1, 'B-6', -1, 1, 6, 0},
-        leverOff = {0, 'G#1', -1, 3, 12, 0},
-        closeDoor = {1, 'B-6', -1, 1, 6, 0},
-        checkpoint = {1, 'B-6', -1, 1, 6, 0},
+        -- leverOn = {56, 'E-6', -1, 3, 1, -2},
+        leverOn = {57, 'E-6', -1, 3, 5, 0},
+        leverOff = {57, 'E-5', -1, 3, 5, 0},
+        closeDoor = {58, 'D-2', -1, 3, 8, 1},
+        checkpoint = {59, 'E-6', -1, 3, 2, -1},
     }
 }
 
@@ -318,6 +319,18 @@ data.SettingLever.sprites = {
     off = Sprite:new({5}, 1),
 }
 
+data.EnemyDeathSounds = {  -- i cancel it :-<
+    WeakRose = {55, 'D-6', -1, 3, 0, 3},
+    Rose = {55, 'D-6', -1, 3, 0, 3},
+    BulletHell = {54, 'A-2', -1, 3, 0, 0},
+    Snowman = {62, 'E-1', -1, 3, 0, 0},
+}
+data.EnemyDamageSounds = {
+    WeakRose = {62, 'A-4', 8, 3, 2, 0},
+    Rose = {62, 'B-4', -1, 3, 2, 0},
+    BulletHell = { 62, 'D-4', -1, 3, 2, 0  },
+    Snowman = { 62, 'E-4', -1, 3, 2, 0  },
+}
 
 RoseHP = {weak=15, strong=200}
 BulletHellHP = {small=25, medium=50, big=100}
@@ -338,6 +351,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 0,
+        isWeak = false,
     },
 
     [36] = {
@@ -353,6 +367,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 0,
+        isWeak = false,
     },
 
     [19] = {
@@ -370,6 +385,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 0,
+        isWeak = false,
     },
 
     [20] = {
@@ -392,6 +408,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 0,
+        isWeak = false,
     },
 
     [32] = {
@@ -596,6 +613,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 0,
+        isWeak = false,
     },
     [171] = {
         name = 'MusicRose',
@@ -604,6 +622,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 1,
+        isWeak = false,
     },
     [172] = {
         name = 'MusicRose',
@@ -612,6 +631,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 2,
+        isWeak = false,
     },
     [173] = {
         name = 'MusicRose',
@@ -619,6 +639,7 @@ data.EnemyConfig = {
         startingHealth = RoseHP.strong,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
+        isWeak = false,
         direction = 3,
     },
 
@@ -629,6 +650,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 0,
+        isWeak = false,
     },
     [183] = {
         name = 'MusicRose',
@@ -637,6 +659,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 1,
+        isWeak = false,
     },
     [184] = {
         name = 'MusicRose',
@@ -645,6 +668,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 2,
+        isWeak = false,
     },
     [185] = {
         name = 'MusicRose',
@@ -653,6 +677,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 3,
+        isWeak = false,
     },
 
     [186] = {
@@ -662,13 +687,14 @@ data.EnemyConfig = {
             sfxMap = {{0, 'G#3', -1, 0, 12, 0}},
             intro = {
                 beatMap = {0, 0, 0, 0},
-                sfxMap = {0, 'G#1', -1, 3, 12, 0}
+                sfxMap = {0, 'G#1', -1, 1, 12, 0}
             }
         },
         startingHealth = RoseHP.strong,
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 0,
+        isWeak = false,
     },
     [187] = {
         name = 'MusicRose',
@@ -677,6 +703,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 1,
+        isWeak = false,
     },
     [188] = {
         name = 'MusicRose',
@@ -685,6 +712,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 2,
+        isWeak = false,
     },
     [189] = {
         name = 'MusicRose',
@@ -693,6 +721,7 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 3,
+        isWeak = false,
     },
     [198] = {
         name = 'MusicWeakRose',
@@ -701,6 +730,107 @@ data.EnemyConfig = {
         metronomeTicksReloading = 1,
         metronomeTicksSpentShooting = 1,
         direction = 0,
+        isWeak = true,
+    },
+    [43] = {
+        name = 'MusicBulletHell',
+        circleDiameter = 5,
+        bulletSpreadRadius = 5,
+        -- bulletRotationSpeed = 0.001,
+        bulletRotationSpeed = 0.002,
+        bulletCount = 8,
+        bulletSpeed = 1.1,
+        deathBulletSpeed = 0.1,
+        color = 14,
+        music = {
+            beatMap = {0,0, 1,0, 0,1, 1,0},
+            sfxMap = {
+                {12, 'D-7', -1, 0, 5, 0},
+                {12, 'E-7', -1, 0, 5, 0},
+                {12, 'D-7', -1, 0, 5, 0},
+            },
+            intro = {
+                beatMap = {0, 0, 0, 0},
+                sfxMap = {
+                    {2, 'C#3', -1, 1, 4, 0},
+                    {1, 'B-6', -1, 1, 6, 0},
+                },
+            }
+        },
+        hp = 16,
+    },
+    [12] = {
+        name = 'MusicWeakRose',
+        music = {
+            beatMap = {1,0, 0,0, 1,0, 0,0},
+            sfxMap = {
+                {2, 'D-4', -1, 1, 4, 0},
+                {2, 'D-4', -1, 1, 4, 0},
+                {2, 'B-3', -1, 1, 4, 0},
+                {2, 'B-3', -1, 1, 4, 0},
+            },
+        },
+        startingHealth = RoseHP.weak,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+        direction = 0,
+        isWeak = true,
+    },
+    [28] = {
+        name = 'MusicWeakRose',
+        music = {
+            beatMap = {0,0, 1,0, 0,1, 0,0},
+            sfxMap = {
+                {1, 'C#5', -1, 2, 15, 0},
+                {1, 'C#5', -1, 2, 15, 0},
+                {1, 'B-4', -1, 2, 15, 0},
+                {1, 'B-4', -1, 2, 15, 0},
+            },
+        },
+        startingHealth = RoseHP.weak,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+        direction = 0,
+        isWeak = true,
+    },
+    [44] = {
+        name = 'MusicWeakRose',
+        music = {
+            beatMap = {0,0, 1,0, 0,1, 0,0},
+            sfxMap = {
+                {1, 'A-4', -1, 1, 15, 0},
+                {1, 'A-4', -1, 1, 15, 0},
+                {1, 'F#4', -1, 1, 15, 0},
+                {1, 'F#4', -1, 1, 15, 0},
+            },
+        },
+        startingHealth = RoseHP.weak,
+        metronomeTicksReloading = 1,
+        metronomeTicksSpentShooting = 1,
+        direction = 0,
+        isWeak = true,
+    },
+    [27] = {
+        name = 'MusicBulletHell',
+        circleDiameter = 5,
+        bulletSpreadRadius = 5,
+        -- bulletRotationSpeed = 0.001,
+        bulletRotationSpeed = 0.002,
+        bulletCount = 8,
+        bulletSpeed = 1.1,
+        deathBulletSpeed = 0.1,
+        color = 14,
+        music = {
+            beatMap = {1,0, 0,0, 1,0, 0,0},
+            sfxMap = {
+                {12, 'A-1', -1, 0, 7, 0},
+            },
+            intro = {
+                beatMap = {0, 0, 0, 0},
+                sfxMap = {},
+            }
+        },
+        hp = 16,
     },
 }
 

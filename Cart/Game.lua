@@ -349,6 +349,10 @@ end
 
 game.deleteSchedule = {}
 
+-- Такого костыля мир ещё не видывал - 👴
+-- И его, слава богу, пока что не будет
+-- game.soundsQueue = Queue:new()
+
 function game.update()
     if game.ended then
         game.drawGameEndScreen()
@@ -368,6 +372,7 @@ function game.update()
     game.updatePlayerArea()
 
     Time.update()
+    GameTimers.update()
 
     game.draw()
 end
