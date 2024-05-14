@@ -14,6 +14,7 @@ require("Sprite")
 require("Drums")
 require("BassLine")
 require("Data")
+require("SuperConfig")
 
 require("Palette")
 require("Rect")
