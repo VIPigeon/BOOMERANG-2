@@ -62,7 +62,7 @@ data.fruitSFX = {
 data.Player = {
     movementNormalizerStraight = 1,
     movementNormalizerDiagonal = 1 / math.sqrt(2),
-    speed = 0.9,
+    speed = 1,
     deathParticleSprite = Sprite:new({377}, 1),
     deathAnimationDurationMs = 1000,
     deathParticleCountMin = 10,
@@ -553,12 +553,12 @@ data.EnemyConfig = {
         },
 
         music = {
-            beatMap = {0, 0, 0, 1, 1, 1},
-            sfxMap = bassLine.rose.D2.sfxMap,
-            intro = {
-                beatMap = {0, 0, 0, 0},
-                sfxMap = bassLine.rose.D2.sfxMap,
-            }
+            beatMap = {1, 1, 0, 0},
+            sfxMap = {
+                {32, 'B-4', -1, 2, 6, 0},
+                {32, 'B-4', -1, 2, 6, 0},
+                {33, 'B-4', -1, 2, 6, -1},
+            },
         },
 
         sprites = {
