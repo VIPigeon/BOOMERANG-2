@@ -16,6 +16,8 @@ function Metronome4_4:new(bpm)
         beat8Count = 0,
         beat16 = false,
         beat16Count = 0,
+        beat32 = false,
+        beat32Count = 0,
         beat6 = 0, -- ТРИОЛИ
         beat6Count = 0,
     }
@@ -41,6 +43,10 @@ function Metronome4_4:_onBeat()
         self.beat16 = true
         -- self.beat8Count = (self.beat8Count + 1) % 8
     end
+    if self.beatCount % (M44 // 8) == 0 then
+        self.beat32 = true
+        -- self.beat8Count = (self.beat8Count + 1) % 8
+    end
     if self.beatCount % ((M44 * 2) // 3) == 0 then
         self.beat6 = true
         -- self.beat6Count = (self.beat6Count + 1) % 6
@@ -52,6 +58,7 @@ function Metronome4_4:_beatsOff()
     self.beat4 = false
     self.beat8 = false
     self.beat16 = false
+    self.beat32 = false
     self.beat6 = false
 end
 
