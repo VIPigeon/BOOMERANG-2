@@ -27,10 +27,10 @@ KEY_B = 02 -- Что это?? Это круто. 🙂 ЁЯЩа<😎>
 MAP_WIDTH = 239
 MAP_HEIGHT = 135
 
--- PLAYER_START_Y = 76 * 8 -- 128 * 8 -- 😋😋
--- PLAYER_START_X = 105 * 8 -- 42 * 8  -- 😲😲
-PLAYER_START_Y = 8* 126
-PLAYER_START_X = 8* 80     
+PLAYER_START_Y = 76 * 8 -- 128 * 8 -- 😋😋
+PLAYER_START_X = 105 * 8 -- 42 * 8  -- 😲😲
+-- PLAYER_START_Y = 8* 117
+-- PLAYER_START_X = 8* 138     
 
 -- PLAYER_END_Y = 89 * 8 -- BYKE 😎😎
 -- PLAYER_END_X = 118 * 8 -- G🤠T🤠 BYKE
