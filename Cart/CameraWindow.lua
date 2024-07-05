@@ -69,7 +69,6 @@ end
 function CameraWindow:shakeByDoor(magnitude)
     if not self.statuses['doork'] then
         self.statuses['doork'] = true
-        trace('uwuwuwuwuwuwuuwu')
     end
     self.shakeMagnitude['doork'] = magnitude
 end
