@@ -29,8 +29,8 @@ MAP_HEIGHT = 135
 
 PLAYER_START_Y = 76 * 8 -- 128 * 8 -- 😋😋
 PLAYER_START_X = 105 * 8 -- 42 * 8  -- 😲😲
-PLAYER_START_Y = 8* 7
-PLAYER_START_X = 8* 112     
+-- PLAYER_START_Y = 8* 60
+-- PLAYER_START_X = 8* 78     
 
 -- PLAYER_END_Y = 89 * 8 -- BYKE 😎😎
 -- PLAYER_END_X = 118 * 8 -- G🤠T🤠 BYKE
