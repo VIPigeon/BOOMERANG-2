@@ -29,8 +29,8 @@ MAP_HEIGHT = 135
 
 PLAYER_START_Y = 76 * 8 -- 128 * 8 -- 😋😋
 PLAYER_START_X = 105 * 8 -- 42 * 8  -- 😲😲
--- PLAYER_START_Y = 8* 117
--- PLAYER_START_X = 8* 138     
+-- PLAYER_START_Y = 8* 24
+-- PLAYER_START_X = 8* 75     
 
 -- PLAYER_END_Y = 89 * 8 -- BYKE 😎😎
 -- PLAYER_END_X = 118 * 8 -- G🤠T🤠 BYKE
@@ -77,7 +77,7 @@ data.Player = {
         leverOn = {57, 'E-6', -1, 3, 5, 0},
         leverOff = {57, 'E-5', -1, 3, 5, 0},
         closeDoor = {58, 'D-2', -1, 3, 8, 1},
-        checkpoint = {59, 'E-5', -1, 3, 3, -1},
+        checkpoint = {59, 'E-5', -1, 3, 2, -1},
     }
 }
 
@@ -326,7 +326,7 @@ data.EnemyDeathSounds = {  -- i cancel it :-<
     WeakRose = {1, 'A-5', -1, 3, 0, 3},
     Rose = {1, 'B-5', -1, 3, 0, 3},
     BulletHell = {1, 'D-5', -1, 3, 0, 0},
-    Snowman = {1, 'E-5', -1, 3, 0, 0},
+    Snowman = {1, 'E-5', -1, 1, 0, 0},
 }
 data.EnemyDamageSounds = {
     WeakRose = {62, 'A-4', 8, 3, 8, 0},

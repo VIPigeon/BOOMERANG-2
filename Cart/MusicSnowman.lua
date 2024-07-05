@@ -22,6 +22,11 @@ function MusicSnowman:tuning(music)
     self.beatMap = beatMap
     self.beatMapIndex = 1
     self.pastAngle = 0
+
+    if music.altBeatMap then
+        self.altBeatMap = music.altBeatMap
+        -- trace("!!!!!!!!!   "..#self.altBeatMap)
+    end
 end
 
 function MusicSnowman:update()
@@ -31,6 +36,13 @@ function MusicSnowman:update()
 
         if not self.reserveMusic then
             self.beatMapIndex = (self.beatMapIndex % #self.beatMap) + 1
+            if self.altBeatMap and self.beatMapIndex == 1 then
+                local buf = table.copy(self.beatMap)
+                self.beatMap = table.copy(self.altBeatMap)
+                self.altBeatMap = buf
+                -- trace(self.altBeatMap[1].." "..self.altBeatMap[2].." "..self.altBeatMap[3].." "..self.altBeatMap[4])
+                -- trace(self.beatMap[1].." "..self.beatMap[2].." "..self.beatMap[3].." "..self.beatMap[4])
+            end
         else
             self.beatMapIndex = self.beatMapIndex + 1
             if self.beatMapIndex > #self.beatMap then

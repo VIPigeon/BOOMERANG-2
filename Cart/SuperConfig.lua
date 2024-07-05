@@ -17,6 +17,15 @@ strongrose = {
     direction = 0,
     isWeak = false,
 }
+
+verystrongrose = {
+    name = 'MusicRose',
+    startingHealth = RoseHP.strong*3,
+    metronomeTicksReloading = 1,
+    metronomeTicksSpentShooting = 1,
+    direction = 0,
+    isWeak = false,
+}
 weakrose = {
     name = 'MusicWeakRose',
     startingHealth = RoseHP.weak,
@@ -69,8 +78,8 @@ autobullethellprefab = {
         bulletSpreadRadius = 5,
         bulletRotationSpeed = 0.002,
         bulletCount = 8,
-        bulletSpeed = 1,
-        deathBulletSpeed = 0.03,
+        bulletSpeed = 2,
+        deathBulletSpeed = 0.1,
         color = 13,
         hp = BulletHellHP.small,
     },
@@ -80,7 +89,7 @@ autobullethellprefab = {
         bulletSpreadRadius = 8,
         bulletRotationSpeed = 0.0009,
         bulletCount = 12,
-        bulletSpeed = 3,
+        bulletSpeed = 4,
         deathBulletSpeed = 0.03,
         color = 13,
         hp = BulletHellHP.medium,
@@ -91,7 +100,7 @@ autobullethellprefab = {
         bulletSpreadRadius = 11,
         bulletRotationSpeed = 1,
         bulletCount = 16,
-        bulletSpeed = 4.1,
+        bulletSpeed = 5,
         deathBulletSpeed = 0.03,
         color = 13,
         hp = BulletHellHP.big,
@@ -139,9 +148,9 @@ data.EnemyConfig = {
     [65] = {
         name = 'Snowman',
         color = 12,
-        speed = 12, -- data.Player.speed - 0.41,
+        speed = 15, -- data.Player.speed - 0.41,
         speedWithWhirl = 0.8, --data.Player.speed - 0.61,
-        hp = 100,
+        hp = 200,
         prepareJumpTime = 20,
         --jumpTime = 20,
         resetJumpTime = 24,
@@ -166,18 +175,67 @@ data.EnemyConfig = {
         },
 
         music = {
-            beatMap = {1, 0, 0, 0, 0, 0, 1, 1,},
+            beatMap = {0, 0, 0, 0, 0, 0, 0, 0,},
             sfxMap = {
-                {28, 'D-3', -1, 0, 8, 0},
-                {28, 'A-3', -1, 0, 8, 0},
-                {28, 'F-4', -1, 1, 10, 0},
-                {28, 'F-4', -1, 2, 14, 0},
-                {28, 'F-5', -1, 0, 14, 0},
-                {28, 'F-4', -1, 1, 14, 0},
-                {28, 'E-3', -1, 2, 14, 0},
+                -- {4, 'A-2', 16, 0, 4, -1},
+                -- {4, 'C-3', 16, 0, 4, -1},
+                {1, 'A-4', -1, 2, 10, 0},
+                {1, 'G-4', -1, 2, 10, 0},
+                {1, 'A-4', -1, 2, 10, 0},
+                {1, 'G-4', -1, 2, 10, 0},
             },
-            -- intro = silence,
-            -- altBeatMap = {1, 0, 0, 0, 1, 0, 0, 0}
+            altBeatMap = {0,0,0,0, 1, 1, 1, 1}
+        },
+
+        sprites = {
+            chill = Sprite:new({312}, 2),
+            prepareJump = Sprite:new({312, 344}, 2),
+            flyJump = Sprite:new(anim.gen60({346,348,346}), 2),
+            resetJump = Sprite:new({348,344,312}, 2),
+            death = Sprite:new(anim.gen60({312,314,312,314,312}), 2)
+        },
+    },
+
+    [66] = {
+        name = 'Snowman',
+        color = 12,
+        speed = 15, -- data.Player.speed - 0.41,
+        speedWithWhirl = 0.8, --data.Player.speed - 0.61,
+        hp = 150,
+        prepareJumpTime = 20,
+        --jumpTime = 20,
+        resetJumpTime = 24,
+
+        deathParticleCountMin = 100,
+        deathParticleCountMax = 300,
+        deathAnimationParticleSpeed = 1,
+        deathAnimationParticleSpeedNormalizer = 0.4,
+        deathParticleMinSpeed = 1,
+        deathParticleSprite = Sprite:new({378}, 1),
+
+        specialTaraxacum = {
+            radius = 3,
+            bodyLength = 15,
+            shiftForCenterX = 12,
+            shiftForCenterY = -3,
+            startStickX = 0,
+            startStickY = 0,
+            bodyColor = 10,
+            color = 12,
+            reloadAnimationTime = 18, -- in tics should divide by 3
+        },
+
+        music = {
+            beatMap = {0, 0, 0, 0, 0, 0, 0, 0,},
+            sfxMap = {
+                -- {4, 'A-2', 16, 0, 4, -1},
+                -- {4, 'C-3', 16, 0, 4, -1},
+                {1, 'A-4', -1, 2, 10, 0},
+                {1, 'G-4', -1, 2, 10, 0},
+                {1, 'A-4', -1, 2, 10, 0},
+                {1, 'G-4', -1, 2, 10, 0},
+            },
+            altBeatMap = {0,0,0,0, 1, 1, 1, 1}
         },
 
         sprites = {
@@ -217,16 +275,70 @@ data.add_all_autobullethell_sizes(
     {
         beatMap = {1,0,0,0,0,0,0,0},
         sfxMap = {
-            {16, 'F#3', -1, 2, 10, 0},
+            {16, 'B-2', 50, 0, 15, 0},
+            {16, 'A-2', 50, 0, 10, 0},
+            {16, 'F#2', 50, 0, 10, 0},
+            {16, 'G#2', 50, 0, 10, 0},
+            {16, 'A-2', 50, 0, 10, 0},
+            {16, 'B-2', 50, 0, 15, 0},
+            {16, 'A-2', 50, 0, 10, 0},
+            {16, 'F#2', 50, 0, 10, 0},
         },
-        intro = {
-            beatMap = {0, 0, 0, 1},
-            sfxMap = {
-                {16, 'F#3', -1, 2, 10, 0},
-            },  
-        }
+        intro = silence,
     }
 )
+-- drum theme --------------------------------------
+
+data.add_all_bullethell_sizes(
+    112,
+    {
+        beatMap = {
+            0,0,1,0,
+            0,1,0,0,
+            1,0,0,1,
+            0,0,1,1,
+        },
+        sfxMap = {
+            {20, 'A-8', -1, 1, 9, 0},
+            {20, 'A-8', -1, 1, 9, 0},
+            {20, 'A-8', -1, 1, 9, 0},
+            {20, 'E-8', -1, 1, 9, 0},
+            {20, 'A-8', -1, 1, 9, 0},
+        },
+    }
+)
+
+data.add_all_bullethell_sizes(
+    131,
+    {
+        beatMap = {
+            1,0,1,0,
+            1,0,1,0,
+            1,0,1,0,
+            1,0,1,0,
+        },
+        sfxMap = {
+            {17, 'B-8', -1, 2, 6, 0},{17, 'B-8', -1, 2, 8, 0},{17, 'B-8', -1, 2, 10, 0},{17, 'B-8', -1, 2, 12, 0},
+            {19, 'B-8', -1, 2, 14, 0},{17, 'B-8', -1, 2, 12, 0},{17, 'B-8', -1, 2, 10, 0},{17, 'B-8', -1, 2, 8, 0},
+        },
+    }
+)
+
+data.add_all_bullethell_sizes(
+    128,
+    {
+        beatMap = {
+            0,1,0,1,
+            0,1,0,1,
+            0,1,0,1,
+            0,1,0,1,
+        },
+        sfxMap = {
+            {17, 'B-8', -1, 2, 5, 0},
+        },
+    }
+)
+-----------------------------------------------------
 
 -- main theme ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 data.add_enemy(
@@ -391,16 +503,30 @@ data.add_all_bullethell_sizes(
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+
+-- second theme --------------------------------------------------------------------------------------------------------------------------------------------------
 data.add_enemy(
     12,
-    weakrose,
+    strongrose,
     {
         beatMap = {1,0, 0,0, 1,0, 0,0},
         sfxMap = {
-            {2, 'D-4', -1, 1, 4, 0},
-            {2, 'D-4', -1, 1, 4, 0},
-            {2, 'B-3', -1, 1, 4, 0},
-            {2, 'B-3', -1, 1, 4, 0},
+            {2, 'D-3', -1, 1, 11, 0},
+            {2, 'D-4', -1, 1, 11, 0},
+            {2, 'B-3', -1, 1, 11, 0},
+            {2, 'B-3', -1, 1, 11, 0},
+
+            {2, 'D-4', -1, 1, 11, 0},
+            {2, 'D-4', -1, 1, 11, 0},
+            {2, 'B-3', -1, 1, 11, 0},
+            {2, 'B-3', -1, 1, 11, 0},
+        },
+        intro = {
+            beatMap = {0,0, 0,0, 1,0, 1,0},
+            sfxMap = {
+                {2, 'A-3', -1, 1, 4, 0},
+                {2, 'F#3', -1, 1, 4, 0},
+            },  
         },
     }
 )
@@ -415,6 +541,7 @@ data.add_enemy(
             {1, 'B-4', -1, 2, 15, 0},
             {1, 'B-4', -1, 2, 15, 0},
         },
+        intro = silence,
     }
 )
 data.add_enemy(
@@ -428,7 +555,61 @@ data.add_enemy(
             {1, 'F#4', -1, 1, 15, 0},
             {1, 'F#4', -1, 1, 15, 0},
         },
+        intro = silence,
     }
 )
 
--- double_beatMap_of_all()
+data.add_all_bullethell_sizes(38,
+    {
+        beatMap = {0,0, 0,0, 0,0, 0,0,},
+        sfxMap = {
+            -- {18, 'C#3', -1, 2, 5, 0},
+            {19, 'F#6', -1, 0, 4, 0},
+            {19, 'F#6', -1, 0, 4, 0},
+            {19, 'F#6', -1, 0, 4, 0},
+            {19, 'F#6', -1, 0, 4, 0},
+            {19, 'A-6', -1, 0, 4, 0},
+            {19, 'A-6', -1, 0, 4, 0},
+            {19, 'A-6', -1, 0, 4, 0},
+            {19, 'A-6', -1, 0, 4, 0},
+        },
+        intro = silence,
+        altBeatMap = {1,0,1,0, 1,0,1,0,}
+    }
+)
+data.add_all_bullethell_sizes(41,
+    {
+        beatMap = {0,0, 1,0, 0,1, 0,0},
+        sfxMap = {
+            -- {18, 'C#3', -1, 2, 5, 0},
+            {19, 'C#7', -1, 0, 4, 0},
+            {19, 'C#7', -1, 0, 4, 0},
+            {19, 'B-6', -1, 0, 4, 0},
+            {19, 'B-6', -1, 0, 4, 0},
+        },
+        intro = silence,
+        -- altBeatMap = {1,1,0,0, 0,0,0,0, 0,1,0,0, 0,0,0,0,}
+    }
+)
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+data.add_enemy(19, verystrongrose,
+    {
+        beatMap = {1,1,1,1, 1,1,1,0},
+        sfxMap = {
+            {8, 'A-2', 90, 1, 6, 0},
+            {1, 'A-2', 16, 3, 0, 0},
+            {1, 'A-2', 16, 3, 0, 0},
+            {1, 'A-2', 16, 3, 0, 0},
+            {1, 'A-2', 16, 3, 0, 0},
+            {1, 'A-2', 16, 3, 0, 0},
+            {1, 'A-2', 16, 3, 0, 0},
+
+            {8, 'C-3', 60, 1, 10, 0},
+            {1, 'C-3', 16, 3, 0, 0},
+            {1, 'C-3', 16, 3, 0, 0},
+            {1, 'C-3', 16, 3, 0, 0},
+        },
+        intro = silence,
+        altBeatMap = {1,1,1,1, 0,0,0,0},
+    })

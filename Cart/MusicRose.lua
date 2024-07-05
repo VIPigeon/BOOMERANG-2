@@ -23,6 +23,11 @@ function MusicRose:tuning(music)
     -- строка из 0, 1, указывающая биты, на которые стреляет роза
     self.beatMap = beatMap
     self.i_beatMap = 1
+
+    if music.altBeatMap then
+        self.altBeatMap = music.altBeatMap
+        -- trace("!!!!!!!!!   "..#self.altBeatMap)
+    end
 end
 
 
@@ -72,6 +77,13 @@ function MusicRose:onBeat()
     end
     if not self.reserveMusic then
         self.i_beatMap = (self.i_beatMap % #self.beatMap) + 1
+        if self.altBeatMap and self.i_beatMap == 1 then
+            local buf = table.copy(self.beatMap)
+            self.beatMap = table.copy(self.altBeatMap)
+            self.altBeatMap = buf
+            -- trace(self.altBeatMap[1].." "..self.altBeatMap[2].." "..self.altBeatMap[3].." "..self.altBeatMap[4])
+            -- trace(self.beatMap[1].." "..self.beatMap[2].." "..self.beatMap[3].." "..self.beatMap[4])
+        end
         return
     end
     self.i_beatMap = self.i_beatMap + 1
