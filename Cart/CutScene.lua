@@ -83,5 +83,10 @@ function CutScene:draw()
 end
 
 function CutScene:update()
+    -- trace(self.bike_speed)
+    if self.bike_speed > 0.54 then
+        game.finish()
+        return
+    end
 	update_psystems()
 end

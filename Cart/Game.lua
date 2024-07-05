@@ -384,9 +384,9 @@ end
 local textYs = {20, 100, 130}
 
 function game.drawGameEndScreen()
-    local backgroundColor = 8
-    local textColor = 6
-    local textX = 10
+    local backgroundColor = 0
+    local textColor = 5
+    local textX = 4
     
     local scrollAmount = 10
     local minScroll = 20 - 4 * scrollAmount
@@ -406,7 +406,7 @@ function game.drawGameEndScreen()
     
     rect(0, 0, MAP_WIDTH, MAP_HEIGHT, backgroundColor)
     print(
-    'Fruits collected:\n\n       ' .. fruitsCollection.collected .. ' / ' .. fruitsCollection.needed,
+    'Thank you\nfor playing!\n\n'..'Fruits collected:\n\n       ' .. fruitsCollection.collected .. ' / ' .. fruitsCollection.needed,
     textX, textYs[1],
     textColor,
     false,
