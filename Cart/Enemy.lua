@@ -28,15 +28,31 @@ function Enemy:_drawAnimations()
 end
 
 function Enemy:_focusAnimations()
-    local center = self.hitbox:get_center()
+    local center_x
+    local center_y
+    -- What the fuck??? +10000% code speedup когда я убрал создание таблицы,
+    -- что за тупая хрень???!
+    if self.hitbox.type == 'hitcircle' then
+        local x1 = self.hitbox.x
+        local x2 = self.hitbox.x + self.hitbox.d
+        local y1 = self.hitbox.y
+        local y2 = self.hitbox.y + self.hitbox.d
+        center_x = x1 + (x2 - x1) / 2
+        center_y = y1 + (y2 - y1) / 2
+    else
+        local x1 = self.hitbox.x1
+        local y1 = self.hitbox.y1
+        center_x = x1 + (self.hitbox.x2 - x1) / 2
+        center_y = y1 + (self.hitbox.y2 - y1) / 2
+    end
     local width = self.hitbox:getWidth()
     local height = self.hitbox:getHeight()
     -- чтобы анимация проигрывалась вокруг противника равномерно
 
-    local x1 = center.x - width
-    local x2 = center.x
-    local y1 = center.y - height
-    local y2 = center.y 
+    local x1 = center_x - width
+    local x2 = center_x
+    local y1 = center_y - height
+    local y2 = center_y 
     for _, anime in ipairs(self.currentAnimations) do
         anime:focus(x1, y1, x2, y2)
     end
