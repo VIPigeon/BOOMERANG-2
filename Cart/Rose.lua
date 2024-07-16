@@ -102,7 +102,8 @@ function Rose:new(x, y, direction, sprites, laserColor, config)
 
         isActive = false,
     }
-    trace(obj.damageSound)
+
+    Rose.shoot(obj)
 
     setmetatable(obj, self)
     self.__index = self

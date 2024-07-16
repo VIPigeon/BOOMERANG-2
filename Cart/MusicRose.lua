@@ -26,7 +26,6 @@ function MusicRose:tuning(music)
 
     if music.altBeatMap then
         self.altBeatMap = music.altBeatMap
-        -- trace("!!!!!!!!!   "..#self.altBeatMap)
     end
 end
 
@@ -39,7 +38,6 @@ function MusicRose:_full_shot()
     end
     self.status = 'shooting'
     self.sprite = self.sprites.shooting
-    self:shoot()
 
     local sound = self.sfxMap[self.i_sfxMap]
     sfx(sound[1],
