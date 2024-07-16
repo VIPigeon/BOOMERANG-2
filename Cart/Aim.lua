@@ -75,8 +75,8 @@ function aim.bfs(startPos)
             {x =-1, y = 1},
     }
 
-    local px = game.player:getPositionTile().x
-    local py = game.player:getPositionTile().y
+    local px = self.x // 8
+    local py = self.y // 8
 
     local queue = Queue:new()
     queue:enqueue({x = startPos.x, y = startPos.y, path = { {x = startPos.x, y = startPos.y} }})

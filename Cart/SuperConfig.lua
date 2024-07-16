@@ -160,7 +160,7 @@ data.EnemyConfig = {
         deathAnimationParticleSpeed = 1,
         deathAnimationParticleSpeedNormalizer = 0.4,
         deathParticleMinSpeed = 1,
-        deathParticleSprite = Sprite:new({378}, 1),
+        deathParticleSprite = StaticSprite:new(378, 1),
 
         specialTaraxacum = {
             radius = 3,
@@ -188,7 +188,7 @@ data.EnemyConfig = {
         },
 
         sprites = {
-            chill = Sprite:new({312}, 2),
+            chill = StaticSprite:new(312, 2),
             prepareJump = Sprite:new({312, 344}, 2),
             flyJump = Sprite:new(anim.gen60({346,348,346}), 2),
             resetJump = Sprite:new({348,344,312}, 2),
@@ -211,7 +211,7 @@ data.EnemyConfig = {
         deathAnimationParticleSpeed = 1,
         deathAnimationParticleSpeedNormalizer = 0.4,
         deathParticleMinSpeed = 1,
-        deathParticleSprite = Sprite:new({378}, 1),
+        deathParticleSprite = StaticSprite:new(378, 1),
 
         specialTaraxacum = {
             radius = 3,
@@ -239,7 +239,7 @@ data.EnemyConfig = {
         },
 
         sprites = {
-            chill = Sprite:new({312}, 2),
+            chill = StaticSprite:new(312, 2),
             prepareJump = Sprite:new({312, 344}, 2),
             flyJump = Sprite:new(anim.gen60({346,348,346}), 2),
             resetJump = Sprite:new({348,344,312}, 2),
@@ -266,7 +266,7 @@ data.EnemyConfig = {
 
         deathBulletSpread = 2,
 
-        deathBulletSprite = Sprite:new({378}, 1),
+        deathBulletSprite = StaticSprite:new(378, 1),
     }, -- mb static idk
 }
 

@@ -1,6 +1,6 @@
 Bullet = table.copy(Body)
 
-Bullet.defaultSprite = Sprite:new({373}, 1)
+Bullet.defaultSprite = StaticSprite:new(373, 1)
 
 function Bullet:new(x, y, sprite)
     sprite = sprite or Bullet.defaultSprite
@@ -20,11 +20,13 @@ function Bullet:new(x, y, sprite)
 end
 
 function Bullet:setVelocity(x, y)
-    self.vector = {x=x, y=y}
+    self.vector.x = x
+    self.vector.y = y
 end
 
 function Bullet:vectorUpdateByTarget(targetCoordX, targetCoordY)
-    self.vector = {x = targetCoordX - self.x, y = targetCoordY - self.y}
+    self.vector.x = targetCoordX - self.x
+    self.vector.y = targetCoordY - self.y
     self.vector = math.vecNormalize(self.vector)
 end
 

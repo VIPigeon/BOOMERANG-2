@@ -298,7 +298,7 @@ function game.restart()
     local camera = createCamera(player)
     local fruitPopup = FruitPopup
     
-    table.insert(game.updatables, metronome)
+    -- table.insert(game.updatables, metronome)
     table.concatTable(game.updatables, checkpoints)
     table.insert(game.updatables, player)
     table.insert(game.updatables, bike)
@@ -332,7 +332,7 @@ function game.restart()
     game.boomer = boomerang
     game.camera = camera
     game.enemies = enemies
-    
+
     game.updateActiveEnemies()
 end
 
@@ -357,23 +357,25 @@ function game.update()
         game.drawGameEndScreen()
         return
     end
-    
+
+    game.metronome:update()
+    Time.update()
+    GameTimers.update()
     for _, updatable in ipairs(game.updatables) do
         updatable:update()
     end
-    
+
     if #game.deleteSchedule > 0 then
         table.removeElements(game.updatables, game.deleteSchedule)
         table.removeElements(game.drawables, game.deleteSchedule)
         game.deleteSchedule = {}
     end
-    
+
     game.updatePlayerArea()
-    
-    Time.update()
-    GameTimers.update()
-    
+
+    local draw_start = time()
     game.draw()
+    local draw_elapsed = time() - draw_start
 end
 
 function game.finish()

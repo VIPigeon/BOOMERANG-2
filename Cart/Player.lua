@@ -34,10 +34,6 @@ function Player:new(x, y, boomerang)
         return obj
 end
 
-function Player:getPositionTile()
-    return {x = self.x // 8, y = self.y // 8}
-end
-
 function Player:_willMoveCheck()
     self.dx = 0
     self.dy = 0 -- chill bro~~

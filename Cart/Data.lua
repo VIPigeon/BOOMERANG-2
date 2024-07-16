@@ -66,7 +66,7 @@ data.Player = {
     movementNormalizerStraight = 1,
     movementNormalizerDiagonal = 0.7,
     speed = 1.03,
-    deathParticleSprite = Sprite:new({377}, 1),
+    deathParticleSprite = StaticSprite:new(377, 1),
     deathAnimationDurationMs = 1000,
     deathParticleCountMin = 10,
     deathParticleCountMax = 20,
@@ -95,7 +95,7 @@ function plr_death_anim()
 end
 
 data.Player.sprites = {
-    stayFront =Sprite:new({257}, 1),
+    stayFront = Sprite:new({257}, 1),
     runFront = Sprite:new(anim.gen60({256, 257, 258, 259, 256, 257, 258, 259, 256, 257, 258, 259}), 1),
     death = Sprite:new({452, 453, 454}, 1),
     hat = Sprite:new(anim.gen60({279}), 1),
@@ -119,15 +119,15 @@ data.Boomerang.sprites = {
 data.Bike = {}
 
 data.Bike.sprites = {
-    waitingForHero = Sprite:new({138},2),
-    himAgain = Sprite:new({140}, 2),
+    waitingForHero = StaticSprite:new(138,2),
+    himAgain = StaticSprite:new(140, 2),
     sparklualCycleModifier = 10,
 }
 data.Bike.sprites.animations = {
     sparkingWhileWaitingMyBoy = Sprite:new(anim.gen({505, 506, 507, 508, 509, 510}, 6), 1),
-    notSparklingBecauseSandnessComeAgain = Sprite:new({0}, 1),
-    -- notSparklingBecauseSandnessCameAgain = Sprite:new({0}, 1),
-    notSparklingBecauseBoring = Sprite:new({0}, 1),
+    notSparklingBecauseSandnessComeAgain = StaticSprite:new(0, 1),
+    -- notSparklingBecauseSandnessCameAgain = StaticSprite:new({0}, 1),
+    notSparklingBecauseBoring = StaticSprite:new(0, 1),
     -- notSparkling = Sprite:new({0}, 1),
     -- notSparklingAgain = Sprite:new({0}, 1),
     -- notSparklingAndAgain = Sprite:new({0}, 1),
@@ -253,7 +253,7 @@ data.Taraxacum = {
 
     deathBulletSpread = 2.5,
 
-    deathBulletSprite = Sprite:new({378}, 1),
+    deathBulletSprite = StaticSprite:new(378, 1),
 }
 
 data.StaticTaraxacum = {
@@ -281,9 +281,9 @@ data.Checkpoint =  {
     width = 8,
     height = 8,
     flagTile = 211,
-    turnedOffSprite = Sprite:new({0}, 1),
-    turnedOnSprite = Sprite:new({248}, 1),
-    justUsedSprite = Sprite:new({249}, 1),
+    turnedOffSprite = StaticSprite:new(0, 1),
+    turnedOnSprite = StaticSprite:new(248, 1),
+    justUsedSprite = StaticSprite:new(249, 1),
     turnOnAnimation = Sprite:new(anim.gen(turnOnAnimationFrames, 3), 1),
 }
 
@@ -312,14 +312,14 @@ data.Lever = {
     hitboxHeight = 4,
 }
 data.Lever.sprites = {
-    on = Sprite:new({3},1),
-    off = Sprite:new({2},1),
+    on = StaticSprite:new(3,1),
+    off = StaticSprite:new(2,1),
 }
 
 data.SettingLever ={}
 data.SettingLever.sprites = {
-    on = Sprite:new({6}, 1),
-    off = Sprite:new({5}, 1),
+    on = StaticSprite:new(6, 1),
+    off = StaticSprite:new(5, 1),
 }
 
 data.EnemyDeathSounds = {  -- i cancel it :-<
@@ -371,7 +371,7 @@ data.AutoBulletHell = {
 
 data.Bullet = {
     defaultSpeed = 0.5,
-    defaultSprite = Sprite:new({373}, 1),
+    defaultSprite = StaticSprite:new(373, 1),
     reloadAnimation = Sprite:new(anim.gen({373, 0, 374, 375, 376}, 4), 1),
 }
 
@@ -380,16 +380,16 @@ data.Enemy = {
     defaultEnemyFlagTile = 98,
 }
 data.Enemy.sprites = {
-    defaultSprite = Sprite:new({403}, 1),
+    defaultSprite = StaticSprite:new(403, 1),
     --ahegaoDeath = Sprite:new({386, 387, 388, 389, 390}, 1)
 }
 data.Enemy.sprites.hurtEffect = {
     hurtingHorizontal = Sprite:new(anim.gen({473, 474, 475, 476, 477, 478, 479}, 3), 1),
     hurtingVertical = Sprite:new(anim.gen({473 + 16, 474 + 16, 475 + 16, 476 + 16, 477 + 16, 478 + 16, 479 + 16}, 3), 1),
-    hurtingNull0 = Sprite:new({0}, 1),
-    hurtingNull1 = Sprite:new({0}, 1),
-    hurtingNull2 = Sprite:new({0}, 1),
-    hurtingNull3 = Sprite:new({0}, 1),
+    hurtingNull0 = StaticSprite:new(0, 1),
+    hurtingNull1 = StaticSprite:new(0, 1),
+    hurtingNull2 = StaticSprite:new(0, 1),
+    hurtingNull3 = StaticSprite:new(0, 1),
 }
 
 data.Rose = {
@@ -413,8 +413,8 @@ data.Rose.anotherRoseFlagTile = 15
 data.Rose.sprites = {
     transition = Sprite:new({389, 391, 393, 395, 397, 421}, 2),
     death = Sprite:new(anim.gen60({423, 425, 427, 429}), 2),
-    idle = Sprite:new({389}, 2),
-    shooting = Sprite:new({391}, 2),
+    idle = StaticSprite:new(389, 2),
+    shooting = StaticSprite:new(391, 2),
 }
 data.Rose.animation_frame_duration_ms = 16
 data.Rose.rose_animation_duration_ms = data.Rose.animation_frame_duration_ms * #data.Rose.sprites.transition.animation
@@ -422,15 +422,15 @@ data.Rose.rose_animation_duration_ms = data.Rose.animation_frame_duration_ms * #
 data.WeakRose = {}
 data.WeakRose.sprites = {
     death = Sprite:new(anim.gen60({277, 279, 281, 283}), 2),
-    idle = Sprite:new({393}, 2),
-    shooting = Sprite:new({395}, 2),
+    idle = StaticSprite:new(393, 2),
+    shooting = StaticSprite:new(395, 2),
 }
 
 data.Snowman = {}
 
 data.Snowman.whirl = {
     fadeTimeMs = 150, -- Время до исчезания частички вихря
-    sprite = Sprite:new({350}, 1),
+    sprite = StaticSprite:new(350, 1),
     rotationSpeed = 0.012, -- Скорость вращения палки. Так мало, потому что миллисекунды 😏
     particleEmitDelayMs = 4, -- Задержка между спавном частиц вихря
     taraxacum = {
@@ -459,8 +459,8 @@ data.Snowman.whirl = {
 data.SnowmanBox = {}
 data.SnowmanBox.playerCheckFrequencyMs = 1000
 data.SnowmanBox.wakeUpDistanceToPlayer = 48
-data.SnowmanBox.sleepSprite = Sprite:new({485}, 2)
-data.SnowmanBox.wokeupSprite = Sprite:new({487}, 2)
+data.SnowmanBox.sleepSprite = StaticSprite:new(485, 2)
+data.SnowmanBox.wokeupSprite = StaticSprite:new(487, 2)
 
 
 data.Cutscene = {

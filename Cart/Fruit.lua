@@ -13,7 +13,7 @@ function FruitPopup:show(stayTimeMilliseconds)
     self.timeToStay = stayTimeMilliseconds
 end
 
-local goToBikeSprite = Sprite:new({308}, 4)
+local goToBikeSprite = StaticSprite:new(308, 4)
 
 function FruitPopup:draw()
     if fruitsCollection.collected == fruitsCollection.needed then
