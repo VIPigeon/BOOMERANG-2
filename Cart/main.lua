@@ -1,5 +1,6 @@
 C0 = 0  -- прозрачный цвет
 
+require("Heap")
 require("Aim")
 require("Math")
 require("Animation")
