@@ -186,7 +186,7 @@ function game.updatePlayerArea()
             game.updateActiveEnemies()
         end
     else
-        game.playerAreaLast = -2147483648
+        game.playerAreaLast = -2147483648 --😨🤯😩
     end
 end
 
