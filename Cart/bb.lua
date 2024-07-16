@@ -1,9 +1,158 @@
 C0 = 0  -- прозрачный цвет
-
 -- title:  BOOMERANG 2: RETURN
 -- author: V. Crocodile
--- desc:   A little game about killing flowers. Thanks to Visa who made a particlse system library
+-- desc:   A little game about killing flowers.
 -- script: lua
+-- Aim.lua
+
+-- Heap.lua
+Heap = {}
+Heap.Node = {}
+
+function Heap.Node:new(key)
+    local obj = {
+        key = key,
+        i = nil
+    }
+    setmetatable(obj, self)
+    self.__index = self
+    return obj
+end
+
+function Heap.Node:write()
+    io.write("Node\tkey="..self.key.."\ti="..self.i.."\n")
+end
+
+-- function Heap.compare(node1, node2)
+--     return node1.key > node2.key
+-- end
+
+function Heap:new(content)
+    local obj = {
+        tree = content,
+        size = #content + 1,
+        compare = function(node1, node2)
+            return node1.key > node2.key;
+        end,
+    }
+    setmetatable(obj, self)
+    self.__index = self
+    return obj
+end
+
+
+function Heap:buildHeap()
+    for i, node in ipairs(self.tree) do
+        node.i = i  -- установление начальных индексов
+    end
+    for i = self.size // 2, 1, -1 do
+        self:heapify(i)
+    end
+end
+
+function Heap:heapify(i)
+    local left = 2 * i
+    local right = 2 * i + 1
+    local largest = i
+    if left < self.size and not self.compare(self.tree[left], self.tree[largest]) then
+        largest = left
+    end
+    if right < self.size and not self.compare(self.tree[right], self.tree[largest]) then
+        largest = right
+    end
+
+    if largest == i then
+        return
+    end
+
+    local swapVar = self.tree[largest]
+    self.tree[largest] = self.tree[i]
+    self.tree[i] = swapVar
+    self.tree[i].i = i; self.tree[largest].i = largest;
+
+    self:heapify(largest)
+end
+
+function Heap:push(node)
+    self.tree[self.size] = node
+    self.size = self.size + 1;
+    node.i = self.size - 1
+    self:increaseKey(node.i, node.key);
+end
+
+function Heap:increaseKey(i, key)
+    self.tree[i].key = key
+    -- io.write(self.tree[i].key.." ")
+    while i > 1 and not self.compare(self.tree[i], self.tree[i // 2]) do
+    -- while i > 0 and not (self.tree[i].key > self.tree[i // 2].key) do
+        local swapVar = self.tree[i]
+        self.tree[i] = self.tree[i // 2]
+        self.tree[i // 2] = swapVar
+        self.tree[i].i = i; self.tree[i//2].i = i//2;
+        i = i // 2
+    end
+end
+
+function Heap:pull()
+    local res = self.tree[1];
+    self.size = self.size - 1;
+    self.tree[1] = self.tree[self.size];
+    table.remove(self.tree, nil)  -- remove last element
+    self:heapify(1);
+    return res.key;
+end
+
+function Heap:print()
+    for i, e in ipairs(self.tree) do
+        e:write()
+    end
+    io.write("\n")
+end
+
+--[[
+-- Ссылочная структура работает. Вот пруфы:
+node1 = Heap.Node:new(1)
+node2 = Heap.Node:new(2)
+node3 = Heap.Node:new(3)
+t = {node1, node2, node3}
+print(t[1].key .." ".. t[2].key)
+tmp = t[1]
+t[1] = t[2]
+t[2] = tmp
+print(t[1].key .." ".. t[2].key)
+t[2].key = 5
+print(node1.key .." ".. node2.key)
+--]]
+
+--[[
+-- Отладка
+node = Heap.Node:new(70)
+h = Heap:new{Heap.Node:new(1),
+Heap.Node:new(2),
+Heap.Node:new(4),
+Heap.Node:new(-5),
+Heap.Node:new(6),
+Heap.Node:new(8),
+Heap.Node:new(9),
+node
+}
+h:buildHeap()
+h:print()
+io.write(h:pull().."\n")
+io.write(h:pull().."\n")
+io.write(h:pull().."\n")
+io.write(h:pull().."\n")
+io.write(h:pull().."\n")
+h:push(Heap.Node:new(-48))
+h:push(Heap.Node:new(8))
+h:push(Heap.Node:new(4))
+h:push(Heap.Node:new(50))
+h:push(Heap.Node:new(23))
+h:print()
+h:increaseKey(node.i, 2)
+h:print()
+--]]
+
 -- Aim.lua
 
 aim = {}
@@ -27,8 +176,8 @@ function aim.compute(x, y, fx, fy, v)
     end
 
     if math.sq_distance(x, y, fx, fy) < math.sq_distance(x + kx*dx, y + ky*dy, fx, fy) then
-        -- 
-        -- 
+        trace(kx * dx)
+        trace(ky * dy)
     end
 
     return {x = kx * dx,
@@ -82,8 +231,8 @@ function aim.bfs(startPos)
             {x =-1, y = 1},
     }
 
-    local px = game.player:getPositionTile().x
-    local py = game.player:getPositionTile().y
+    local px = self.x // 8
+    local py = self.y // 8
 
     local queue = Queue:new()
     queue:enqueue({x = startPos.x, y = startPos.y, path = { {x = startPos.x, y = startPos.y} }})
@@ -108,7 +257,7 @@ function aim.bfs(startPos)
             end
 
             if (x == px) and (y == py) then
-                -- 
+                trace('I chased you 🤗'..' '..x..' '..y..' !!') -- 🤗
                 table.insert(cur.path, {x = x, y = y})
                 return cur.path
             elseif not visited[x][y] then --🤗
@@ -203,7 +352,7 @@ function aim.bfsMapAdaptedV2x2(startPos)
     end
 
     -- if math.inRangeIncl(cur.x, px - 1, px + 1) and math.inRangeIncl(cur.y, py - 1, py + 1) then
-        -- 
+    --     trace('woooow')
     --     return cur.path
     -- end
 
@@ -221,7 +370,7 @@ end
 --         -- {x=-1, y=1},
 --         -- {x=-1, y=-1}
 --     }
-    -- 
+--     -- trace(#path)
 --     local cx = path[#path].x
 --     local cy = path[#path].y
 --     local queue = {
@@ -238,17 +387,17 @@ end
 --                 goto continue
 --             end
 --             if gm.tilemap[x][y] == 'void' then
-                -- 
+--                 -- trace(v.path)
 --                 local new_path = table.copy(v.path)
 --                 table.insert(new_path, {x=x, y=y})
 --                 assert(not cash[x][y], "cash[v.x][v.y] is true")
-                -- 
+--                 -- trace(v.y)
 --                 cash[x][y] = true
-                -- 
+--                 -- trace(new_path)
 --                 table.insert(queue, {x=x, y=y, path=table.copy(new_path)})
 --             end
 --             if gm.tilemap[x][y] == 'player' then
-                -- 
+--                 -- trace(v.path)
 --                 local res = table.copy(v.path)
 --                 table.insert(res, {x=x, y=y})
 --                 -- cash[v.x][v.y] = true
@@ -258,7 +407,7 @@ end
 --             ::continue::
 --         end
 --     end
-    
+--     -- trace(#cash)
 --     local debug_score = 0
 --     for x = 1, 240 do
 --         for y = 1, 136 do
@@ -267,7 +416,7 @@ end
 --             end
 --         end
 --     end
-    -- 
+--     trace(debug_score)
 --     assert(false, "can't find a player")
 -- end
 
@@ -440,135 +589,135 @@ particle_systems = {}
 -- Call this, to create an empty particle system, and then fill the emittimers, emitters,
 -- drawfuncs, and affectors tables with your parameters.
 function make_psystem(minlife, maxlife, minstartsize, maxstartsize, minendsize, maxendsize)
-    local ps = {
-    -- global particle system params
+	local ps = {
+	-- global particle system params
 
-    -- if true, automatically deletes the particle system if all of it's particles died
-    autoremove = true,
+	-- if true, automatically deletes the particle system if all of it's particles died
+	autoremove = true,
 
-    minlife = minlife,
-    maxlife = maxlife,
+	minlife = minlife,
+	maxlife = maxlife,
 
-    minstartsize = minstartsize,
-    maxstartsize = maxstartsize,
-    minendsize = minendsize,
-    maxendsize = maxendsize,
+	minstartsize = minstartsize,
+	maxstartsize = maxstartsize,
+	minendsize = minendsize,
+	maxendsize = maxendsize,
 
-    -- container for the particles
-    particles = {},
+	-- container for the particles
+	particles = {},
 
-    -- emittimers dictate when a particle should start
-    -- they called every frame, and call emit_particle when they see fit
-    -- they should return false if no longer need to be updated
-    emittimers = {},
+	-- emittimers dictate when a particle should start
+	-- they called every frame, and call emit_particle when they see fit
+	-- they should return false if no longer need to be updated
+	emittimers = {},
 
-    -- emitters must initialize p.x, p.y, p.vx, p.vy
-    emitters = {},
+	-- emitters must initialize p.x, p.y, p.vx, p.vy
+	emitters = {},
 
-    -- every ps needs a drawfunc
-    drawfuncs = {},
+	-- every ps needs a drawfunc
+	drawfuncs = {},
 
-    -- affectors affect the movement of the particles
-    affectors = {},
-    }
+	-- affectors affect the movement of the particles
+	affectors = {},
+	}
 
-    table.insert(particle_systems, ps)
+	table.insert(particle_systems, ps)
 
-    return ps
+	return ps
 end
 
 -- Call this to update all particle systems
 function update_psystems()
-    local timenow = time()
-    for key,ps in pairs(particle_systems) do
-        update_ps(ps, timenow)
-    end
+	local timenow = time()
+	for key,ps in pairs(particle_systems) do
+		update_ps(ps, timenow)
+	end
 end
 
 -- updates individual particle systems
 -- most of the time, you don't have to deal with this, the above function is sufficient
 -- but you can call this if you want (for example fast forwarding a particle system before first draw)
 function update_ps(ps, timenow)
-    -- 
-    for key,et in pairs(ps.emittimers) do
-        local keep = et.timerfunc(ps, et.params)
-        if (keep==false) then
-            table.remove(ps.emittimers, key)
-        end
-    end
+	--trace("updting~")
+	for key,et in pairs(ps.emittimers) do
+		local keep = et.timerfunc(ps, et.params)
+		if (keep==false) then
+			table.remove(ps.emittimers, key)
+		end
+	end
 
-    for key,p in pairs(ps.particles) do
-        p.phase = (timenow-p.starttime)/(p.deathtime-p.starttime)
+	for key,p in pairs(ps.particles) do
+		p.phase = (timenow-p.starttime)/(p.deathtime-p.starttime)
 
-        for key,a in pairs(ps.affectors) do
-            a.affectfunc(p, a.params)
-        end
+		for key,a in pairs(ps.affectors) do
+			a.affectfunc(p, a.params)
+		end
 
-        p.x = p.x + p.vx
-        p.y = p.y + p.vy
+		p.x = p.x + p.vx
+		p.y = p.y + p.vy
 
-        local dead = false
-        if (p.x<0 or p.x>240 or p.y<0 or p.y>136) then
-            dead = true
-        end
+		local dead = false
+		if (p.x<0 or p.x>240 or p.y<0 or p.y>136) then
+			dead = true
+		end
 
-        if (timenow>=p.deathtime) then
-            dead = true
-        end
+		if (timenow>=p.deathtime) then
+			dead = true
+		end
 
-        if (dead==true) then
-            table.remove(ps.particles, key)
-        end
-    end
+		if (dead==true) then
+			table.remove(ps.particles, key)
+		end
+	end
 
-    if (ps.autoremove==true and #ps.particles<=0) then
-        local psidx = -1
-        for pskey,pps in pairs(particle_systems) do
-            if pps==ps then
-                table.remove(particle_systems, pskey)
-                return
-            end
-        end
-    end
+	if (ps.autoremove==true and #ps.particles<=0) then
+		local psidx = -1
+		for pskey,pps in pairs(particle_systems) do
+			if pps==ps then
+				table.remove(particle_systems, pskey)
+				return
+			end
+		end
+	end
 end
 
 -- draw a single particle system
 function draw_ps(ps, params)
-    for key,df in pairs(ps.drawfuncs) do
-        df.drawfunc(ps, df.params)
-    end
+	for key,df in pairs(ps.drawfuncs) do
+		df.drawfunc(ps, df.params)
+	end
 end
 
 -- draws all particle system
 -- This is just a convinience function, you probably want to draw the individual particles,
 -- if you want to control the draw order in relation to the other game objects for example
 function draw_psystems()
-    -- 
-    for key,ps in pairs(particle_systems) do
-        draw_ps(ps)
-    end
+	--trace("bib")
+	for key,ps in pairs(particle_systems) do
+		draw_ps(ps)
+	end
 end
 
 -- This need to be called from emitttimers, when they decide it is time to emit a particle
 function emit_particle(psystem)
-    local p = {}
+	local p = {}
 
-    local ecount = nil
-    local e = psystem.emitters[math.random(#psystem.emitters)]
-    e.emitfunc(p, e.params)
+	local ecount = nil
+	local e = psystem.emitters[math.random(#psystem.emitters)]
+	e.emitfunc(p, e.params)
 
-    p.phase = 0
-    p.starttime = time()
-    p.deathtime = time()+frnd(psystem.maxlife-psystem.minlife)+psystem.minlife
+	p.phase = 0
+	p.starttime = time()
+	p.deathtime = time()+frnd(psystem.maxlife-psystem.minlife)+psystem.minlife
 
-    p.startsize = frnd(psystem.maxstartsize-psystem.minstartsize)+psystem.minstartsize
-    p.endsize = frnd(psystem.maxendsize-psystem.minendsize)+psystem.minendsize
+	p.startsize = frnd(psystem.maxstartsize-psystem.minstartsize)+psystem.minstartsize
+	p.endsize = frnd(psystem.maxendsize-psystem.minendsize)+psystem.minendsize
 
-    table.insert(psystem.particles, p)
+	table.insert(psystem.particles, p)
 end
 
 function frnd(max)
-    return math.random()*max
+	return math.random()*max
 end
 
 
@@ -585,21 +734,21 @@ end
 -- params:
 -- num - the number of particle to spawn
 function emittimer_burst(ps, params)
-    for i=1,params.num do
-        emit_particle(ps)
-    end
-    return false
+	for i=1,params.num do
+		emit_particle(ps)
+	end
+	return false
 end
 
 -- Emits a particle every "speed" time
 -- params:
 -- speed - time between particle emits
 function emittimer_constant(ps, params)
-    if (params.nextemittime<=time()) then
-        emit_particle(ps)
-        params.nextemittime = params.nextemittime + params.speed
-    end
-    return true
+	if (params.nextemittime<=time()) then
+		emit_particle(ps)
+		params.nextemittime = params.nextemittime + params.speed
+	end
+	return true
 end
 
 -- EMITTERS =====================================================--
@@ -609,11 +758,11 @@ end
 -- x,y - the coordinates of the point
 -- minstartvx, minstartvy and maxstartvx, maxstartvy - the start velocity is randomly chosen between these values
 function emitter_point(p, params)
-    p.x = params.x
-    p.y = params.y
+	p.x = params.x
+	p.y = params.y
 
-    p.vx = frnd(params.maxstartvx-params.minstartvx)+params.minstartvx
-    p.vy = frnd(params.maxstartvy-params.minstartvy)+params.minstartvy
+	p.vx = frnd(params.maxstartvx-params.minstartvx)+params.minstartvx
+	p.vy = frnd(params.maxstartvy-params.minstartvy)+params.minstartvy
 end
 
 -- Emits particles from the surface of a rectangle
@@ -621,11 +770,11 @@ end
 -- minx,miny and maxx, maxy - the corners of the rectangle
 -- minstartvx, minstartvy and maxstartvx, maxstartvy - the start velocity is randomly chosen between these values
 function emitter_box(p, params)
-    p.x = frnd(params.maxx-params.minx)+params.minx
-    p.y = frnd(params.maxy-params.miny)+params.miny
+	p.x = frnd(params.maxx-params.minx)+params.minx
+	p.y = frnd(params.maxy-params.miny)+params.miny
 
-    p.vx = frnd(params.maxstartvx-params.minstartvx)+params.minstartvx
-    p.vy = frnd(params.maxstartvy-params.minstartvy)+params.minstartvy
+	p.vx = frnd(params.maxstartvx-params.minstartvx)+params.minstartvx
+	p.vy = frnd(params.maxstartvy-params.minstartvy)+params.minstartvy
 end
 
 -- AFFECTORS ====================================================--
@@ -635,8 +784,8 @@ end
 -- params: 
 -- fx and fy - the force vector
 function affect_force(p, params)
-    p.vx = p.vx + params.fx
-    p.vy = p.vy + params.fy
+	p.vx = p.vx + params.fx
+	p.vy = p.vy + params.fy
 end
 
 -- A rectangular region, if a particle happens to be in it, apply a constant force to it
@@ -644,20 +793,20 @@ end
 -- zoneminx, zoneminy and zonemaxx, zonemaxy - the corners of the rectangular area
 -- fx and fy - the force vector
 function affect_forcezone(p, params)
-    if (p.x>=params.zoneminx and p.x<=params.zonemaxx and p.y>=params.zoneminy and p.y<=params.zonemaxy) then
-        p.vx = p.vx + params.fx
-        p.vy = p.vy + params.fy
-    end
+	if (p.x>=params.zoneminx and p.x<=params.zonemaxx and p.y>=params.zoneminy and p.y<=params.zonemaxy) then
+		p.vx = p.vx + params.fx
+		p.vy = p.vy + params.fy
+	end
 end
 
 -- A rectangular region, if a particle happens to be in it, the particle stops
 -- params: 
 -- zoneminx, zoneminy and zonemaxx, zonemaxy - the corners of the rectangular area
 function affect_stopzone(p, params)
-    if (p.x>=params.zoneminx and p.x<=params.zonemaxx and p.y>=params.zoneminy and p.y<=params.zonemaxy) then
-        p.vx = 0
-        p.vy = 0
-    end
+	if (p.x>=params.zoneminx and p.x<=params.zonemaxx and p.y>=params.zoneminy and p.y<=params.zonemaxy) then
+		p.vx = 0
+		p.vy = 0
+	end
 end
 
 -- A rectangular region, if a particle cames in contact with it, it bounces back
@@ -665,10 +814,10 @@ end
 -- zoneminx, zoneminy and zonemaxx, zonemaxy - the corners of the rectangular area
 -- damping - the velocity loss on contact
 function affect_bouncezone(p, params)
-    if (p.x>=params.zoneminx and p.x<=params.zonemaxx and p.y>=params.zoneminy and p.y<=params.zonemaxy) then
-        p.vx = -p.vx*params.damping
-        p.vy = -p.vy*params.damping
-    end
+	if (p.x>=params.zoneminx and p.x<=params.zonemaxx and p.y>=params.zoneminy and p.y<=params.zonemaxy) then
+		p.vx = -p.vx*params.damping
+		p.vy = -p.vy*params.damping
+	end
 end
 
 -- A point in space which pulls (or pushes) particles in a specified radius around it
@@ -677,10 +826,10 @@ end
 -- radius - the size of the affector
 -- strength - push/pull force - proportional with the particle distance to the affector coordinates
 function affect_attract(p, params)
-    if (math.abs(p.x-params.x)+math.abs(p.y-params.y)<params.mradius) then
-        p.vx = p.vx + (p.x-params.x)*params.strength
-        p.vy = p.vy + (p.y-params.y)*params.strength
-    end
+	if (math.abs(p.x-params.x)+math.abs(p.y-params.y)<params.mradius) then
+		p.vx = p.vx + (p.x-params.x)*params.strength
+		p.vy = p.vy + (p.y-params.y)*params.strength
+	end
 end
 
 -- Moves particles around in a sin/cos wave or circulary. Directly modifies the particle position
@@ -688,9 +837,9 @@ end
 -- speed - the effect speed
 -- xstrength, ystrength - the amplituse around the x and y axes
 function affect_orbit(p, params)
-    params.phase = params.phase + params.speed
-    p.x = p.x + math.sin(params.phase)*params.xstrength
-    p.y = p.y + math.cos(params.phase)*params.ystrength
+	params.phase = params.phase + params.speed
+	p.x = p.x + math.sin(params.phase)*params.xstrength
+	p.y = p.y + math.cos(params.phase)*params.ystrength
 end
 
 -- DRAW FUNCS ===================================================--
@@ -700,67 +849,67 @@ end
 -- colors array - indexes to the palette, the particle goes trough these in order trough it's lifetime
 -- startsize and endsize is coming from the particle system parameters, not the draw func params!
 function draw_ps_fillcirc(ps, params)
-    for key,p in pairs(ps.particles) do
-        c = math.floor(p.phase*#params.colors)+1
-        r = (1-p.phase)*p.startsize+p.phase*p.endsize
-        circ(p.x,p.y,r,params.colors[c])
-    end
+	for key,p in pairs(ps.particles) do
+		c = math.floor(p.phase*#params.colors)+1
+		r = (1-p.phase)*p.startsize+p.phase*p.endsize
+		circ(p.x,p.y,r,params.colors[c])
+	end
 end
 
 -- Single pixel particle, which animates trough the given colors
 -- params:
 -- colors array - indexes to the palette, the particle goes trough these in order trough it's lifetime
 function draw_ps_pixel(ps, params)
-    for key,p in pairs(ps.particles) do
-        c = math.floor(p.phase*#params.colors)+1
-        pix(p.x,p.y,params.colors[c])
-    end
+	for key,p in pairs(ps.particles) do
+		c = math.floor(p.phase*#params.colors)+1
+		pix(p.x,p.y,params.colors[c])
+	end
 end
 
 -- Draws a line between the particle's previous and current position, kind of "motion blur" effect
 -- params:
 -- colors array - indexes to the palette, the particle goes trough these in order trough it's lifetime
 function draw_ps_streak(ps, params)
-    for key,p in pairs(ps.particles) do
-        c = math.floor(p.phase*#params.colors)+1
-        line(p.x,p.y,p.x-p.vx,p.y-p.vy,params.colors[c])
-    end
+	for key,p in pairs(ps.particles) do
+		c = math.floor(p.phase*#params.colors)+1
+		line(p.x,p.y,p.x-p.vx,p.y-p.vy,params.colors[c])
+	end
 end
 
 -- Animates trough the given frames with the given speed
 -- params:
 -- frames array - indexes to sprite tiles
 function draw_ps_animspr(ps, params)
-    params.currframe = params.currframe + params.speed
-    if (params.currframe>#params.frames) then
-        params.currframe = 1
-    end
-    for key,p in pairs(ps.particles) do
-        -- pal(7,params.colors[math.floor(p.endsize)])
-        spr(params.frames[math.floor(params.currframe+p.startsize)%#params.frames],p.x,p.y,0)
-    end
-    -- pal()
+	params.currframe = params.currframe + params.speed
+	if (params.currframe>#params.frames) then
+		params.currframe = 1
+	end
+	for key,p in pairs(ps.particles) do
+		-- pal(7,params.colors[math.floor(p.endsize)])
+		spr(params.frames[math.floor(params.currframe+p.startsize)%#params.frames],p.x,p.y,0)
+	end
+	-- pal()
 end
 
 -- Maps the given frames to the life of the particle
 -- params:
 -- frames array - indexes to sprite tiles
 function draw_ps_agespr(ps, params)
-    for key,p in pairs(ps.particles) do
-        local f = math.floor(p.phase*#params.frames)+1
-        spr(params.frames[f],p.x,p.y,0)
-    end
+	for key,p in pairs(ps.particles) do
+		local f = math.floor(p.phase*#params.frames)+1
+		spr(params.frames[f],p.x,p.y,0)
+	end
 end
 
 -- Each particle is randomly chosen from the given frames
 -- params:
 -- frames array - indexes to sprite tiles
 function draw_ps_rndspr(ps, params)
-    for key,p in pairs(ps.particles) do
-        -- pal(7,params.colors[math.floor(p.endsize)])
-        spr(params.frames[math.floor(p.startsize)],p.x,p.y,0)
-    end
-    -- pal()
+	for key,p in pairs(ps.particles) do
+		-- pal(7,params.colors[math.floor(p.endsize)])
+		spr(params.frames[math.floor(p.startsize)],p.x,p.y,0)
+	end
+	-- pal()
 end
 
 
@@ -769,122 +918,122 @@ end
 --==================================================================================--
 
 function make_explosparks_ps(ex,ey)
-    local ps = make_psystem(300,700, 1,2,0.5,0.5)
-    
-    table.insert(ps.emittimers,
-        {
-            timerfunc = emittimer_burst,
-            params = { num = 10}
-        }
-    )
-    table.insert(ps.emitters, 
-        {
-            emitfunc = emitter_point,
-            params = { x = ex, y = ey, minstartvx = -1.5, maxstartvx = 1.5, minstartvy = -1.5, maxstartvy=1.5 }
-        }
-    )
-    table.insert(ps.drawfuncs,
-        {
-            drawfunc = draw_ps_pixel,
-            params = { colors = {12,10,1,4,1,2} }
-        }
-    )
-    table.insert(ps.affectors,
-        { 
-            affectfunc = affect_force,
-            params = { fx = 0, fy = 0.1 }
-        }
-    )
+	local ps = make_psystem(300,700, 1,2,0.5,0.5)
+	
+	table.insert(ps.emittimers,
+		{
+			timerfunc = emittimer_burst,
+			params = { num = 10}
+		}
+	)
+	table.insert(ps.emitters, 
+		{
+			emitfunc = emitter_point,
+			params = { x = ex, y = ey, minstartvx = -1.5, maxstartvx = 1.5, minstartvy = -1.5, maxstartvy=1.5 }
+		}
+	)
+	table.insert(ps.drawfuncs,
+		{
+			drawfunc = draw_ps_pixel,
+			params = { colors = {12,10,1,4,1,2} }
+		}
+	)
+	table.insert(ps.affectors,
+		{ 
+			affectfunc = affect_force,
+			params = { fx = 0, fy = 0.1 }
+		}
+	)
 
     return ps
 end
 --100,500, 9,14,1,3
 function make_explosion_ps(ex,ey, min_time, max_time, min_start_size, max_start_size, min_end_size, max_end_size)
-    local ps = make_psystem(min_time, max_time, min_start_size, max_start_size, min_end_size, max_end_size)
-    
-    table.insert(ps.emittimers,
-        {
-            timerfunc = emittimer_burst,
-            params = { num = 4 }
-        }
-    )
-    table.insert(ps.emitters, 
-        {
-            emitfunc = emitter_box,
-            params = { minx = ex-4, maxx = ex+4, miny = ey-4, maxy= ey+4, minstartvx = 0, maxstartvx = 0, minstartvy = 0, maxstartvy=0 }
-        }
-    )
-    table.insert(ps.drawfuncs,
-        {
-            drawfunc = draw_ps_fillcirc,
-            params = { colors = {15,0,14,9,9,4} }
-        }
-    )
+	local ps = make_psystem(min_time, max_time, min_start_size, max_start_size, min_end_size, max_end_size)
+	
+	table.insert(ps.emittimers,
+		{
+			timerfunc = emittimer_burst,
+			params = { num = 4 }
+		}
+	)
+	table.insert(ps.emitters, 
+		{
+			emitfunc = emitter_box,
+			params = { minx = ex-4, maxx = ex+4, miny = ey-4, maxy= ey+4, minstartvx = 0, maxstartvx = 0, minstartvy = 0, maxstartvy=0 }
+		}
+	)
+	table.insert(ps.drawfuncs,
+		{
+			drawfunc = draw_ps_fillcirc,
+			params = { colors = {15,0,14,9,9,4} }
+		}
+	)
 
     return ps
 end
 --200, 2000, 1, 2, 2, 3
 function make_smoke_ps(ex,ey, min_time, max_time, min_start_size, max_start_size, min_end_size, max_end_size)
-    local ps = make_psystem(min_time, max_time, min_start_size, max_start_size, min_end_size, max_end_size)
-    
-    ps.autoremove = false
+	local ps = make_psystem(min_time, max_time, min_start_size, max_start_size, min_end_size, max_end_size)
+	
+	ps.autoremove = false
 
-    table.insert(ps.emittimers,
-        {
-            timerfunc = emittimer_constant,
-            params = {nextemittime = time(), speed = 200}
-        }
-    )
-    table.insert(ps.emitters, 
-        {
-            emitfunc = emitter_box,
-            --params = { minx = ex-4, maxx = ex+4, miny = ey, maxy= ey+2, minstartvx = 0, maxstartvx = 0, minstartvy = 0, maxstartvy=0 }
-            params = { minx = ex-2, maxx = ex+2, miny = ey, maxy= ey+2, minstartvx = 0, maxstartvx = 0, minstartvy = 0, maxstartvy=0 }
-        }
-    )
-    table.insert(ps.drawfuncs,
-        {
-            drawfunc = draw_ps_fillcirc,
-            params = { colors = {1,3,2} }
-        }
-    )
-    table.insert(ps.affectors,
-        { 
-            affectfunc = affect_force,
-            params = { fx = data.Cutscene.smoke_dx, fy = data.Cutscene.smoke_dy }
-        }
-    )
+	table.insert(ps.emittimers,
+		{
+			timerfunc = emittimer_constant,
+			params = {nextemittime = time(), speed = 200}
+		}
+	)
+	table.insert(ps.emitters, 
+		{
+			emitfunc = emitter_box,
+			--params = { minx = ex-4, maxx = ex+4, miny = ey, maxy= ey+2, minstartvx = 0, maxstartvx = 0, minstartvy = 0, maxstartvy=0 }
+			params = { minx = ex-2, maxx = ex+2, miny = ey, maxy= ey+2, minstartvx = 0, maxstartvx = 0, minstartvy = 0, maxstartvy=0 }
+		}
+	)
+	table.insert(ps.drawfuncs,
+		{
+			drawfunc = draw_ps_fillcirc,
+			params = { colors = {1,3,2} }
+		}
+	)
+	table.insert(ps.affectors,
+		{ 
+			affectfunc = affect_force,
+			params = { fx = data.Cutscene.smoke_dx, fy = data.Cutscene.smoke_dy }
+		}
+	)
 
     return ps
 end
 
 function make_explosmoke_ps(ex,ey)
-    local ps = make_psystem(1500,2000, 5,8, 17,18)
+	local ps = make_psystem(1500,2000, 5,8, 17,18)
 
-    table.insert(ps.emittimers,
-        {
-            timerfunc = emittimer_burst,
-            params = { num = 1 }
-        }
-    )
-    table.insert(ps.emitters, 
-        {
-            emitfunc = emitter_point,
-            params = { x = ex, y = ey, minstartvx = 0, maxstartvx = 0, minstartvy = 0, maxstartvy=0 }
-        }
-    )
-    table.insert(ps.drawfuncs,
-        {
-            drawfunc = draw_ps_fillcirc,
-            params = { colors = {2} }
-        }
-    )
-    table.insert(ps.affectors,
-        { 
-            affectfunc = affect_force,
-            params = { fx = 0.003, fy = -0.01 }
-        }
-    )
+	table.insert(ps.emittimers,
+		{
+			timerfunc = emittimer_burst,
+			params = { num = 1 }
+		}
+	)
+	table.insert(ps.emitters, 
+		{
+			emitfunc = emitter_point,
+			params = { x = ex, y = ey, minstartvx = 0, maxstartvx = 0, minstartvy = 0, maxstartvy=0 }
+		}
+	)
+	table.insert(ps.drawfuncs,
+		{
+			drawfunc = draw_ps_fillcirc,
+			params = { colors = {2} }
+		}
+	)
+	table.insert(ps.affectors,
+		{ 
+			affectfunc = affect_force,
+			params = { fx = 0.003, fy = -0.01 }
+		}
+	)
 
     return ps
 end
@@ -894,7 +1043,7 @@ end
 CutScene = {}
 
 function CutScene:new(plr, bk)
-    local obj = {
+	local obj = {
         player = plr,
         bike = bk,
         x = (game.bike.x) - gm.x*8 + gm.sx,
@@ -919,15 +1068,15 @@ function CutScene:beef_preparation()
 end
 
 function CutScene:updateGMXGMSXGMYGMSY()
-    self.x = (game.bike.x) - gm.x*8 + gm.sx
+	self.x = (game.bike.x) - gm.x*8 + gm.sx
     self.y = (game.bike.y) + 8 - gm.y*8 + gm.sy
 end
 --todo сделать дымок, заволакивающий глаза и весь экран в конце
 --сделать дым больше
 --подключить таймер
 function CutScene:make_smokkkkk()
-    self.crutchy = make_smoke_ps(self.x, self.y, 200, 2000, 1, 2, 2, 3)
-    self.cringy = make_explosion_ps(self.x, self.y, 200,500, 9,14,1,3) --100, 500
+	self.crutchy = make_smoke_ps(self.x, self.y, 200, 2000, 1, 2, 2, 3)
+	self.cringy = make_explosion_ps(self.x, self.y, 200,500, 9,14,1,3) --100, 500
     self.crutchy.autoremove = true;
     self.cringy.autoremove = true;
 end
@@ -968,20 +1117,20 @@ function CutScene:go_away()
 end
 
 function CutScene:init()
-    self:beef_preparation()
+	self:beef_preparation()
 end
 
 function CutScene:draw()
-    draw_psystems()
+	draw_psystems()
 end
 
 function CutScene:update()
-    -- 
+    -- trace(self.bike_speed)
     if self.bike_speed > 0.54 then
         game.finish()
         return
     end
-    update_psystems()
+	update_psystems()
 end
 
 -- Body.lua
@@ -1396,6 +1545,42 @@ function Sprite:copy()
 end
 
 
+StaticSprite = {}
+function StaticSprite:new(sprite, size)
+    local obj = {
+        sprite = sprite,
+        size = size
+    }
+    setmetatable(obj, self)
+    self.__index = self; return obj
+end
+
+function StaticSprite:copy()
+    return self
+end
+
+function StaticSprite:draw(x, y, flip, rotate)
+    spr(self.sprite, x, y, C0, 1, flip, rotate, self.size, self.size)
+end
+
+function StaticSprite:animationEnd()
+    -- Страница специально оставлена пустой для литературного эффекта. Спасибо ООП!
+end
+function StaticSprite:nextFrame()
+    -- Страница специально оставлена пустой для литературного эффекта. Спасибо ООП!
+end
+function StaticSprite:getFrame()
+    -- Страница специально оставлена пустой для литературного эффекта. Спасибо ООП!
+end
+function StaticSprite:setFrame(frame)
+    -- Страница специально оставлена пустой для литературного эффекта. Спасибо ООП!
+end
+function StaticSprite:nextFrame()
+    -- Страница специально оставлена пустой для литературного эффекта. Спасибо ООП!
+end
+
+
+
 
 
 
@@ -1517,7 +1702,7 @@ data.Player = {
     movementNormalizerStraight = 1,
     movementNormalizerDiagonal = 0.7,
     speed = 1.03,
-    deathParticleSprite = Sprite:new({377}, 1),
+    deathParticleSprite = StaticSprite:new(377, 1),
     deathAnimationDurationMs = 1000,
     deathParticleCountMin = 10,
     deathParticleCountMax = 20,
@@ -1546,7 +1731,7 @@ function plr_death_anim()
 end
 
 data.Player.sprites = {
-    stayFront =Sprite:new({257}, 1),
+    stayFront = Sprite:new({257}, 1),
     runFront = Sprite:new(anim.gen60({256, 257, 258, 259, 256, 257, 258, 259, 256, 257, 258, 259}), 1),
     death = Sprite:new({452, 453, 454}, 1),
     hat = Sprite:new(anim.gen60({279}), 1),
@@ -1570,15 +1755,15 @@ data.Boomerang.sprites = {
 data.Bike = {}
 
 data.Bike.sprites = {
-    waitingForHero = Sprite:new({138},2),
-    himAgain = Sprite:new({140}, 2),
+    waitingForHero = StaticSprite:new(138,2),
+    himAgain = StaticSprite:new(140, 2),
     sparklualCycleModifier = 10,
 }
 data.Bike.sprites.animations = {
     sparkingWhileWaitingMyBoy = Sprite:new(anim.gen({505, 506, 507, 508, 509, 510}, 6), 1),
-    notSparklingBecauseSandnessComeAgain = Sprite:new({0}, 1),
-    -- notSparklingBecauseSandnessCameAgain = Sprite:new({0}, 1),
-    notSparklingBecauseBoring = Sprite:new({0}, 1),
+    notSparklingBecauseSandnessComeAgain = StaticSprite:new(0, 1),
+    -- notSparklingBecauseSandnessCameAgain = StaticSprite:new({0}, 1),
+    notSparklingBecauseBoring = StaticSprite:new(0, 1),
     -- notSparkling = Sprite:new({0}, 1),
     -- notSparklingAgain = Sprite:new({0}, 1),
     -- notSparklingAndAgain = Sprite:new({0}, 1),
@@ -1704,7 +1889,7 @@ data.Taraxacum = {
 
     deathBulletSpread = 2.5,
 
-    deathBulletSprite = Sprite:new({378}, 1),
+    deathBulletSprite = StaticSprite:new(378, 1),
 }
 
 data.StaticTaraxacum = {
@@ -1732,9 +1917,9 @@ data.Checkpoint =  {
     width = 8,
     height = 8,
     flagTile = 211,
-    turnedOffSprite = Sprite:new({0}, 1),
-    turnedOnSprite = Sprite:new({248}, 1),
-    justUsedSprite = Sprite:new({249}, 1),
+    turnedOffSprite = StaticSprite:new(0, 1),
+    turnedOnSprite = StaticSprite:new(248, 1),
+    justUsedSprite = StaticSprite:new(249, 1),
     turnOnAnimation = Sprite:new(anim.gen(turnOnAnimationFrames, 3), 1),
 }
 
@@ -1747,7 +1932,7 @@ data.solidTiles = {
 
 -- table.concatTable(data.solidTiles,) --> (ノ｀Дa почему??)ノ - да потому!
 -- for i, t in ipairs(data.solidTiles) do
-    -- 
+--     trace(t..' ')
 -- end
 
 data.bfs = {'😎'}
@@ -1763,14 +1948,14 @@ data.Lever = {
     hitboxHeight = 4,
 }
 data.Lever.sprites = {
-    on = Sprite:new({3},1),
-    off = Sprite:new({2},1),
+    on = StaticSprite:new(3,1),
+    off = StaticSprite:new(2,1),
 }
 
 data.SettingLever ={}
 data.SettingLever.sprites = {
-    on = Sprite:new({6}, 1),
-    off = Sprite:new({5}, 1),
+    on = StaticSprite:new(6, 1),
+    off = StaticSprite:new(5, 1),
 }
 
 data.EnemyDeathSounds = {  -- i cancel it :-<
@@ -1822,7 +2007,7 @@ data.AutoBulletHell = {
 
 data.Bullet = {
     defaultSpeed = 0.5,
-    defaultSprite = Sprite:new({373}, 1),
+    defaultSprite = StaticSprite:new(373, 1),
     reloadAnimation = Sprite:new(anim.gen({373, 0, 374, 375, 376}, 4), 1),
 }
 
@@ -1831,16 +2016,16 @@ data.Enemy = {
     defaultEnemyFlagTile = 98,
 }
 data.Enemy.sprites = {
-    defaultSprite = Sprite:new({403}, 1),
+    defaultSprite = StaticSprite:new(403, 1),
     --ahegaoDeath = Sprite:new({386, 387, 388, 389, 390}, 1)
 }
 data.Enemy.sprites.hurtEffect = {
     hurtingHorizontal = Sprite:new(anim.gen({473, 474, 475, 476, 477, 478, 479}, 3), 1),
     hurtingVertical = Sprite:new(anim.gen({473 + 16, 474 + 16, 475 + 16, 476 + 16, 477 + 16, 478 + 16, 479 + 16}, 3), 1),
-    hurtingNull0 = Sprite:new({0}, 1),
-    hurtingNull1 = Sprite:new({0}, 1),
-    hurtingNull2 = Sprite:new({0}, 1),
-    hurtingNull3 = Sprite:new({0}, 1),
+    hurtingNull0 = StaticSprite:new(0, 1),
+    hurtingNull1 = StaticSprite:new(0, 1),
+    hurtingNull2 = StaticSprite:new(0, 1),
+    hurtingNull3 = StaticSprite:new(0, 1),
 }
 
 data.Rose = {
@@ -1864,8 +2049,8 @@ data.Rose.anotherRoseFlagTile = 15
 data.Rose.sprites = {
     transition = Sprite:new({389, 391, 393, 395, 397, 421}, 2),
     death = Sprite:new(anim.gen60({423, 425, 427, 429}), 2),
-    idle = Sprite:new({389}, 2),
-    shooting = Sprite:new({391}, 2),
+    idle = StaticSprite:new(389, 2),
+    shooting = StaticSprite:new(391, 2),
 }
 data.Rose.animation_frame_duration_ms = 16
 data.Rose.rose_animation_duration_ms = data.Rose.animation_frame_duration_ms * #data.Rose.sprites.transition.animation
@@ -1873,15 +2058,15 @@ data.Rose.rose_animation_duration_ms = data.Rose.animation_frame_duration_ms * #
 data.WeakRose = {}
 data.WeakRose.sprites = {
     death = Sprite:new(anim.gen60({277, 279, 281, 283}), 2),
-    idle = Sprite:new({393}, 2),
-    shooting = Sprite:new({395}, 2),
+    idle = StaticSprite:new(393, 2),
+    shooting = StaticSprite:new(395, 2),
 }
 
 data.Snowman = {}
 
 data.Snowman.whirl = {
     fadeTimeMs = 150, -- Время до исчезания частички вихря
-    sprite = Sprite:new({350}, 1),
+    sprite = StaticSprite:new(350, 1),
     rotationSpeed = 0.012, -- Скорость вращения палки. Так мало, потому что миллисекунды 😏
     particleEmitDelayMs = 4, -- Задержка между спавном частиц вихря
     taraxacum = {
@@ -1910,8 +2095,8 @@ data.Snowman.whirl = {
 data.SnowmanBox = {}
 data.SnowmanBox.playerCheckFrequencyMs = 1000
 data.SnowmanBox.wakeUpDistanceToPlayer = 48
-data.SnowmanBox.sleepSprite = Sprite:new({485}, 2)
-data.SnowmanBox.wokeupSprite = Sprite:new({487}, 2)
+data.SnowmanBox.sleepSprite = StaticSprite:new(485, 2)
+data.SnowmanBox.wokeupSprite = StaticSprite:new(487, 2)
 
 
 data.Cutscene = {
@@ -2088,7 +2273,7 @@ data.EnemyConfig = {
         deathAnimationParticleSpeed = 1,
         deathAnimationParticleSpeedNormalizer = 0.4,
         deathParticleMinSpeed = 1,
-        deathParticleSprite = Sprite:new({378}, 1),
+        deathParticleSprite = StaticSprite:new(378, 1),
 
         specialTaraxacum = {
             radius = 3,
@@ -2116,7 +2301,7 @@ data.EnemyConfig = {
         },
 
         sprites = {
-            chill = Sprite:new({312}, 2),
+            chill = StaticSprite:new(312, 2),
             prepareJump = Sprite:new({312, 344}, 2),
             flyJump = Sprite:new(anim.gen60({346,348,346}), 2),
             resetJump = Sprite:new({348,344,312}, 2),
@@ -2139,7 +2324,7 @@ data.EnemyConfig = {
         deathAnimationParticleSpeed = 1,
         deathAnimationParticleSpeedNormalizer = 0.4,
         deathParticleMinSpeed = 1,
-        deathParticleSprite = Sprite:new({378}, 1),
+        deathParticleSprite = StaticSprite:new(378, 1),
 
         specialTaraxacum = {
             radius = 3,
@@ -2167,7 +2352,7 @@ data.EnemyConfig = {
         },
 
         sprites = {
-            chill = Sprite:new({312}, 2),
+            chill = StaticSprite:new(312, 2),
             prepareJump = Sprite:new({312, 344}, 2),
             flyJump = Sprite:new(anim.gen60({346,348,346}), 2),
             resetJump = Sprite:new({348,344,312}, 2),
@@ -2194,7 +2379,7 @@ data.EnemyConfig = {
 
         deathBulletSpread = 2,
 
-        deathBulletSprite = Sprite:new({378}, 1),
+        deathBulletSprite = StaticSprite:new(378, 1),
     }, -- mb static idk
 }
 
@@ -2541,6 +2726,7 @@ data.add_enemy(19, verystrongrose,
         intro = silence,
         altBeatMap = {1,1,1,1, 0,0,0,0},
     })
+
 
 -- Palette.lua
 ADDR = 0x3FC0
@@ -2943,7 +3129,7 @@ function AnimationOver:_draw()
 end
 
 function AnimationOver:_spriteUpdate()
-    -- 
+    --trace('updating sprite')
     self.sprite:nextFrame() -- nexting~
 end
 
@@ -2982,7 +3168,7 @@ function FruitPopup:show(stayTimeMilliseconds)
     self.timeToStay = stayTimeMilliseconds
 end
 
-local goToBikeSprite = Sprite:new({308}, 4)
+local goToBikeSprite = StaticSprite:new(308, 4)
 
 function FruitPopup:draw()
     if fruitsCollection.collected == fruitsCollection.needed then
@@ -3225,7 +3411,7 @@ function gm.isBlockingBfs(x, y)
         return true
     else
         for _, entile in ipairs(game.enemyRespawn) do -- проверяем на столкновение с врагами.（づ￣3￣）づ╭(они тоже твердые)～
-            -- 
+            --trace(entile.x..' '..entile.y..' '..x..' '..y..' ')
             if (entile.x == x) and (entile.y == y) then
                 return true
             end
@@ -3515,15 +3701,31 @@ function Enemy:_drawAnimations()
 end
 
 function Enemy:_focusAnimations()
-    local center = self.hitbox:get_center()
+    local center_x
+    local center_y
+    -- What the fuck??? +10000% code speedup когда я убрал создание таблицы,
+    -- что за тупая хрень???!
+    if self.hitbox.type == 'hitcircle' then
+        local x1 = self.hitbox.x
+        local x2 = self.hitbox.x + self.hitbox.d
+        local y1 = self.hitbox.y
+        local y2 = self.hitbox.y + self.hitbox.d
+        center_x = x1 + (x2 - x1) / 2
+        center_y = y1 + (y2 - y1) / 2
+    else
+        local x1 = self.hitbox.x1
+        local y1 = self.hitbox.y1
+        center_x = x1 + (self.hitbox.x2 - x1) / 2
+        center_y = y1 + (self.hitbox.y2 - y1) / 2
+    end
     local width = self.hitbox:getWidth()
     local height = self.hitbox:getHeight()
     -- чтобы анимация проигрывалась вокруг противника равномерно
 
-    local x1 = center.x - width
-    local x2 = center.x
-    local y1 = center.y - height
-    local y2 = center.y 
+    local x1 = center_x - width
+    local x2 = center_x
+    local y1 = center_y - height
+    local y2 = center_y 
     for _, anime in ipairs(self.currentAnimations) do
         anime:focus(x1, y1, x2, y2)
     end
@@ -3553,13 +3755,13 @@ function Enemy:update()
 end
 
 function Enemy:die()
-    -- Это самый древний 
-    
+    -- Это самый древний trace в нашей кодовой базе! 🦖
+    trace("I AM DEAD!!!")
     if self.deathSound ~= nil then
         local sound = self.deathSound
         sfx(sound[1], sound[2], sound[3], sound[4], sound[5], sound[6])
     else
-        
+        trace('Возможно ошибка: У врага нету звука смерти')
     end
     table.removeElement(game.updatables, self)
     table.removeElement(game.drawables, self)
@@ -3918,7 +4120,7 @@ function aim.superAim(startX, startY, bulletSpeed)
     local c = dirx*dirx + diry*diry
     local d = b*b - a * c
     local t = (-b + math.sqrt(d)) / a
-    -- 
+    -- trace('t: ' .. t .. ' vx: ' .. vx .. ' vy: ' .. vy .. ' dirx: ' .. dirx .. ' diry: ' .. diry)
 
     -- Здесь по t находим нужную нам скорость (здесь может быть ошибка!)
     local resX = dirx/t + vx
@@ -3962,7 +4164,7 @@ function MusicBulletHell:tuning(music)
 
     if music.altBeatMap then
         self.altBeatMap = music.altBeatMap
-        -- 
+        -- trace("!!!!!!!!!   "..#self.altBeatMap)
     end
 end
 
@@ -4020,8 +4222,8 @@ function MusicBulletHell:onBeat()
             local buf = table.copy(self.beatMap)
             self.beatMap = table.copy(self.altBeatMap)
             self.altBeatMap = buf
-            -- 
-            -- 
+            -- trace(self.altBeatMap[1].." "..self.altBeatMap[2].." "..self.altBeatMap[3].." "..self.altBeatMap[4])
+            -- trace(self.beatMap[1].." "..self.beatMap[2].." "..self.beatMap[3].." "..self.beatMap[4])
         end
         return
     end
@@ -4140,7 +4342,7 @@ function MusicAutoBulletHell:tuning(music)
 
     if music.altBeatMap then
         self.altBeatMap = music.altBeatMap
-        -- 
+        -- trace("!!!!!!!!!   "..#self.altBeatMap)
     end
 end
 
@@ -4284,8 +4486,8 @@ function MusicAutoBulletHell:onBeat()
             local buf = table.copy(self.beatMap)
             self.beatMap = table.copy(self.altBeatMap)
             self.altBeatMap = buf
-            -- 
-            -- 
+            -- trace(self.altBeatMap[1].." "..self.altBeatMap[2].." "..self.altBeatMap[3].." "..self.altBeatMap[4])
+            -- trace(self.beatMap[1].." "..self.beatMap[2].." "..self.beatMap[3].." "..self.beatMap[4])
         end
         return
     end
@@ -4401,7 +4603,8 @@ function Rose:new(x, y, direction, sprites, laserColor, config)
 
         isActive = false,
     }
-    
+
+    Rose.shoot(obj)
 
     setmetatable(obj, self)
     self.__index = self
@@ -4604,7 +4807,6 @@ function MusicRose:tuning(music)
 
     if music.altBeatMap then
         self.altBeatMap = music.altBeatMap
-        -- 
     end
 end
 
@@ -4617,7 +4819,6 @@ function MusicRose:_full_shot()
     end
     self.status = 'shooting'
     self.sprite = self.sprites.shooting
-    self:shoot()
 
     local sound = self.sfxMap[self.i_sfxMap]
     sfx(sound[1],
@@ -4659,8 +4860,8 @@ function MusicRose:onBeat()
             local buf = table.copy(self.beatMap)
             self.beatMap = table.copy(self.altBeatMap)
             self.altBeatMap = buf
-            -- 
-            -- 
+            -- trace(self.altBeatMap[1].." "..self.altBeatMap[2].." "..self.altBeatMap[3].." "..self.altBeatMap[4])
+            -- trace(self.beatMap[1].." "..self.beatMap[2].." "..self.beatMap[3].." "..self.beatMap[4])
         end
         return
     end
@@ -4756,7 +4957,7 @@ end
 -- Bullet.lua
 Bullet = table.copy(Body)
 
-Bullet.defaultSprite = Sprite:new({373}, 1)
+Bullet.defaultSprite = StaticSprite:new(373, 1)
 
 function Bullet:new(x, y, sprite)
     sprite = sprite or Bullet.defaultSprite
@@ -4776,11 +4977,13 @@ function Bullet:new(x, y, sprite)
 end
 
 function Bullet:setVelocity(x, y)
-    self.vector = {x=x, y=y}
+    self.vector.x = x
+    self.vector.y = y
 end
 
 function Bullet:vectorUpdateByTarget(targetCoordX, targetCoordY)
-    self.vector = {x = targetCoordX - self.x, y = targetCoordY - self.y}
+    self.vector.x = targetCoordX - self.x
+    self.vector.y = targetCoordY - self.y
     self.vector = math.vecNormalize(self.vector)
 end
 
@@ -5064,7 +5267,7 @@ function SpecialTaraxacum:move(x, y)
 end
 
 function SpecialTaraxacum:_drawline(start, ending)
-    line(start.x, start.y, ending.x, ending.y, data.Snowman.specialTaraxacum.bodyColor)
+	line(start.x, start.y, ending.x, ending.y, data.Snowman.specialTaraxacum.bodyColor)
     -- local arm = self.h / 4
     -- local shift = self.h / 4
     -- local dir = aim.compute(start.x, start.y, ending.x, ending.y, 1)
@@ -5075,18 +5278,18 @@ function SpecialTaraxacum:_drawline(start, ending)
 end
 
 function SpecialTaraxacum:_reloadAnimation()
-    if self.timer == data.Snowman.specialTaraxacum.reloadAnimationTime then
-        self.status = 'ready'
-    elseif self.timer <= data.Snowman.specialTaraxacum.reloadAnimationTime // 3 then
-        circ(self.x + self.radius - 1 - gm.x*8 + gm.sx, self.y + 2- gm.y*8 + gm.sy, 0, data.Snowman.specialTaraxacum.color)
-        self.timer = self.timer + 1
-    elseif self.timer <= 2 * data.Snowman.specialTaraxacum.reloadAnimationTime // 3 then
-        circ(self.x + self.radius - 1 - gm.x*8 + gm.sx, self.y + 2 - gm.y*8 + gm.sy, 1, data.Snowman.specialTaraxacum.color)
-        self.timer = self.timer + 1
-    elseif self.timer < data.Snowman.specialTaraxacum.reloadAnimationTime then
-        circ(self.x + self.radius - 1 - gm.x*8 + gm.sx, self.y + 2 - gm.y*8 + gm.sy, 2, data.Snowman.specialTaraxacum.color)
-        self.timer = self.timer + 1
-    end
+	if self.timer == data.Snowman.specialTaraxacum.reloadAnimationTime then
+		self.status = 'ready'
+	elseif self.timer <= data.Snowman.specialTaraxacum.reloadAnimationTime // 3 then
+		circ(self.x + self.radius - 1 - gm.x*8 + gm.sx, self.y + 2- gm.y*8 + gm.sy, 0, data.Snowman.specialTaraxacum.color)
+		self.timer = self.timer + 1
+	elseif self.timer <= 2 * data.Snowman.specialTaraxacum.reloadAnimationTime // 3 then
+		circ(self.x + self.radius - 1 - gm.x*8 + gm.sx, self.y + 2 - gm.y*8 + gm.sy, 1, data.Snowman.specialTaraxacum.color)
+		self.timer = self.timer + 1
+	elseif self.timer < data.Snowman.specialTaraxacum.reloadAnimationTime then
+		circ(self.x + self.radius - 1 - gm.x*8 + gm.sx, self.y + 2 - gm.y*8 + gm.sy, 2, data.Snowman.specialTaraxacum.color)
+		self.timer = self.timer + 1
+	end
 end
 
 function SpecialTaraxacum:draw()
@@ -5111,12 +5314,12 @@ function SpecialTaraxacum:draw()
     self:_drawline(start, ending)
 
     if not self.dead then
-        if self.status == 'needReload' then
-            self:_reloadAnimation()
+    	if self.status == 'needReload' then
+        	self:_reloadAnimation()
         else
-            self.hitbox:draw(data.Taraxacum.color)
-            self.timer = 0
-        end
+        	self.hitbox:draw(data.Taraxacum.color)
+        	self.timer = 0
+    	end
     end
 end
 
@@ -5205,32 +5408,32 @@ function Snowman:_moveOneTile() -- оптимизируем вычисления
     for _, tile in ipairs(game.transitionTiles) do -- этот парень почти как игрок, ему можно
         if tile.x == self.x // 8 and tile.y == self.y // 8 and self.area ~= tile.area then
             self.area = tile.area
-            
+            trace('Snowman transitioned into area ' .. self.area)
         end
     end
 
     if #self.theWay > 2 and self.chaseStatus == 'chasing 🧐' then --[[ придётся менять это условие и то, что ниже в _jumpActivate()
      широкий парень уважает личное пространство                 ]]--
-        -- 
+        --trace(tostring(table.contains(data.bfs.solidTiles, mget(self.theWay[2].x, self.theWay[2].y))))
         if not table.contains(data.bfs.solidTiles, mget(self.theWay[2 + 1].x, self.theWay[2 + 1].y)) then -- тут мы проверяем, не является ли, совершенно случайно, следующий тайл дверью 😅
             local vec = {x = 8 * self.theWay[2].x - self.x, y = 8 * self.theWay[2].y - self.y}
             return self:_slowMoveOneTile(math.vecNormalize(vec), {x = 8 * self.theWay[2].x, y = 8 * self.theWay[2].y})
         else
-            
+            trace('next time i chase you 👿')
             return false
         end
         -- Честно говоря, я тоже боюсь того, что написал
     elseif self.outOfChaseTime < #self.theWay - 2 and self.chaseStatus == 'lost him 😠' then
-        -- 
+        --trace(tostring(table.contains(data.bfs.solidTiles, mget(self.theWay[2 + self.outOfChaseTime].x, self.theWay[2 + self.outOfChaseTime].y))))
         if self.area == game.playerArea then -- провяем, на одной ли зоне 🐓
             local vec = {x = 8 * self.theWay[2 + self.outOfChaseTime].x - self.x, y = 8 * self.theWay[2 + self.outOfChaseTime].y - self.y}
             return self:_slowMoveOneTile(math.vecNormalize(vec), {x = 8 * self.theWay[2 + self.outOfChaseTime].x, y = 8 * self.theWay[2 + self.outOfChaseTime].y})
         else
-            
+            trace('damn you, player the sandass')
             return false
         end
     else
-        -- 
+        --trace('let me hug yu🤗!!')
     end
 end
 
@@ -5423,7 +5626,7 @@ function Snowman:_createDeathEffect()
 end
 
 function Snowman:die()
-    
+    trace("I AM DEAD!!!")
     table.removeElement(game.updatables, self)
     table.removeElement(game.drawables, self)
     table.removeElement(game.collideables, self)
@@ -5472,7 +5675,7 @@ function MusicSnowman:tuning(music)
 
     if music.altBeatMap then
         self.altBeatMap = music.altBeatMap
-        -- 
+        -- trace("!!!!!!!!!   "..#self.altBeatMap)
     end
 end
 
@@ -5487,8 +5690,8 @@ function MusicSnowman:update()
                 local buf = table.copy(self.beatMap)
                 self.beatMap = table.copy(self.altBeatMap)
                 self.altBeatMap = buf
-                -- 
-                -- 
+                -- trace(self.altBeatMap[1].." "..self.altBeatMap[2].." "..self.altBeatMap[3].." "..self.altBeatMap[4])
+                -- trace(self.beatMap[1].." "..self.beatMap[2].." "..self.beatMap[3].." "..self.beatMap[4])
             end
         else
             self.beatMapIndex = self.beatMapIndex + 1
@@ -5739,7 +5942,7 @@ function DoorMechanic.findConnection(startX, startY) -- where we start searching
             if table.contains(data.mapConstants.turnedOnWires, tileType) then
                 DoorMechanic._walkWire(x, y, doorWiresLever)
                 if doorWiresLever.door == nil or doorWiresLever.lever == nil then
-                    
+                    trace("ERROR!! Couldn't find lever or door for wire at " .. x .. " " .. y)
                     return doorWiresLever
                 else
                     return doorWiresLever
@@ -5762,13 +5965,13 @@ function DoorMechanic.findConnectionWithoutDoor(startX, startY) -- where we star
             local tileType = gm.getTileId(x, y)
             if table.contains(data.mapConstants.turnedOnWires, tileType) then
                 DoorMechanic._walkWire(x, y, doorWiresLever)
-                -- 
+                --trace('rrrrrrrr')
                 if doorWiresLever.door == nil or doorWiresLever.lever == nil then
-                    
+                    trace("ERROR!! Couldn't find lever or door for wire at " .. x .. " " .. y)
 
                     return doorWiresLever
                 else
-                    -- 
+                    --trace(doorWiresLever.door)
                     return doorWiresLever
                 end
             end
@@ -5781,7 +5984,7 @@ function DoorMechanic._walkWire(x, y, doorWiresLever) -- _walkWireWhileDoor to b
     if table.contains(data.mapConstants.doorIds, tileType) then
         if (doorWiresLever.door == nil) or ((x <= doorWiresLever.door.x) and (y <= doorWiresLever.door.y)) then
             doorWiresLever.door = { x = x, y = y, id = mget(x, y) }
-            -- 
+            --trace('dr'..x..' '..y)
         end
     end
 
@@ -6329,10 +6532,6 @@ function Player:new(x, y, boomerang)
         return obj
 end
 
-function Player:getPositionTile()
-    return {x = self.x // 8, y = self.y // 8}
-end
-
 function Player:_willMoveCheck()
     self.dx = 0
     self.dy = 0 -- chill bro~~
@@ -6416,7 +6615,7 @@ function Player:_tryMove(movementNormalizer)
     for _, tile in ipairs(game.transitionTiles) do
         if tile.x == tilex and tile.y == tiley and game.playerArea ~= tile.area then
             game.playerArea = tile.area
-            
+            trace('Player transitioned into area ' .. game.playerArea)
         end
     end
 end
@@ -6522,7 +6721,7 @@ function Player:update()
 
     -- if keyp(27) then
     --     sfx(0, 'D-2', -1, 0, 10, 0)
-        
+    --     -- trace('GNOADFNASDJV')
     -- end
     -- if keyp(28) then
     --     sfx(0, 'D-2', 10, 0, 10, 0)
@@ -6580,18 +6779,18 @@ function Bike:new(x, y)
 end
 
 function Bike:sparkle()
-    
+    trace('sparkling~~')
 end
 
 function Bike:_drawAnimations()
-    -- 
+    --trace('yay2')
     for _, anime in ipairs(self.currentAnimations) do
         anime:play()
     end
 end
 
 function Bike:draw()
-    -- 
+    --trace('yay')
     self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
     self:_drawAnimations()
     if self.cutscene then
@@ -6617,7 +6816,7 @@ function Bike:_focusAnimations()
 end
 
 function Bike:onStatus()
-    -- 
+    --trace('heyday')
 
     rand = math.random(14)
     if rand == 7 then
@@ -6654,7 +6853,7 @@ function Bike:endspiel()
 end
 
 function Bike:update()
-    -- 
+    --trace('yay1')\
 
     if self.status == 'endgame' then
         self.beforeCutsceneTime = self.beforeCutsceneTime + 1
@@ -6674,7 +6873,7 @@ function Bike:update()
 
     if self.status ~= 'endgame' and self.hitbox:collide(game.player.hitbox) then
         self.sprite = data.Bike.sprites.himAgain:copy()
-        
+        trace('Ugh, rolled around in the sandbox again, drunkard!😞')
         
         self.cutscene = CutScene:new(game.player, game.bike)
         self.cutscene:init()
@@ -6968,70 +7167,70 @@ end
 -- Settings.lua
 settings = {}
 
-    SettingLever = table.copy(Lever)
+	SettingLever = table.copy(Lever)
 
-    SettingLever.spriteOff = data.SettingLever.sprites.off -- is default
-    SettingLever.spriteOn = data.SettingLever.sprites.on
+	SettingLever.spriteOff = data.SettingLever.sprites.off -- is default
+	SettingLever.spriteOn = data.SettingLever.sprites.on
 
-    function SettingLever:new(x, y, setting)
-        local obj = {
-            x = x,
-            y = y,
-            wires = {},
-            setting = nil,
-            sprite = SettingLever.spriteOff:copy(),
-            hitbox = Hitbox:new(x, y, x+8, y+8),
-            status = 'off'
-        }
+	function SettingLever:new(x, y, setting)
+	    local obj = {
+	        x = x,
+	        y = y,
+	        wires = {},
+	        setting = nil,
+	        sprite = SettingLever.spriteOff:copy(),
+	        hitbox = Hitbox:new(x, y, x+8, y+8),
+	        status = 'off'
+	    }
 
-        setmetatable(obj, self)
-        self.__index = self
-        return obj
-    end
+	    setmetatable(obj, self)
+	    self.__index = self
+	    return obj
+	end
 
-    local function changeSetting(name)
-        for i, set in ipairs(settings) do
-            if set.name == name then
-                set.change(set.state)
-            end
-        end
-    end
+	local function changeSetting(name)
+		for i, set in ipairs(settings) do
+			if set.name == name then
+				set.change(set.state)
+			end
+		end
+	end
 
-    function SettingLever:_turn()
-        if self.status == 'off' then
-            self.sprite = SettingLever.spriteOn
-            self.status = 'justOn'
+	function SettingLever:_turn()
+	    if self.status == 'off' then
+	        self.sprite = SettingLever.spriteOn
+	        self.status = 'justOn'
 
-            self:_toogleWires()
-            self.setting.state = true
-            changeSetting(self.setting.name)
+	        self:_toogleWires()
+	        self.setting.state = true
+	        changeSetting(self.setting.name)
 
-            return
-        elseif self.status == 'on' then
-            self.sprite = SettingLever.spriteOff
-            self.status = 'justOff'
+	        return
+	    elseif self.status == 'on' then
+	        self.sprite = SettingLever.spriteOff
+	        self.status = 'justOff'
 
-            self:_toogleWires()
-            self.setting.state = false
-            changeSetting(self.setting.name)
-            
-            return
-        end
-    end
+	        self:_toogleWires()
+	        self.setting.state = false
+	        changeSetting(self.setting.name)
+	        
+	        return
+	    end
+	end
 
 settings = {
-    [1] = {name = 'oneBitPallete', state = false},
-    [2] = {name = 'boomerShake', state = false},
+	[1] = {name = 'oneBitPallete', state = false},
+	[2] = {name = 'boomerShake', state = false},
 }
 
 
 
 settings[1].change = function (state) -- changes palette
-    palette.toggle1Bit()
+	palette.toggle1Bit()
 end
 
  settings[2].change = function (state) -- changes boomer shake
-    game.boomer.shakeOld = state
+	game.boomer.shakeOld = state
 end
 
 
@@ -7336,7 +7535,7 @@ function game.restart()
     local camera = createCamera(player)
     local fruitPopup = FruitPopup
     
-    table.insert(game.updatables, metronome)
+    -- table.insert(game.updatables, metronome)
     table.concatTable(game.updatables, checkpoints)
     table.insert(game.updatables, player)
     table.insert(game.updatables, bike)
@@ -7370,7 +7569,7 @@ function game.restart()
     game.boomer = boomerang
     game.camera = camera
     game.enemies = enemies
-    
+
     game.updateActiveEnemies()
 end
 
@@ -7395,23 +7594,25 @@ function game.update()
         game.drawGameEndScreen()
         return
     end
-    
+
+    game.metronome:update()
+    Time.update()
+    GameTimers.update()
     for _, updatable in ipairs(game.updatables) do
         updatable:update()
     end
-    
+
     if #game.deleteSchedule > 0 then
         table.removeElements(game.updatables, game.deleteSchedule)
         table.removeElements(game.drawables, game.deleteSchedule)
         game.deleteSchedule = {}
     end
-    
+
     game.updatePlayerArea()
-    
-    Time.update()
-    GameTimers.update()
-    
+
+    local draw_start = time()
     game.draw()
+    local draw_elapsed = time() - draw_start
 end
 
 function game.finish()
