@@ -101,6 +101,10 @@ function Heap:print()
     io.write("\n")
 end
 
+function Heap:empty()
+    return #self.tree == 0;
+end
+
 --[[
 -- Ссылочная структура работает. Вот пруфы:
 node1 = Heap.Node:new(1)

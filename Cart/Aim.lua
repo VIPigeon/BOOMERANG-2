@@ -203,6 +203,88 @@ function aim.bfsMapAdaptedV2x2(startPos)
     --error("findn't the way") -- when player snuggled to the wall
 end
 
+
+function aim.astar_2x2(startPos)
+    local MAX_PATH_LENGTH = 6
+
+    local steps = {
+        {x = 1, y =-1},
+        {x = 1, y = 1},
+        {x =-1, y =-1},
+        {x =-1, y = 1},
+        {x = 0, y = 1},
+        {x = 0, y =-1},
+        {x = 1, y = 0},
+        {x =-1, y = 0},
+    }
+    global_px = game.player.hitbox:get_center().x // 8
+    global_py = game.player.hitbox:get_center().y // 8
+    local px = global_px
+    local py = global_py
+
+    local visited = {}
+    for x = 0, 239 do
+        visited[x] = {}
+    end
+
+    local heap = Heap:new({Heap.Node:new({x = startPos.x, y = startPos.y, path = { {x = startPos.x, y = startPos.y} }})})
+    heap.compare = function(node1, node2)
+        return #node1.key.path + aim.getShortestKingPath(node1.key.x, node1.key.y, global_px, global_py) > #node2.key.path + aim.getShortestKingPath(node2.key.x, node2.key.y, global_px, global_py);
+    end
+
+    while not heap:empty() do
+        -- trace(heap:empty())
+        local cur = heap:pull()
+        -- trace(cur.x.." "..cur.y)
+
+        for _, step in ipairs(steps) do
+            local x = cur.x + step.x
+            local y = cur.y + step.y
+
+            if (x < 0) or (x > 240 - 1) or (y < 0) or (y > 135 - 1) then
+                goto continue
+            end
+
+            if gm.isBlockingBfs(x, y) then -- двери не твердые, потому что на карте их нет
+                visited[x][y] = true
+                goto continue
+            end
+            if gm.isBlockingBfs(x + 1, y) then
+                visited[x + 1][y] = true
+                goto continue
+            end
+            if gm.isBlockingBfs(x, y + 1) then
+                visited[x][y + 1] = true
+                goto continue
+            end
+            if gm.isBlockingBfs(x + 1, y + 1) then
+                visited[x + 1][y + 1] = true
+                goto continue
+            end
+
+
+            if math.inRangeIncl(x, px - 1, px + 1) and math.inRangeIncl(y, py - 1, py + 1) then
+                table.insert(cur.path, {x = x, y = y})
+                -- trace(#cur.path)
+                return cur.path
+            elseif not visited[x][y] then --🤗
+                local newPath = table.copy(cur.path)
+                table.insert(newPath, {x = x, y = y})
+
+                heap:push(Heap.Node:new({x = x, y = y, path = newPath}))
+                visited[x][y] = true
+            end
+
+            if #cur.path > MAX_PATH_LENGTH then
+                return cur.path
+            end
+
+            ::continue::
+        end
+    end
+end
+
+
 -- function aim.bfs(path)
 --     local steps = {
 --         {x=0, y=1},
@@ -263,6 +345,14 @@ end
 --     trace(debug_score)
 --     assert(false, "can't find a player")
 -- end
+
+
+function aim.getShortestKingPath(startX, startY, targetX, targetY)
+    -- returns length of the shortest path that a chess king can take (board is empty)
+    local dx = math.abs(startX - targetX)
+    local dy = math.abs(startY - targetY)
+    return math.min(dx, dy) + math.abs(dx - dy)
+end
 
 
 return aim

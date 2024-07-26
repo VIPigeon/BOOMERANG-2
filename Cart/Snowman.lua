@@ -169,7 +169,8 @@ function Snowman:_onBeat()
 end
 
 function Snowman:_setPath()
-    local way = aim.bfsMapAdaptedV2x2({x = self.x // 8, y = self.y // 8})
+    -- local way = aim.bfsMapAdaptedV2x2({x = self.x // 8, y = self.y // 8})
+    local way = aim.astar_2x2({x = self.x // 8, y = self.y // 8})
 
     if way then
         self.chaseStatus = 'chasing 🧐'
