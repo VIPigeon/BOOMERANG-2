@@ -205,7 +205,7 @@ end
 
 
 function aim.astar_2x2(startPos)
-    local MAX_PATH_LENGTH = 4
+    local MAX_PATH_LENGTH = math.random(4, 13)
 
     local steps = {
         {x = 1, y =-1},
