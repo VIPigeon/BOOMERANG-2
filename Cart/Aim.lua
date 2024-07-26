@@ -205,7 +205,7 @@ end
 
 
 function aim.astar_2x2(startPos)
-    local MAX_PATH_LENGTH = 6
+    local MAX_PATH_LENGTH = 4
 
     local steps = {
         {x = 1, y =-1},
@@ -223,8 +223,11 @@ function aim.astar_2x2(startPos)
     local py = global_py
 
     local visited = {}
-    for x = 0, 239 do
-        visited[x] = {}
+    -- for x = 0, 239 do
+    --     visited[x] = {}
+    -- end
+    for y = 0, 134 do
+        visited[y] = {}
     end
 
     local heap = Heap:new({Heap.Node:new({x = startPos.x, y = startPos.y, path = { {x = startPos.x, y = startPos.y} }})})
@@ -246,19 +249,19 @@ function aim.astar_2x2(startPos)
             end
 
             if gm.isBlockingBfs(x, y) then -- двери не твердые, потому что на карте их нет
-                visited[x][y] = true
+                visited[y][x] = true
                 goto continue
             end
             if gm.isBlockingBfs(x + 1, y) then
-                visited[x + 1][y] = true
+                visited[y][x + 1] = true
                 goto continue
             end
             if gm.isBlockingBfs(x, y + 1) then
-                visited[x][y + 1] = true
+                visited[y + 1][x] = true
                 goto continue
             end
             if gm.isBlockingBfs(x + 1, y + 1) then
-                visited[x + 1][y + 1] = true
+                visited[y + 1][x + 1] = true
                 goto continue
             end
 
@@ -267,12 +270,12 @@ function aim.astar_2x2(startPos)
                 table.insert(cur.path, {x = x, y = y})
                 -- trace(#cur.path)
                 return cur.path
-            elseif not visited[x][y] then --🤗
+            elseif not visited[y][x] then --🤗
                 local newPath = table.copy(cur.path)
                 table.insert(newPath, {x = x, y = y})
 
                 heap:push(Heap.Node:new({x = x, y = y, path = newPath}))
-                visited[x][y] = true
+                visited[y][x] = true
             end
 
             if #cur.path > MAX_PATH_LENGTH then

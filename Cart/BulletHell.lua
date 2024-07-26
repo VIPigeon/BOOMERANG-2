@@ -184,5 +184,6 @@ function BulletHell:draw()
         self.bullets[i]:draw(self.color)
     end
 
+    -- self.hitbox:draw(1)
     self:_drawAnimations()
 end
