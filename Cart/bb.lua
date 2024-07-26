@@ -1,9 +1,10 @@
-C0 = 0  -- прозрачный цвет
+
 -- title:  BOOMERANG 2: RETURN
 -- author: V. Crocodile
 -- desc:   A little game about killing flowers.
 -- script: lua
--- Aim.lua
+
+C0 = 0  -- прозрачный цвет
 
 -- Heap.lua
 Heap = {}
@@ -107,6 +108,10 @@ function Heap:print()
         e:write()
     end
     io.write("\n")
+end
+
+function Heap:empty()
+    return #self.tree == 0;
 end
 
 --[[
@@ -359,6 +364,91 @@ function aim.bfsMapAdaptedV2x2(startPos)
     --error("findn't the way") -- when player snuggled to the wall
 end
 
+
+function aim.astar_2x2(startPos)
+    local MAX_PATH_LENGTH = math.random(4, 13)
+
+    local steps = {
+        {x = 1, y =-1},
+        {x = 1, y = 1},
+        {x =-1, y =-1},
+        {x =-1, y = 1},
+        {x = 0, y = 1},
+        {x = 0, y =-1},
+        {x = 1, y = 0},
+        {x =-1, y = 0},
+    }
+    global_px = game.player.hitbox:get_center().x // 8
+    global_py = game.player.hitbox:get_center().y // 8
+    local px = global_px
+    local py = global_py
+
+    local visited = {}
+    -- for x = 0, 239 do
+    --     visited[x] = {}
+    -- end
+    for y = 0, 134 do
+        visited[y] = {}
+    end
+
+    local heap = Heap:new({Heap.Node:new({x = startPos.x, y = startPos.y, path = { {x = startPos.x, y = startPos.y} }})})
+    heap.compare = function(node1, node2)
+        return #node1.key.path + aim.getShortestKingPath(node1.key.x, node1.key.y, global_px, global_py) > #node2.key.path + aim.getShortestKingPath(node2.key.x, node2.key.y, global_px, global_py);
+    end
+
+    while not heap:empty() do
+        -- trace(heap:empty())
+        local cur = heap:pull()
+        -- trace(cur.x.." "..cur.y)
+
+        for _, step in ipairs(steps) do
+            local x = cur.x + step.x
+            local y = cur.y + step.y
+
+            if (x < 0) or (x > 240 - 1) or (y < 0) or (y > 135 - 1) then
+                goto continue
+            end
+
+            if gm.isBlockingBfs(x, y) then -- двери не твердые, потому что на карте их нет
+                visited[y][x] = true
+                goto continue
+            end
+            if gm.isBlockingBfs(x + 1, y) then
+                visited[y][x + 1] = true
+                goto continue
+            end
+            if gm.isBlockingBfs(x, y + 1) then
+                visited[y + 1][x] = true
+                goto continue
+            end
+            if gm.isBlockingBfs(x + 1, y + 1) then
+                visited[y + 1][x + 1] = true
+                goto continue
+            end
+
+
+            if math.inRangeIncl(x, px - 1, px + 1) and math.inRangeIncl(y, py - 1, py + 1) then
+                table.insert(cur.path, {x = x, y = y})
+                -- trace(#cur.path)
+                return cur.path
+            elseif not visited[y][x] then --🤗
+                local newPath = table.copy(cur.path)
+                table.insert(newPath, {x = x, y = y})
+
+                heap:push(Heap.Node:new({x = x, y = y, path = newPath}))
+                visited[y][x] = true
+            end
+
+            if #cur.path > MAX_PATH_LENGTH then
+                return cur.path
+            end
+
+            ::continue::
+        end
+    end
+end
+
+
 -- function aim.bfs(path)
 --     local steps = {
 --         {x=0, y=1},
@@ -421,7 +511,15 @@ end
 -- end
 
 
+function aim.getShortestKingPath(startX, startY, targetX, targetY)
+    -- returns length of the shortest path that a chess king can take (board is empty)
+    local dx = math.abs(startX - targetX)
+    local dy = math.abs(startY - targetY)
+    return math.min(dx, dy) + math.abs(dx - dy)
+end
 
+
+-- return aim
 
 -- Math.lua
 
@@ -503,7 +601,7 @@ end
 -- end
 
 
-
+-- return math
 
 -- Animation.lua
 
@@ -531,7 +629,7 @@ function anim.gen60(t)
     return res
 end
 
-
+-- return anim
 
 -- AnimeParticles.lua
 -- title:  pslib
@@ -1225,7 +1323,7 @@ function Body:born_update()
     return true
 end
 
-
+-- return Body
 
 -- Table.lua
 function table.copy(t)
@@ -1320,7 +1418,7 @@ function table.chooseRandomElement(t)
     return choosen
 end
 
-
+-- return table
 
 -- Hitbox.lua
 --Hitbox = table.copy(Rect)
@@ -1419,7 +1517,7 @@ function Hitbox:getHeight()
     return self.y2 - self.y1
 end
 
-
+-- return Hitbox
 
 -- HitCircle.lua
 HitCircle = table.copy(Hitbox)
@@ -1501,7 +1599,7 @@ function HitCircle:getHeight()
     return self.d
 end
 
-
+-- return HitCircle
 
 -- Sprite.lua
 
@@ -1581,7 +1679,7 @@ end
 
 
 
-
+-- return Sprite
 
 
 -- Drums.lua
@@ -1665,8 +1763,8 @@ MAP_HEIGHT = 135
 
 PLAYER_START_Y = 76 * 8 -- 128 * 8 -- 😋😋
 PLAYER_START_X = 105 * 8 -- 42 * 8  -- 😲😲
--- PLAYER_START_Y = 8* 60
--- PLAYER_START_X = 8* 78     
+-- PLAYER_START_Y = 8* 61
+-- PLAYER_START_X = 8* 181     
 
 -- PLAYER_END_Y = 89 * 8 -- BYKE 😎😎
 -- PLAYER_END_X = 118 * 8 -- G🤠T🤠 BYKE
@@ -2108,7 +2206,7 @@ data.Cutscene = {
     smoke_frequency = 3, -- More - less particles
 }   
 
-
+-- return data
 
 -- SuperConfig.lua
 
@@ -2177,7 +2275,7 @@ common = {
         bulletSpreadRadius = 11,
         bulletRotationSpeed = 1,
         bulletCount = 16,
-        bulletSpeed = 1.5,
+        bulletSpeed = 1.3,
         deathBulletSpeed = 0.1,
         color = 14,
         hp = BulletHellHP.big,
@@ -2191,7 +2289,7 @@ autobullethellprefab = {
         bulletSpreadRadius = 5,
         bulletRotationSpeed = 0.002,
         bulletCount = 8,
-        bulletSpeed = 2,
+        bulletSpeed = 1.5,
         deathBulletSpeed = 0.1,
         color = 13,
         hp = BulletHellHP.small,
@@ -2202,7 +2300,7 @@ autobullethellprefab = {
         bulletSpreadRadius = 8,
         bulletRotationSpeed = 0.0009,
         bulletCount = 12,
-        bulletSpeed = 4,
+        bulletSpeed = 1.8,
         deathBulletSpeed = 0.03,
         color = 13,
         hp = BulletHellHP.medium,
@@ -2213,7 +2311,7 @@ autobullethellprefab = {
         bulletSpreadRadius = 11,
         bulletRotationSpeed = 1,
         bulletCount = 16,
-        bulletSpeed = 5,
+        bulletSpeed = 2.1,
         deathBulletSpeed = 0.03,
         color = 13,
         hp = BulletHellHP.big,
@@ -2729,6 +2827,8 @@ data.add_enemy(19, verystrongrose,
 
 
 -- Palette.lua
+-- sync(0, 1, false)
+
 ADDR = 0x3FC0
 
 palette = {
@@ -2738,7 +2838,23 @@ palette = {
     isOneBit = false
 }
 
+
+astropalette = {
+    white = {218, 242, 233},
+    light_blue = {149, 224, 204},
+    blue = {57, 112, 122},
+    dark_blue = {35, 73, 93},
+    bg = {28, 38, 56},
+    red = {241, 78, 82},
+    dark_red = {155, 34, 43},
+    black = {0, 0, 0},
+}
+
 function palette.toggle1Bit()
+    -- небольшая подмена
+    palette.toggleAstroPalette()
+
+    --[[
     for id = 1, 15 do
         local color
         if not palette.isOneBit then
@@ -2755,22 +2871,54 @@ function palette.toggle1Bit()
     end
 
     palette.isOneBit = not palette.isOneBit
+    --]]
 end
+
+
+function palette.toggleAstroPalette()
+    palette.isOneBit = not palette.isOneBit
+
+    if not palette.isOneBit then
+        for id = 1, 15 do
+            local color = palette.defaultColors[id]
+            palette.colorChange(id, color.r, color.g, color.b)
+        end
+        return
+    end
+
+    palette.colorChange(0, astropalette.bg[1], astropalette.bg[2], astropalette.bg[3])
+    palette.colorChange(1, astropalette.red[1], astropalette.red[2], astropalette.red[3])
+    palette.colorChange(2, astropalette.blue[1], astropalette.blue[2], astropalette.blue[3])
+    palette.colorChange(3, astropalette.light_blue[1], astropalette.light_blue[2], astropalette.light_blue[3])
+    palette.colorChange(4, astropalette.blue[1], astropalette.blue[2], astropalette.blue[3])
+    palette.colorChange(5, astropalette.blue[1], astropalette.blue[2], astropalette.blue[3])
+    palette.colorChange(6, astropalette.black[1], astropalette.black[2], astropalette.black[3])
+    palette.colorChange(7, astropalette.dark_red[1], astropalette.dark_red[2], astropalette.dark_red[3])
+    palette.colorChange(8, astropalette.light_blue[1], astropalette.light_blue[2], astropalette.light_blue[3])
+    palette.colorChange(9, astropalette.blue[1], astropalette.blue[2], astropalette.blue[3])
+    palette.colorChange(10, astropalette.dark_blue[1], astropalette.dark_blue[2], astropalette.dark_blue[3])
+    palette.colorChange(11, astropalette.white[1], astropalette.white[2], astropalette.white[3])
+    palette.colorChange(12, astropalette.white[1], astropalette.white[2], astropalette.white[3])
+    palette.colorChange(13, astropalette.white[1], astropalette.white[2], astropalette.white[3])
+    palette.colorChange(14, astropalette.red[1], astropalette.red[2], astropalette.red[3])
+    palette.colorChange(15, astropalette.light_blue[1], astropalette.light_blue[2], astropalette.light_blue[3])
+end
+
 
 function palette.getColor(id)
     color = {}
-    color.r = peek(ADDR+(id*3)+2)
+    color.r = peek(ADDR+(id*3))
     color.g = peek(ADDR+(id*3)+1)
-    color.b = peek(ADDR+(id*3))
+    color.b = peek(ADDR+(id*3)+2)
     return color
 end
 
 function palette.colorChange(id, red, green, blue)
     -- id -- color index in tic80 palette
     -- red, green, blue -- new color parameters
-    poke(ADDR+(id*3)+2, red)
+    poke(ADDR+(id*3), red)
     poke(ADDR+(id*3)+1, green)
-    poke(ADDR+(id*3), blue)
+    poke(ADDR+(id*3)+2, blue)
 end
 
 function palette.ghostColor(GC)
@@ -2779,9 +2927,9 @@ function palette.ghostColor(GC)
     -- Всем привет, ребята 🤠
     -- здесь GC = 11
     local id = GC  -- id цвета
-    poke(ADDR+(id*3)+2, peek(ADDR+2))  -- red
+    poke(ADDR+(id*3)+2, peek(ADDR))  -- red
     poke(ADDR+(id*3)+1, peek(ADDR+1))  -- green
-    poke(ADDR+(id*3), peek(ADDR))  -- blue
+    poke(ADDR+(id*3), peek(ADDR+2))  -- blue
 end
 
 for i = 1, 15 do
@@ -2789,7 +2937,7 @@ for i = 1, 15 do
     table.insert(palette.defaultColors, color)
 end
 
-
+-- return palette
 
 -- Rect.lua
 Rect = {}
@@ -2893,7 +3041,7 @@ function Rect:drawDebug()
     )
 end
 
-
+-- return Rect
 -- Queue.lua
 Queue = {}
 
@@ -3045,7 +3193,7 @@ function Whirl:draw()
     self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
 end
 
-
+-- return Whirl
 
 -- AnimationOver.lua
 --Эпикграф
@@ -3453,7 +3601,7 @@ function gm.in_one_screen(obj1, obj2)
             math.round(y1 // 136) == math.round(y2 // 136)
 end
 
-
+-- return gm
 
 
 -- Time.lua
@@ -3991,6 +4139,7 @@ function BulletHell:draw()
         self.bullets[i]:draw(self.color)
     end
 
+    -- self.hitbox:draw(1)
     self:_drawAnimations()
 end
 
@@ -5495,7 +5644,8 @@ function Snowman:_onBeat()
 end
 
 function Snowman:_setPath()
-    local way = aim.bfsMapAdaptedV2x2({x = self.x // 8, y = self.y // 8})
+    -- local way = aim.bfsMapAdaptedV2x2({x = self.x // 8, y = self.y // 8})
+    local way = aim.astar_2x2({x = self.x // 8, y = self.y // 8})
 
     if way then
         self.chaseStatus = 'chasing 🧐'
@@ -6751,7 +6901,7 @@ function Player:update()
     end
 end
 
-
+-- return Player
 
 -- Bike.lua
 Bike = table.copy(Body)
@@ -7004,7 +7154,7 @@ function Boomerang:draw()
 end
 
 
-
+-- return Boomerang
 
 -- CameraWindow.lua
 CameraWindow = {}
@@ -7162,7 +7312,7 @@ function CameraWindow:update()
     self:moveCamera()
 end
 
-
+-- return CameraWindow
 
 -- Settings.lua
 settings = {}
@@ -7667,7 +7817,7 @@ function game.drawGameEndScreen()
     )
 end
 
-
+-- return game
 
 
 function TIC()

@@ -1,4 +1,4 @@
-sync(0, 1, false)
+-- sync(0, 1, false)
 
 ADDR = 0x3FC0
 
