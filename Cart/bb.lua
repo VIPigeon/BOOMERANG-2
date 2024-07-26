@@ -2390,10 +2390,10 @@ data.EnemyConfig = {
             sfxMap = {
                 -- {4, 'A-2', 16, 0, 4, -1},
                 -- {4, 'C-3', 16, 0, 4, -1},
-                {1, 'A-4', -1, 2, 10, 0},
-                {1, 'G-4', -1, 2, 10, 0},
-                {1, 'A-4', -1, 2, 10, 0},
-                {1, 'G-4', -1, 2, 10, 0},
+                {1, 'A-4', -1, 2, 15, 0},
+                {1, 'G-4', -1, 2, 15, 0},
+                {1, 'A-4', -1, 2, 15, 0},
+                {1, 'G-4', -1, 2, 15, 0},
             },
             altBeatMap = {0,0,0,0, 1, 1, 1, 1}
         },
@@ -2441,10 +2441,10 @@ data.EnemyConfig = {
             sfxMap = {
                 -- {4, 'A-2', 16, 0, 4, -1},
                 -- {4, 'C-3', 16, 0, 4, -1},
-                {1, 'A-4', -1, 2, 10, 0},
-                {1, 'G-4', -1, 2, 10, 0},
-                {1, 'A-4', -1, 2, 10, 0},
-                {1, 'G-4', -1, 2, 10, 0},
+                {1, 'A-4', -1, 2, 15, 0},
+                {1, 'G-4', -1, 2, 15, 0},
+                {1, 'A-4', -1, 2, 15, 0},
+                {1, 'G-4', -1, 2, 15, 0},
             },
             altBeatMap = {0,0,0,0, 1, 1, 1, 1}
         },
@@ -6972,7 +6972,7 @@ function Bike:onStatus()
     if rand == 7 then
         local anime = AnimationOver:new(table.chooseRandomElement(data.Bike.sprites.animations), 'randomOn', 'activeOnes')
         --need refactoring
-        if anime.sprite.animation[1] == 457 then
+        if anime.sprite.sprite == 457 or anime.sprite.animation ~= nil and anime.sprite.animation[1] == 457 then
             anime.right_sided = true
             anime.left_sided = false
         end
