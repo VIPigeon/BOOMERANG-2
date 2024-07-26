@@ -7726,7 +7726,7 @@ end
 game.restart()
 
 function game.draw()
-    map(gm.x, gm.y , 30, 17, gm.sx, gm.sy, C0)
+    map(gm.x, gm.y , 31, 18, gm.sx, gm.sy, C0)
     
     for _, drawable in ipairs(game.drawables) do
         drawable:draw()
