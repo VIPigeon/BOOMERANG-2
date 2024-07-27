@@ -106,7 +106,6 @@ function Boomerang:draw()
         return
     end
     self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
-    self.hitbox:draw(2)
 end
 
 

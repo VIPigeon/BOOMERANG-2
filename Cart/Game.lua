@@ -159,6 +159,12 @@ end
 
 function game.updateActiveEnemies()
     local plarea = game.playerArea
+
+    if game.playerAreaLast and game.playerAreaLast ~= -2147483648 then
+        for _, enemy in ipairs(AreaToEnemies[game.playerAreaLast]) do
+            enemy.isActive = false
+        end
+    end
     
     for _, enemy in ipairs(AreaToEnemies[plarea]) do
         if enemy.isActive ~= nil then
@@ -172,8 +178,8 @@ function game.updatePlayerArea()
         if game.playerAreaLast == game.playerArea then
             return
         else
-            game.playerAreaLast = game.playerArea
             game.updateActiveEnemies()
+            game.playerAreaLast = game.playerArea
         end
     else
         game.playerAreaLast = -2147483648
