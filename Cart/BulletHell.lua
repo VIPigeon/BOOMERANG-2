@@ -6,6 +6,7 @@ function BulletHell:new(x, y, config)
         bullets[i] = HellBullet:new()
     end
 
+    local radius = math.floor(config.circleDiameter / 2) - 2
     local object = {
         x = x,
         y = y,
@@ -21,6 +22,7 @@ function BulletHell:new(x, y, config)
         deathBulletSpeed = config.deathBulletSpeed,
         hp = config.hp,
         hitbox = HitCircle:new(x, y, config.circleDiameter),
+        radius = radius,
         time = 0,
         status = '',
         color = config.color,
@@ -93,8 +95,8 @@ function BulletHell:launchBulletsAround()
         bullet.y = self.bullets[i].y
         bullet.hitbox:set_xy(bullet.x, bullet.y)
 
-        local directionX = bullet.x - self.x
-        local directionY = bullet.y - self.y
+        local directionX = bullet.x - (self.x + self.radius)
+        local directionY = bullet.y - (self.y + self.radius)
 
         local speed = self.deathBulletSpeed
 
@@ -142,13 +144,14 @@ function BulletHell:update()
 end
 
 function BulletHell._moveBullets(bullethell, offset)
+    local radius = bullethell.radius
     local step = 2 * math.pi / bullethell.bulletCount
     for i = 1, #bullethell.bullets do
         local pheta = i * step + bullethell.rotationSpeed * offset
         local x = math.round(bullethell.spread * math.cos(pheta))
         local y = math.round(bullethell.spread * math.sin(pheta))
         local bullet = bullethell.bullets[i]
-        bullet:setPos(bullethell.x + x, bullethell.y + y) --не настоящие пули
+        bullet:setPos(bullethell.x + radius + x, bullethell.y + radius + y) --не настоящие пули
     end
 end
 
@@ -184,6 +187,6 @@ function BulletHell:draw()
         self.bullets[i]:draw(self.color)
     end
 
-    -- self.hitbox:draw(1)
+    --self.hitbox.hb:draw(1)
     self:_drawAnimations()
 end
