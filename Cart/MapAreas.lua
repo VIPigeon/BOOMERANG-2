@@ -1,5 +1,7 @@
 MapAreas = {}
 
+AreaToEnemies = {}
+
 function MapAreas.generate()
     local areas = {}
     local transitionTiles = {}
@@ -76,6 +78,17 @@ function MapAreas.generate()
     end
 
     return areas, transitionTiles
+end
+
+function MapAreas.CookEnemies()
+    for i, area in ipairs(game.areas) do
+        AreaToEnemies[i] = {}
+    end
+
+    for _, enemy in ipairs(game.enemies) do
+        local enemyLocation = MapAreas.findAreaWithTile(enemy.x // 8, enemy.y // 8)
+        table.insert(AreaToEnemies[enemyLocation], enemy)
+    end
 end
 
 function MapAreas.findAreaWithTile(tilex, tiley)
