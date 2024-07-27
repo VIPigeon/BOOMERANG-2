@@ -165,21 +165,6 @@ function game.updateActiveEnemies()
             enemy.isActive = true
         end
     end
-    --for _, enemy in ipairs(game.enemies) do
-    --    if enemy.isActive ~= nil then
-    --        -- TODO: OPTIMIZE PRIME
-    --        local enemyLocation = MapAreas.findAreaWithTile(enemy.x // 8, enemy.y // 8)
-    --        enemy.isActive = plarea == enemyLocation
-    --        
-    --        --debug
-    --        local lol = -1
-    --        if enemy.isActive then
-    --            lol = 1
-    --        else
-    --            lol = 0
-    --        end
-    --    end
-    --end
 end
 
 function game.updatePlayerArea()
@@ -271,6 +256,18 @@ function game.load()
     return checkpoint
 end
 
+-- Глобальные элементы игры, которые не
+-- меняются от сохранений (если игрок
+-- респавнится на чекпоинте, штуки снизу
+-- не изменятся)
+game.areas, game.transitionTiles = MapAreas.generate()
+
+local levers = createLevers()
+game.doors = createDoors(levers)
+local settingLevers = createSettingLevers()
+game.fruits = createFruits()
+fruitsCollection.needed = #game.fruits
+
 -- Все элементы игры, которые появляются 
 -- заново после смерти игрока.
 function game.restart()
@@ -283,8 +280,6 @@ function game.restart()
     game.updatables = {}
     game.collideables = {}
     
-    local levers = createLevers()
-    game.doors = createDoors(levers)
     local metronome = createMetronome()
     local enemies = createEnemies()
     local boomerang = createBoomerang(spawnpoint.x, spawnpoint.y)
@@ -292,11 +287,7 @@ function game.restart()
     local bike = createBike(YOUFORGOTYOURBIKEHERE)
     local camera = createCamera(player)
     local fruitPopup = FruitPopup
-
-    local settingLevers = createSettingLevers()
-    game.fruits = createFruits()
-    fruitsCollection.needed = #game.fruits
-
+    
     -- table.insert(game.updatables, metronome)
     table.concatTable(game.updatables, checkpoints)
     table.insert(game.updatables, player)
@@ -336,14 +327,10 @@ function game.restart()
     game.updateActiveEnemies()
 end
 
--- Глобальные элементы игры, которые не
--- меняются от сохранений (если игрок
--- респавнится на чекпоинте, штуки снизу
--- не изменятся)
-game.areas, game.transitionTiles = MapAreas.generate()
 game.restart()
 
 function game.draw()
+    -- map(gm.x, gm.y , 30, 17, gm.sx, gm.sy, C0)
     map(gm.x, gm.y , 31, 18, gm.sx, gm.sy, C0)
     
     for _, drawable in ipairs(game.drawables) do
