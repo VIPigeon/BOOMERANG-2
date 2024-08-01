@@ -1,4 +1,160 @@
+-- title:  BOOMERANG 2: RETURN
+-- author: V. Crocodile
+-- desc:   A little game about killing flowers.
+-- script: lua
 C0 = 0  -- прозрачный цвет
+
+-- Heap.lua
+Heap = {}
+Heap.Node = {}
+
+function Heap.Node:new(key)
+    local obj = {
+        key = key,
+        i = nil
+    }
+    setmetatable(obj, self)
+    self.__index = self
+    return obj
+end
+
+function Heap.Node:write()
+    io.write("Node\tkey="..self.key.."\ti="..self.i.."\n")
+end
+
+-- function Heap.compare(node1, node2)
+--     return node1.key > node2.key
+-- end
+
+function Heap:new(content)
+    local obj = {
+        tree = content,
+        size = #content + 1,
+        compare = function(node1, node2)
+            return node1.key > node2.key;
+        end,
+    }
+    setmetatable(obj, self)
+    self.__index = self
+    return obj
+end
+
+
+function Heap:buildHeap()
+    for i, node in ipairs(self.tree) do
+        node.i = i  -- установление начальных индексов
+    end
+    for i = self.size // 2, 1, -1 do
+        self:heapify(i)
+    end
+end
+
+function Heap:heapify(i)
+    local left = 2 * i
+    local right = 2 * i + 1
+    local largest = i
+    if left < self.size and not self.compare(self.tree[left], self.tree[largest]) then
+        largest = left
+    end
+    if right < self.size and not self.compare(self.tree[right], self.tree[largest]) then
+        largest = right
+    end
+
+    if largest == i then
+        return
+    end
+
+    local swapVar = self.tree[largest]
+    self.tree[largest] = self.tree[i]
+    self.tree[i] = swapVar
+    self.tree[i].i = i; self.tree[largest].i = largest;
+
+    self:heapify(largest)
+end
+
+function Heap:push(node)
+    self.tree[self.size] = node
+    self.size = self.size + 1;
+    node.i = self.size - 1
+    self:increaseKey(node.i, node.key);
+end
+
+function Heap:increaseKey(i, key)
+    self.tree[i].key = key
+    -- io.write(self.tree[i].key.." ")
+    while i > 1 and not self.compare(self.tree[i], self.tree[i // 2]) do
+    -- while i > 0 and not (self.tree[i].key > self.tree[i // 2].key) do
+        local swapVar = self.tree[i]
+        self.tree[i] = self.tree[i // 2]
+        self.tree[i // 2] = swapVar
+        self.tree[i].i = i; self.tree[i//2].i = i//2;
+        i = i // 2
+    end
+end
+
+function Heap:pull()
+    local res = self.tree[1];
+    self.size = self.size - 1;
+    self.tree[1] = self.tree[self.size];
+    table.remove(self.tree, nil)  -- remove last element
+    self:heapify(1);
+    return res.key;
+end
+
+function Heap:print()
+    for i, e in ipairs(self.tree) do
+        e:write()
+    end
+    io.write("\n")
+end
+
+function Heap:empty()
+    return #self.tree == 0;
+end
+
+--[[
+-- Ссылочная структура работает. Вот пруфы:
+node1 = Heap.Node:new(1)
+node2 = Heap.Node:new(2)
+node3 = Heap.Node:new(3)
+t = {node1, node2, node3}
+print(t[1].key .." ".. t[2].key)
+tmp = t[1]
+t[1] = t[2]
+t[2] = tmp
+print(t[1].key .." ".. t[2].key)
+t[2].key = 5
+print(node1.key .." ".. node2.key)
+--]]
+
+--[[
+-- Отладка
+node = Heap.Node:new(70)
+h = Heap:new{Heap.Node:new(1),
+Heap.Node:new(2),
+Heap.Node:new(4),
+Heap.Node:new(-5),
+Heap.Node:new(6),
+Heap.Node:new(8),
+Heap.Node:new(9),
+node
+}
+h:buildHeap()
+h:print()
+io.write(h:pull().."\n")
+io.write(h:pull().."\n")
+io.write(h:pull().."\n")
+io.write(h:pull().."\n")
+io.write(h:pull().."\n")
+h:push(Heap.Node:new(-48))
+h:push(Heap.Node:new(8))
+h:push(Heap.Node:new(4))
+h:push(Heap.Node:new(50))
+h:push(Heap.Node:new(23))
+h:print()
+h:increaseKey(node.i, 2)
+h:print()
+--]]
 
 -- Aim.lua
 
@@ -78,8 +234,8 @@ function aim.bfs(startPos)
             {x =-1, y = 1},
     }
 
-    local px = game.player:getPositionTile().x
-    local py = game.player:getPositionTile().y
+    local px = self.x // 8
+    local py = self.y // 8
 
     local queue = Queue:new()
     queue:enqueue({x = startPos.x, y = startPos.y, path = { {x = startPos.x, y = startPos.y} }})
@@ -206,6 +362,91 @@ function aim.bfsMapAdaptedV2x2(startPos)
     --error("findn't the way") -- when player snuggled to the wall
 end
 
+
+function aim.astar_2x2(startPos)
+    local MAX_PATH_LENGTH = math.random(4, 13)
+
+    local steps = {
+        {x = 1, y =-1},
+        {x = 1, y = 1},
+        {x =-1, y =-1},
+        {x =-1, y = 1},
+        {x = 0, y = 1},
+        {x = 0, y =-1},
+        {x = 1, y = 0},
+        {x =-1, y = 0},
+    }
+    global_px = game.player.hitbox:get_center().x // 8
+    global_py = game.player.hitbox:get_center().y // 8
+    local px = global_px
+    local py = global_py
+
+    local visited = {}
+    -- for x = 0, 239 do
+    --     visited[x] = {}
+    -- end
+    for y = 0, 134 do
+        visited[y] = {}
+    end
+
+    local heap = Heap:new({Heap.Node:new({x = startPos.x, y = startPos.y, path = { {x = startPos.x, y = startPos.y} }})})
+    heap.compare = function(node1, node2)
+        return #node1.key.path + aim.getShortestKingPath(node1.key.x, node1.key.y, global_px, global_py) > #node2.key.path + aim.getShortestKingPath(node2.key.x, node2.key.y, global_px, global_py);
+    end
+
+    while not heap:empty() do
+        -- trace(heap:empty())
+        local cur = heap:pull()
+        -- trace(cur.x.." "..cur.y)
+
+        for _, step in ipairs(steps) do
+            local x = cur.x + step.x
+            local y = cur.y + step.y
+
+            if (x < 0) or (x > 240 - 1) or (y < 0) or (y > 135 - 1) then
+                goto continue
+            end
+
+            if gm.isBlockingBfs(x, y) then -- двери не твердые, потому что на карте их нет
+                visited[y][x] = true
+                goto continue
+            end
+            if gm.isBlockingBfs(x + 1, y) then
+                visited[y][x + 1] = true
+                goto continue
+            end
+            if gm.isBlockingBfs(x, y + 1) then
+                visited[y + 1][x] = true
+                goto continue
+            end
+            if gm.isBlockingBfs(x + 1, y + 1) then
+                visited[y + 1][x + 1] = true
+                goto continue
+            end
+
+
+            if math.inRangeIncl(x, px - 1, px + 1) and math.inRangeIncl(y, py - 1, py + 1) then
+                table.insert(cur.path, {x = x, y = y})
+                -- trace(#cur.path)
+                return cur.path
+            elseif not visited[y][x] then --🤗
+                local newPath = table.copy(cur.path)
+                table.insert(newPath, {x = x, y = y})
+
+                heap:push(Heap.Node:new({x = x, y = y, path = newPath}))
+                visited[y][x] = true
+            end
+
+            if #cur.path > MAX_PATH_LENGTH then
+                return cur.path
+            end
+
+            ::continue::
+        end
+    end
+end
+
+
 -- function aim.bfs(path)
 --     local steps = {
 --         {x=0, y=1},
@@ -268,7 +509,15 @@ end
 -- end
 
 
+function aim.getShortestKingPath(startX, startY, targetX, targetY)
+    -- returns length of the shortest path that a chess king can take (board is empty)
+    local dx = math.abs(startX - targetX)
+    local dy = math.abs(startY - targetY)
+    return math.min(dx, dy) + math.abs(dx - dy)
+end
 
+
+-- return aim
 
 -- Math.lua
 
@@ -350,7 +599,7 @@ end
 -- end
 
 
-
+-- return math
 
 -- Animation.lua
 
@@ -378,7 +627,7 @@ function anim.gen60(t)
     return res
 end
 
-
+-- return anim
 
 -- AnimeParticles.lua
 -- title:  pslib
@@ -1072,7 +1321,7 @@ function Body:born_update()
     return true
 end
 
-
+-- return Body
 
 -- Table.lua
 function table.copy(t)
@@ -1167,7 +1416,7 @@ function table.chooseRandomElement(t)
     return choosen
 end
 
-
+-- return table
 
 -- Hitbox.lua
 --Hitbox = table.copy(Rect)
@@ -1266,7 +1515,7 @@ function Hitbox:getHeight()
     return self.y2 - self.y1
 end
 
-
+-- return Hitbox
 
 -- HitCircle.lua
 HitCircle = table.copy(Hitbox)
@@ -1322,11 +1571,13 @@ function HitCircle:set_xy(x, y)
 end
 
 function HitCircle:drawOutline(color)
-    circb(self.x + 2 - 8*gm.x + gm.sx, self.y + 2 - 8*gm.y + gm.sy, (self.d/2), color)
+    local radius = math.floor(self.d/2)
+    circb(radius + self.x - 8*gm.x + gm.sx, radius + self.y - 8*gm.y + gm.sy, (self.d/2), color)
 end
 
 function HitCircle:draw(color)
-    circ(self.x + 2 - 8*gm.x + gm.sx, self.y + 2 - 8*gm.y + gm.sy, (self.d/2), color)
+    local radius = math.floor(self.d/2)
+    circ(radius + self.x - 8*gm.x + gm.sx, radius + self.y - 8*gm.y + gm.sy, self.d/2, color)
 end
 
 function HitCircle:get_center()
@@ -1348,7 +1599,7 @@ function HitCircle:getHeight()
     return self.d
 end
 
-
+-- return HitCircle
 
 -- Sprite.lua
 
@@ -1392,7 +1643,43 @@ function Sprite:copy()
 end
 
 
+StaticSprite = {}
+function StaticSprite:new(sprite, size)
+    local obj = {
+        sprite = sprite,
+        size = size
+    }
+    setmetatable(obj, self)
+    self.__index = self; return obj
+end
 
+function StaticSprite:copy()
+    return self
+end
+
+function StaticSprite:draw(x, y, flip, rotate)
+    spr(self.sprite, x, y, C0, 1, flip, rotate, self.size, self.size)
+end
+
+function StaticSprite:animationEnd()
+    -- Страница специально оставлена пустой для литературного эффекта. Спасибо ООП!
+end
+function StaticSprite:nextFrame()
+    -- Страница специально оставлена пустой для литературного эффекта. Спасибо ООП!
+end
+function StaticSprite:getFrame()
+    -- Страница специально оставлена пустой для литературного эффекта. Спасибо ООП!
+end
+function StaticSprite:setFrame(frame)
+    -- Страница специально оставлена пустой для литературного эффекта. Спасибо ООП!
+end
+function StaticSprite:nextFrame()
+    -- Страница специально оставлена пустой для литературного эффекта. Спасибо ООП!
+end
+
+
+
+-- return Sprite
 
 
 -- Drums.lua
@@ -1476,8 +1763,8 @@ MAP_HEIGHT = 135
 
 PLAYER_START_Y = 76 * 8 -- 128 * 8 -- 😋😋
 PLAYER_START_X = 105 * 8 -- 42 * 8  -- 😲😲
--- PLAYER_START_Y = 8* 60
--- PLAYER_START_X = 8* 78     
+-- PLAYER_START_X = 8* 75     
+-- PLAYER_START_Y = 8* 14
 
 -- PLAYER_END_Y = 89 * 8 -- BYKE 😎😎
 -- PLAYER_END_X = 118 * 8 -- G🤠T🤠 BYKE
@@ -1513,7 +1800,7 @@ data.Player = {
     movementNormalizerStraight = 1,
     movementNormalizerDiagonal = 0.7,
     speed = 1.03,
-    deathParticleSprite = Sprite:new({377}, 1),
+    deathParticleSprite = StaticSprite:new(377, 1),
     deathAnimationDurationMs = 1000,
     deathParticleCountMin = 10,
     deathParticleCountMax = 20,
@@ -1542,7 +1829,7 @@ function plr_death_anim()
 end
 
 data.Player.sprites = {
-    stayFront =Sprite:new({257}, 1),
+    stayFront = Sprite:new({257}, 1),
     runFront = Sprite:new(anim.gen60({256, 257, 258, 259, 256, 257, 258, 259, 256, 257, 258, 259}), 1),
     death = Sprite:new({452, 453, 454}, 1),
     hat = Sprite:new(anim.gen60({279}), 1),
@@ -1566,15 +1853,15 @@ data.Boomerang.sprites = {
 data.Bike = {}
 
 data.Bike.sprites = {
-    waitingForHero = Sprite:new({138},2),
-    himAgain = Sprite:new({140}, 2),
+    waitingForHero = StaticSprite:new(138,2),
+    himAgain = StaticSprite:new(140, 2),
     sparklualCycleModifier = 10,
 }
 data.Bike.sprites.animations = {
     sparkingWhileWaitingMyBoy = Sprite:new(anim.gen({505, 506, 507, 508, 509, 510}, 6), 1),
-    notSparklingBecauseSandnessComeAgain = Sprite:new({0}, 1),
-    -- notSparklingBecauseSandnessCameAgain = Sprite:new({0}, 1),
-    notSparklingBecauseBoring = Sprite:new({0}, 1),
+    notSparklingBecauseSandnessComeAgain = StaticSprite:new(0, 1),
+    -- notSparklingBecauseSandnessCameAgain = StaticSprite:new({0}, 1),
+    notSparklingBecauseBoring = StaticSprite:new(0, 1),
     -- notSparkling = Sprite:new({0}, 1),
     -- notSparklingAgain = Sprite:new({0}, 1),
     -- notSparklingAndAgain = Sprite:new({0}, 1),
@@ -1700,7 +1987,7 @@ data.Taraxacum = {
 
     deathBulletSpread = 2.5,
 
-    deathBulletSprite = Sprite:new({378}, 1),
+    deathBulletSprite = StaticSprite:new(378, 1),
 }
 
 data.StaticTaraxacum = {
@@ -1728,9 +2015,9 @@ data.Checkpoint =  {
     width = 8,
     height = 8,
     flagTile = 211,
-    turnedOffSprite = Sprite:new({0}, 1),
-    turnedOnSprite = Sprite:new({248}, 1),
-    justUsedSprite = Sprite:new({249}, 1),
+    turnedOffSprite = StaticSprite:new(0, 1),
+    turnedOnSprite = StaticSprite:new(248, 1),
+    justUsedSprite = StaticSprite:new(249, 1),
     turnOnAnimation = Sprite:new(anim.gen(turnOnAnimationFrames, 3), 1),
 }
 
@@ -1759,14 +2046,14 @@ data.Lever = {
     hitboxHeight = 4,
 }
 data.Lever.sprites = {
-    on = Sprite:new({3},1),
-    off = Sprite:new({2},1),
+    on = StaticSprite:new(3,1),
+    off = StaticSprite:new(2,1),
 }
 
 data.SettingLever ={}
 data.SettingLever.sprites = {
-    on = Sprite:new({6}, 1),
-    off = Sprite:new({5}, 1),
+    on = StaticSprite:new(6, 1),
+    off = StaticSprite:new(5, 1),
 }
 
 data.EnemyDeathSounds = {  -- i cancel it :-<
@@ -1818,7 +2105,7 @@ data.AutoBulletHell = {
 
 data.Bullet = {
     defaultSpeed = 0.5,
-    defaultSprite = Sprite:new({373}, 1),
+    defaultSprite = StaticSprite:new(373, 1),
     reloadAnimation = Sprite:new(anim.gen({373, 0, 374, 375, 376}, 4), 1),
 }
 
@@ -1827,16 +2114,16 @@ data.Enemy = {
     defaultEnemyFlagTile = 98,
 }
 data.Enemy.sprites = {
-    defaultSprite = Sprite:new({403}, 1),
+    defaultSprite = StaticSprite:new(403, 1),
     --ahegaoDeath = Sprite:new({386, 387, 388, 389, 390}, 1)
 }
 data.Enemy.sprites.hurtEffect = {
     hurtingHorizontal = Sprite:new(anim.gen({473, 474, 475, 476, 477, 478, 479}, 3), 1),
     hurtingVertical = Sprite:new(anim.gen({473 + 16, 474 + 16, 475 + 16, 476 + 16, 477 + 16, 478 + 16, 479 + 16}, 3), 1),
-    hurtingNull0 = Sprite:new({0}, 1),
-    hurtingNull1 = Sprite:new({0}, 1),
-    hurtingNull2 = Sprite:new({0}, 1),
-    hurtingNull3 = Sprite:new({0}, 1),
+    hurtingNull0 = StaticSprite:new(0, 1),
+    hurtingNull1 = StaticSprite:new(0, 1),
+    hurtingNull2 = StaticSprite:new(0, 1),
+    hurtingNull3 = StaticSprite:new(0, 1),
 }
 
 data.Rose = {
@@ -1860,8 +2147,8 @@ data.Rose.anotherRoseFlagTile = 15
 data.Rose.sprites = {
     transition = Sprite:new({389, 391, 393, 395, 397, 421}, 2),
     death = Sprite:new(anim.gen60({423, 425, 427, 429}), 2),
-    idle = Sprite:new({389}, 2),
-    shooting = Sprite:new({391}, 2),
+    idle = StaticSprite:new(389, 2),
+    shooting = StaticSprite:new(391, 2),
 }
 data.Rose.animation_frame_duration_ms = 16
 data.Rose.rose_animation_duration_ms = data.Rose.animation_frame_duration_ms * #data.Rose.sprites.transition.animation
@@ -1869,15 +2156,15 @@ data.Rose.rose_animation_duration_ms = data.Rose.animation_frame_duration_ms * #
 data.WeakRose = {}
 data.WeakRose.sprites = {
     death = Sprite:new(anim.gen60({277, 279, 281, 283}), 2),
-    idle = Sprite:new({393}, 2),
-    shooting = Sprite:new({395}, 2),
+    idle = StaticSprite:new(393, 2),
+    shooting = StaticSprite:new(395, 2),
 }
 
 data.Snowman = {}
 
 data.Snowman.whirl = {
     fadeTimeMs = 150, -- Время до исчезания частички вихря
-    sprite = Sprite:new({350}, 1),
+    sprite = StaticSprite:new(350, 1),
     rotationSpeed = 0.012, -- Скорость вращения палки. Так мало, потому что миллисекунды 😏
     particleEmitDelayMs = 4, -- Задержка между спавном частиц вихря
     taraxacum = {
@@ -1906,8 +2193,8 @@ data.Snowman.whirl = {
 data.SnowmanBox = {}
 data.SnowmanBox.playerCheckFrequencyMs = 1000
 data.SnowmanBox.wakeUpDistanceToPlayer = 48
-data.SnowmanBox.sleepSprite = Sprite:new({485}, 2)
-data.SnowmanBox.wokeupSprite = Sprite:new({487}, 2)
+data.SnowmanBox.sleepSprite = StaticSprite:new(485, 2)
+data.SnowmanBox.wokeupSprite = StaticSprite:new(487, 2)
 
 
 data.Cutscene = {
@@ -1919,7 +2206,7 @@ data.Cutscene = {
     smoke_frequency = 3, -- More - less particles
 }   
 
-
+-- return data
 
 -- SuperConfig.lua
 
@@ -1966,7 +2253,7 @@ common = {
         bulletSpreadRadius = 5,
         bulletRotationSpeed = 0.002,
         bulletCount = 8,
-        bulletSpeed = 0.95,
+        bulletSpeed = 0.98,
         deathBulletSpeed = 0.18,
         color = 14,
         hp = BulletHellHP.small,
@@ -1977,7 +2264,7 @@ common = {
         bulletSpreadRadius = 8,
         bulletRotationSpeed = 0.0009,
         bulletCount = 12,
-        bulletSpeed = 1.1,
+        bulletSpeed = 1.13,
         deathBulletSpeed = 0.1,
         color = 14,
         hp = BulletHellHP.medium,
@@ -1988,7 +2275,7 @@ common = {
         bulletSpreadRadius = 11,
         bulletRotationSpeed = 1,
         bulletCount = 16,
-        bulletSpeed = 1.5,
+        bulletSpeed = 1.4,
         deathBulletSpeed = 0.1,
         color = 14,
         hp = BulletHellHP.big,
@@ -2013,7 +2300,7 @@ autobullethellprefab = {
         bulletSpreadRadius = 8,
         bulletRotationSpeed = 0.0009,
         bulletCount = 12,
-        bulletSpeed = 4,
+        bulletSpeed = 2.3,
         deathBulletSpeed = 0.03,
         color = 13,
         hp = BulletHellHP.medium,
@@ -2024,7 +2311,7 @@ autobullethellprefab = {
         bulletSpreadRadius = 11,
         bulletRotationSpeed = 1,
         bulletCount = 16,
-        bulletSpeed = 5,
+        bulletSpeed = 2.5,
         deathBulletSpeed = 0.03,
         color = 13,
         hp = BulletHellHP.big,
@@ -2074,57 +2361,6 @@ data.EnemyConfig = {
         color = 12,
         speed = 15, -- data.Player.speed - 0.41,
         speedWithWhirl = 0.8, --data.Player.speed - 0.61,
-        hp = 200,
-        prepareJumpTime = 20,
-        --jumpTime = 20,
-        resetJumpTime = 24,
-
-        deathParticleCountMin = 100,
-        deathParticleCountMax = 300,
-        deathAnimationParticleSpeed = 1,
-        deathAnimationParticleSpeedNormalizer = 0.4,
-        deathParticleMinSpeed = 1,
-        deathParticleSprite = Sprite:new({378}, 1),
-
-        specialTaraxacum = {
-            radius = 3,
-            bodyLength = 15,
-            shiftForCenterX = 12,
-            shiftForCenterY = -3,
-            startStickX = 0,
-            startStickY = 0,
-            bodyColor = 10,
-            color = 12,
-            reloadAnimationTime = 18, -- in tics should divide by 3
-        },
-
-        music = {
-            beatMap = {0, 0, 0, 0, 0, 0, 0, 0,},
-            sfxMap = {
-                -- {4, 'A-2', 16, 0, 4, -1},
-                -- {4, 'C-3', 16, 0, 4, -1},
-                {1, 'A-4', -1, 2, 10, 0},
-                {1, 'G-4', -1, 2, 10, 0},
-                {1, 'A-4', -1, 2, 10, 0},
-                {1, 'G-4', -1, 2, 10, 0},
-            },
-            altBeatMap = {0,0,0,0, 1, 1, 1, 1}
-        },
-
-        sprites = {
-            chill = Sprite:new({312}, 2),
-            prepareJump = Sprite:new({312, 344}, 2),
-            flyJump = Sprite:new(anim.gen60({346,348,346}), 2),
-            resetJump = Sprite:new({348,344,312}, 2),
-            death = Sprite:new(anim.gen60({312,314,312,314,312}), 2)
-        },
-    },
-
-    [66] = {
-        name = 'Snowman',
-        color = 12,
-        speed = 15, -- data.Player.speed - 0.41,
-        speedWithWhirl = 0.8, --data.Player.speed - 0.61,
         hp = 150,
         prepareJumpTime = 20,
         --jumpTime = 20,
@@ -2135,7 +2371,7 @@ data.EnemyConfig = {
         deathAnimationParticleSpeed = 1,
         deathAnimationParticleSpeedNormalizer = 0.4,
         deathParticleMinSpeed = 1,
-        deathParticleSprite = Sprite:new({378}, 1),
+        deathParticleSprite = StaticSprite:new(378, 1),
 
         specialTaraxacum = {
             radius = 3,
@@ -2154,22 +2390,73 @@ data.EnemyConfig = {
             sfxMap = {
                 -- {4, 'A-2', 16, 0, 4, -1},
                 -- {4, 'C-3', 16, 0, 4, -1},
-                {1, 'A-4', -1, 2, 10, 0},
-                {1, 'G-4', -1, 2, 10, 0},
-                {1, 'A-4', -1, 2, 10, 0},
-                {1, 'G-4', -1, 2, 10, 0},
+                {42, 'A-5', -1, 2, 10, 0},
+                {42, 'G-5', -1, 2, 10, 0},
+                {42, 'A-5', -1, 2, 10, 0},
+                {42, 'G-5', -1, 2, 10, 0},
             },
             altBeatMap = {0,0,0,0, 1, 1, 1, 1}
         },
 
         sprites = {
-            chill = Sprite:new({312}, 2),
+            chill = StaticSprite:new(312, 2),
             prepareJump = Sprite:new({312, 344}, 2),
             flyJump = Sprite:new(anim.gen60({346,348,346}), 2),
             resetJump = Sprite:new({348,344,312}, 2),
             death = Sprite:new(anim.gen60({312,314,312,314,312}), 2)
         },
     },
+
+    -- [66] = {
+    --     name = 'Snowman',
+    --     color = 12,
+    --     speed = 15, -- data.Player.speed - 0.41,
+    --     speedWithWhirl = 0.8, --data.Player.speed - 0.61,
+    --     hp = 150,
+    --     prepareJumpTime = 20,
+    --     --jumpTime = 20,
+    --     resetJumpTime = 24,
+
+    --     deathParticleCountMin = 100,
+    --     deathParticleCountMax = 300,
+    --     deathAnimationParticleSpeed = 1,
+    --     deathAnimationParticleSpeedNormalizer = 0.4,
+    --     deathParticleMinSpeed = 1,
+    --     deathParticleSprite = StaticSprite:new(378, 1),
+
+    --     specialTaraxacum = {
+    --         radius = 3,
+    --         bodyLength = 15,
+    --         shiftForCenterX = 12,
+    --         shiftForCenterY = -3,
+    --         startStickX = 0,
+    --         startStickY = 0,
+    --         bodyColor = 10,
+    --         color = 12,
+    --         reloadAnimationTime = 18, -- in tics should divide by 3
+    --     },
+
+    --     music = {
+    --         beatMap = {0, 0, 0, 0, 0, 0, 0, 0,},
+    --         sfxMap = {
+    --             -- {4, 'A-2', 16, 0, 4, -1},
+    --             -- {4, 'C-3', 16, 0, 4, -1},
+    --             {1, 'A-4', -1, 2, 15, 0},
+    --             {1, 'G-4', -1, 2, 15, 0},
+    --             {1, 'A-4', -1, 2, 15, 0},
+    --             {1, 'G-4', -1, 2, 15, 0},
+    --         },
+    --         altBeatMap = {0,0,0,0, 1, 1, 1, 1}
+    --     },
+
+    --     sprites = {
+    --         chill = StaticSprite:new(312, 2),
+    --         prepareJump = Sprite:new({312, 344}, 2),
+    --         flyJump = Sprite:new(anim.gen60({346,348,346}), 2),
+    --         resetJump = Sprite:new({348,344,312}, 2),
+    --         death = Sprite:new(anim.gen60({312,314,312,314,312}), 2)
+    --     },
+    -- },
     [97] = {
         name = 'StaticTaraxacum',
         speed = 2,
@@ -2190,7 +2477,7 @@ data.EnemyConfig = {
 
         deathBulletSpread = 2,
 
-        deathBulletSprite = Sprite:new({378}, 1),
+        deathBulletSprite = StaticSprite:new(378, 1),
     }, -- mb static idk
 }
 
@@ -2229,6 +2516,7 @@ data.add_all_bullethell_sizes(
             {20, 'E-8', -1, 1, 9, 0},
             {20, 'A-8', -1, 1, 9, 0},
         },
+        intro = silence,
     }
 )
 
@@ -2448,8 +2736,8 @@ data.add_enemy(
         intro = {
             beatMap = {0,0, 0,0, 1,0, 1,0},
             sfxMap = {
-                {2, 'A-3', -1, 1, 4, 0},
-                {2, 'F#3', -1, 1, 4, 0},
+                {2, 'A-3', -1, 1, 15, 0},
+                {2, 'F#3', -1, 1, 15, 0},
             },  
         },
     }
@@ -2538,7 +2826,10 @@ data.add_enemy(19, verystrongrose,
         altBeatMap = {1,1,1,1, 0,0,0,0},
     })
 
+
 -- Palette.lua
+-- sync(0, 1, false)
+
 ADDR = 0x3FC0
 
 palette = {
@@ -2548,7 +2839,23 @@ palette = {
     isOneBit = false
 }
 
+
+astropalette = {
+    white = {218, 242, 233},
+    light_blue = {149, 224, 204},
+    blue = {57, 112, 122},
+    dark_blue = {35, 73, 93},
+    bg = {28, 38, 56},
+    red = {241, 78, 82},
+    dark_red = {155, 34, 43},
+    black = {0, 0, 0},
+}
+
 function palette.toggle1Bit()
+    -- небольшая подмена
+    palette.toggleAstroPalette()
+
+    --[[
     for id = 1, 15 do
         local color
         if not palette.isOneBit then
@@ -2565,22 +2872,54 @@ function palette.toggle1Bit()
     end
 
     palette.isOneBit = not palette.isOneBit
+    --]]
 end
+
+
+function palette.toggleAstroPalette()
+    palette.isOneBit = not palette.isOneBit
+
+    if not palette.isOneBit then
+        for id = 1, 15 do
+            local color = palette.defaultColors[id]
+            palette.colorChange(id, color.r, color.g, color.b)
+        end
+        return
+    end
+
+    palette.colorChange(0, astropalette.bg[1], astropalette.bg[2], astropalette.bg[3])
+    palette.colorChange(1, astropalette.red[1], astropalette.red[2], astropalette.red[3])
+    palette.colorChange(2, astropalette.blue[1], astropalette.blue[2], astropalette.blue[3])
+    palette.colorChange(3, astropalette.light_blue[1], astropalette.light_blue[2], astropalette.light_blue[3])
+    palette.colorChange(4, astropalette.blue[1], astropalette.blue[2], astropalette.blue[3])
+    palette.colorChange(5, astropalette.blue[1], astropalette.blue[2], astropalette.blue[3])
+    palette.colorChange(6, astropalette.black[1], astropalette.black[2], astropalette.black[3])
+    palette.colorChange(7, astropalette.dark_red[1], astropalette.dark_red[2], astropalette.dark_red[3])
+    palette.colorChange(8, astropalette.light_blue[1], astropalette.light_blue[2], astropalette.light_blue[3])
+    palette.colorChange(9, astropalette.blue[1], astropalette.blue[2], astropalette.blue[3])
+    palette.colorChange(10, astropalette.dark_blue[1], astropalette.dark_blue[2], astropalette.dark_blue[3])
+    palette.colorChange(11, astropalette.white[1], astropalette.white[2], astropalette.white[3])
+    palette.colorChange(12, astropalette.white[1], astropalette.white[2], astropalette.white[3])
+    palette.colorChange(13, astropalette.white[1], astropalette.white[2], astropalette.white[3])
+    palette.colorChange(14, astropalette.red[1], astropalette.red[2], astropalette.red[3])
+    palette.colorChange(15, astropalette.light_blue[1], astropalette.light_blue[2], astropalette.light_blue[3])
+end
+
 
 function palette.getColor(id)
     color = {}
-    color.r = peek(ADDR+(id*3)+2)
+    color.r = peek(ADDR+(id*3))
     color.g = peek(ADDR+(id*3)+1)
-    color.b = peek(ADDR+(id*3))
+    color.b = peek(ADDR+(id*3)+2)
     return color
 end
 
 function palette.colorChange(id, red, green, blue)
     -- id -- color index in tic80 palette
     -- red, green, blue -- new color parameters
-    poke(ADDR+(id*3)+2, red)
+    poke(ADDR+(id*3), red)
     poke(ADDR+(id*3)+1, green)
-    poke(ADDR+(id*3), blue)
+    poke(ADDR+(id*3)+2, blue)
 end
 
 function palette.ghostColor(GC)
@@ -2589,9 +2928,9 @@ function palette.ghostColor(GC)
     -- Всем привет, ребята 🤠
     -- здесь GC = 11
     local id = GC  -- id цвета
-    poke(ADDR+(id*3)+2, peek(ADDR+2))  -- red
+    poke(ADDR+(id*3)+2, peek(ADDR))  -- red
     poke(ADDR+(id*3)+1, peek(ADDR+1))  -- green
-    poke(ADDR+(id*3), peek(ADDR))  -- blue
+    poke(ADDR+(id*3), peek(ADDR+2))  -- blue
 end
 
 for i = 1, 15 do
@@ -2599,7 +2938,7 @@ for i = 1, 15 do
     table.insert(palette.defaultColors, color)
 end
 
-
+-- return palette
 
 -- Rect.lua
 Rect = {}
@@ -2703,7 +3042,7 @@ function Rect:drawDebug()
     )
 end
 
-
+-- return Rect
 -- Queue.lua
 Queue = {}
 
@@ -2855,7 +3194,7 @@ function Whirl:draw()
     self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
 end
 
-
+-- return Whirl
 
 -- AnimationOver.lua
 --Эпикграф
@@ -2978,7 +3317,7 @@ function FruitPopup:show(stayTimeMilliseconds)
     self.timeToStay = stayTimeMilliseconds
 end
 
-local goToBikeSprite = Sprite:new({308}, 4)
+local goToBikeSprite = StaticSprite:new(308, 4)
 
 function FruitPopup:draw()
     if fruitsCollection.collected == fruitsCollection.needed then
@@ -3085,6 +3424,8 @@ end
 -- MapAreas.lua
 MapAreas = {}
 
+AreaToEnemies = {}
+
 function MapAreas.generate()
     local areas = {}
     local transitionTiles = {}
@@ -3161,6 +3502,17 @@ function MapAreas.generate()
     end
 
     return areas, transitionTiles
+end
+
+function MapAreas.CookEnemies()
+    for i, area in ipairs(game.areas) do
+        AreaToEnemies[i] = {}
+    end
+
+    for _, enemy in ipairs(game.enemies) do
+        local enemyLocation = MapAreas.findAreaWithTile(enemy.x // 8, enemy.y // 8)
+        table.insert(AreaToEnemies[enemyLocation], enemy)
+    end
 end
 
 function MapAreas.findAreaWithTile(tilex, tiley)
@@ -3263,7 +3615,7 @@ function gm.in_one_screen(obj1, obj2)
             math.round(y1 // 136) == math.round(y2 // 136)
 end
 
-
+-- return gm
 
 
 -- Time.lua
@@ -3511,15 +3863,31 @@ function Enemy:_drawAnimations()
 end
 
 function Enemy:_focusAnimations()
-    local center = self.hitbox:get_center()
+    local center_x
+    local center_y
+    -- What the fuck??? +10000% code speedup когда я убрал создание таблицы,
+    -- что за тупая хрень???!
+    if self.hitbox.type == 'hitcircle' then
+        local x1 = self.hitbox.x
+        local x2 = self.hitbox.x + self.hitbox.d
+        local y1 = self.hitbox.y
+        local y2 = self.hitbox.y + self.hitbox.d
+        center_x = x1 + (x2 - x1) / 2
+        center_y = y1 + (y2 - y1) / 2
+    else
+        local x1 = self.hitbox.x1
+        local y1 = self.hitbox.y1
+        center_x = x1 + (self.hitbox.x2 - x1) / 2
+        center_y = y1 + (self.hitbox.y2 - y1) / 2
+    end
     local width = self.hitbox:getWidth()
     local height = self.hitbox:getHeight()
     -- чтобы анимация проигрывалась вокруг противника равномерно
 
-    local x1 = center.x - width
-    local x2 = center.x
-    local y1 = center.y - height
-    local y2 = center.y 
+    local x1 = center_x - width
+    local x2 = center_x
+    local y1 = center_y - height
+    local y2 = center_y 
     for _, anime in ipairs(self.currentAnimations) do
         anime:focus(x1, y1, x2, y2)
     end
@@ -3607,6 +3975,7 @@ function BulletHell:new(x, y, config)
         bullets[i] = HellBullet:new()
     end
 
+    local radius = math.floor(config.circleDiameter / 2) - 2
     local object = {
         x = x,
         y = y,
@@ -3622,6 +3991,7 @@ function BulletHell:new(x, y, config)
         deathBulletSpeed = config.deathBulletSpeed,
         hp = config.hp,
         hitbox = HitCircle:new(x, y, config.circleDiameter),
+        radius = radius,
         time = 0,
         status = '',
         color = config.color,
@@ -3694,8 +4064,8 @@ function BulletHell:launchBulletsAround()
         bullet.y = self.bullets[i].y
         bullet.hitbox:set_xy(bullet.x, bullet.y)
 
-        local directionX = bullet.x - self.x
-        local directionY = bullet.y - self.y
+        local directionX = bullet.x - (self.x + self.radius)
+        local directionY = bullet.y - (self.y + self.radius)
 
         local speed = self.deathBulletSpeed
 
@@ -3743,13 +4113,14 @@ function BulletHell:update()
 end
 
 function BulletHell._moveBullets(bullethell, offset)
+    local radius = bullethell.radius
     local step = 2 * math.pi / bullethell.bulletCount
     for i = 1, #bullethell.bullets do
         local pheta = i * step + bullethell.rotationSpeed * offset
         local x = math.round(bullethell.spread * math.cos(pheta))
         local y = math.round(bullethell.spread * math.sin(pheta))
         local bullet = bullethell.bullets[i]
-        bullet:setPos(bullethell.x + x, bullethell.y + y) --не настоящие пули
+        bullet:setPos(bullethell.x + radius + x, bullethell.y + radius + y) --не настоящие пули
     end
 end
 
@@ -3785,6 +4156,7 @@ function BulletHell:draw()
         self.bullets[i]:draw(self.color)
     end
 
+    --self.hitbox.hb:draw(1)
     self:_drawAnimations()
 end
 
@@ -4078,6 +4450,7 @@ function MusicAutoBulletHell:new(x, y, config)
         bullets[i] = AutoHellBullet:new()
     end
 
+    local radius = math.floor(config.circleDiameter / 2) - 1
     local object = {
         x = x,
         y = y,
@@ -4091,6 +4464,7 @@ function MusicAutoBulletHell:new(x, y, config)
         deathBulletSpeed = config.deathBulletSpeed,
         hp = config.hp,
         hitbox = HitCircle:new(x, y, config.circleDiameter),
+        radius = radius,
         time = 0,
         status = '',
         color = config.color,
@@ -4100,6 +4474,9 @@ function MusicAutoBulletHell:new(x, y, config)
         currentAnimations = {},
 
         isActive = false,
+
+        damageSound = data.EnemyDamageSounds.BulletHell,
+        deathSound = data.EnemyDeathSounds.BulletHell,
     }
 
     BulletHell._moveBullets(object, 0)
@@ -4292,6 +4669,7 @@ function MusicAutoBulletHell:onBeat()
     end
 end
 
+
 -- Rose.lua
 Rose = table.copy(Enemy)
 
@@ -4397,7 +4775,8 @@ function Rose:new(x, y, direction, sprites, laserColor, config)
 
         isActive = false,
     }
-    trace(obj.damageSound)
+
+    Rose.shoot(obj)
 
     setmetatable(obj, self)
     self.__index = self
@@ -4600,7 +4979,6 @@ function MusicRose:tuning(music)
 
     if music.altBeatMap then
         self.altBeatMap = music.altBeatMap
-        -- trace("!!!!!!!!!   "..#self.altBeatMap)
     end
 end
 
@@ -4613,7 +4991,6 @@ function MusicRose:_full_shot()
     end
     self.status = 'shooting'
     self.sprite = self.sprites.shooting
-    self:shoot()
 
     local sound = self.sfxMap[self.i_sfxMap]
     sfx(sound[1],
@@ -4752,7 +5129,7 @@ end
 -- Bullet.lua
 Bullet = table.copy(Body)
 
-Bullet.defaultSprite = Sprite:new({373}, 1)
+Bullet.defaultSprite = StaticSprite:new(373, 1)
 
 function Bullet:new(x, y, sprite)
     sprite = sprite or Bullet.defaultSprite
@@ -4772,11 +5149,13 @@ function Bullet:new(x, y, sprite)
 end
 
 function Bullet:setVelocity(x, y)
-    self.vector = {x=x, y=y}
+    self.vector.x = x
+    self.vector.y = y
 end
 
 function Bullet:vectorUpdateByTarget(targetCoordX, targetCoordY)
-    self.vector = {x = targetCoordX - self.x, y = targetCoordY - self.y}
+    self.vector.x = targetCoordX - self.x
+    self.vector.y = targetCoordY - self.y
     self.vector = math.vecNormalize(self.vector)
 end
 
@@ -4969,7 +5348,7 @@ function StaticTaraxacum:new(
     local deathBulletSpeed = config.deathBulletSpeed or error('no config!')
 
     local object = {
-        x = x,
+        x = x+1,  -- wtf
         y = y,
         w = 0,
         h = bodyLength,
@@ -5288,7 +5667,8 @@ function Snowman:_onBeat()
 end
 
 function Snowman:_setPath()
-    local way = aim.bfsMapAdaptedV2x2({x = self.x // 8, y = self.y // 8})
+    -- local way = aim.bfsMapAdaptedV2x2({x = self.x // 8, y = self.y // 8})
+    local way = aim.astar_2x2({x = self.x // 8, y = self.y // 8})
 
     if way then
         self.chaseStatus = 'chasing 🧐'
@@ -6325,10 +6705,6 @@ function Player:new(x, y, boomerang)
         return obj
 end
 
-function Player:getPositionTile()
-    return {x = self.x // 8, y = self.y // 8}
-end
-
 function Player:_willMoveCheck()
     self.dx = 0
     self.dy = 0 -- chill bro~~
@@ -6548,7 +6924,7 @@ function Player:update()
     end
 end
 
-
+-- return Player
 
 -- Bike.lua
 Bike = table.copy(Body)
@@ -6619,7 +6995,7 @@ function Bike:onStatus()
     if rand == 7 then
         local anime = AnimationOver:new(table.chooseRandomElement(data.Bike.sprites.animations), 'randomOn', 'activeOnes')
         --need refactoring
-        if anime.sprite.animation[1] == 457 then
+        if anime.sprite.sprite == 457 or anime.sprite.animation ~= nil and anime.sprite.animation[1] == 457 then
             anime.right_sided = true
             anime.left_sided = false
         end
@@ -6801,7 +7177,7 @@ function Boomerang:draw()
 end
 
 
-
+-- return Boomerang
 
 -- CameraWindow.lua
 CameraWindow = {}
@@ -6959,7 +7335,7 @@ function CameraWindow:update()
     self:moveCamera()
 end
 
-
+-- return CameraWindow
 
 -- Settings.lua
 settings = {}
@@ -7193,20 +7569,16 @@ end
 
 function game.updateActiveEnemies()
     local plarea = game.playerArea
+
+    if game.playerAreaLast and game.playerAreaLast ~= -2147483648 then
+        for _, enemy in ipairs(AreaToEnemies[game.playerAreaLast]) do
+            enemy.isActive = false
+        end
+    end
     
-    for _, enemy in ipairs(game.enemies) do
+    for _, enemy in ipairs(AreaToEnemies[plarea]) do
         if enemy.isActive ~= nil then
-            -- TODO: OPTIMIZE PRIME
-            local enemyLocation = MapAreas.findAreaWithTile(enemy.x // 8, enemy.y // 8)
-            enemy.isActive = plarea == enemyLocation
-            
-            --debug
-            local lol = -1
-            if enemy.isActive then
-                lol = 1
-            else
-                lol = 0
-            end
+            enemy.isActive = true
         end
     end
 end
@@ -7216,8 +7588,8 @@ function game.updatePlayerArea()
         if game.playerAreaLast == game.playerArea then
             return
         else
-            game.playerAreaLast = game.playerArea
             game.updateActiveEnemies()
+            game.playerAreaLast = game.playerArea
         end
     else
         game.playerAreaLast = -2147483648
@@ -7332,7 +7704,7 @@ function game.restart()
     local camera = createCamera(player)
     local fruitPopup = FruitPopup
     
-    table.insert(game.updatables, metronome)
+    -- table.insert(game.updatables, metronome)
     table.concatTable(game.updatables, checkpoints)
     table.insert(game.updatables, player)
     table.insert(game.updatables, bike)
@@ -7366,14 +7738,16 @@ function game.restart()
     game.boomer = boomerang
     game.camera = camera
     game.enemies = enemies
-    
+
+    MapAreas.CookEnemies()
     game.updateActiveEnemies()
 end
 
 game.restart()
 
 function game.draw()
-    map(gm.x, gm.y , 30, 17, gm.sx, gm.sy, C0)
+    -- map(gm.x, gm.y , 30, 17, gm.sx, gm.sy, C0)
+    map(gm.x, gm.y , 31, 18, gm.sx, gm.sy, C0)
     
     for _, drawable in ipairs(game.drawables) do
         drawable:draw()
@@ -7391,23 +7765,25 @@ function game.update()
         game.drawGameEndScreen()
         return
     end
-    
+
+    game.metronome:update()
+    Time.update()
+    GameTimers.update()
     for _, updatable in ipairs(game.updatables) do
         updatable:update()
     end
-    
+
     if #game.deleteSchedule > 0 then
         table.removeElements(game.updatables, game.deleteSchedule)
         table.removeElements(game.drawables, game.deleteSchedule)
         game.deleteSchedule = {}
     end
-    
+
     game.updatePlayerArea()
-    
-    Time.update()
-    GameTimers.update()
-    
+
+    local draw_start = time()
     game.draw()
+    local draw_elapsed = time() - draw_start
 end
 
 function game.finish()
@@ -7462,7 +7838,7 @@ function game.drawGameEndScreen()
     )
 end
 
-
+-- return game
 
 
 function TIC()

@@ -32,6 +32,9 @@ function MusicAutoBulletHell:new(x, y, config)
         currentAnimations = {},
 
         isActive = false,
+
+        damageSound = data.EnemyDamageSounds.BulletHell,
+        deathSound = data.EnemyDeathSounds.BulletHell,
     }
 
     BulletHell._moveBullets(object, 0)

@@ -42,7 +42,7 @@ common = {
         bulletSpreadRadius = 5,
         bulletRotationSpeed = 0.002,
         bulletCount = 8,
-        bulletSpeed = 0.95,
+        bulletSpeed = 0.98,
         deathBulletSpeed = 0.18,
         color = 14,
         hp = BulletHellHP.small,
@@ -53,7 +53,7 @@ common = {
         bulletSpreadRadius = 8,
         bulletRotationSpeed = 0.0009,
         bulletCount = 12,
-        bulletSpeed = 1.1,
+        bulletSpeed = 1.13,
         deathBulletSpeed = 0.1,
         color = 14,
         hp = BulletHellHP.medium,
@@ -64,7 +64,7 @@ common = {
         bulletSpreadRadius = 11,
         bulletRotationSpeed = 1,
         bulletCount = 16,
-        bulletSpeed = 1.5,
+        bulletSpeed = 1.4,
         deathBulletSpeed = 0.1,
         color = 14,
         hp = BulletHellHP.big,
@@ -89,7 +89,7 @@ autobullethellprefab = {
         bulletSpreadRadius = 8,
         bulletRotationSpeed = 0.0009,
         bulletCount = 12,
-        bulletSpeed = 4,
+        bulletSpeed = 2.3,
         deathBulletSpeed = 0.03,
         color = 13,
         hp = BulletHellHP.medium,
@@ -100,7 +100,7 @@ autobullethellprefab = {
         bulletSpreadRadius = 11,
         bulletRotationSpeed = 1,
         bulletCount = 16,
-        bulletSpeed = 5,
+        bulletSpeed = 2.5,
         deathBulletSpeed = 0.03,
         color = 13,
         hp = BulletHellHP.big,
@@ -150,57 +150,6 @@ data.EnemyConfig = {
         color = 12,
         speed = 15, -- data.Player.speed - 0.41,
         speedWithWhirl = 0.8, --data.Player.speed - 0.61,
-        hp = 200,
-        prepareJumpTime = 20,
-        --jumpTime = 20,
-        resetJumpTime = 24,
-
-        deathParticleCountMin = 100,
-        deathParticleCountMax = 300,
-        deathAnimationParticleSpeed = 1,
-        deathAnimationParticleSpeedNormalizer = 0.4,
-        deathParticleMinSpeed = 1,
-        deathParticleSprite = StaticSprite:new(378, 1),
-
-        specialTaraxacum = {
-            radius = 3,
-            bodyLength = 15,
-            shiftForCenterX = 12,
-            shiftForCenterY = -3,
-            startStickX = 0,
-            startStickY = 0,
-            bodyColor = 10,
-            color = 12,
-            reloadAnimationTime = 18, -- in tics should divide by 3
-        },
-
-        music = {
-            beatMap = {0, 0, 0, 0, 0, 0, 0, 0,},
-            sfxMap = {
-                -- {4, 'A-2', 16, 0, 4, -1},
-                -- {4, 'C-3', 16, 0, 4, -1},
-                {1, 'A-4', -1, 2, 10, 0},
-                {1, 'G-4', -1, 2, 10, 0},
-                {1, 'A-4', -1, 2, 10, 0},
-                {1, 'G-4', -1, 2, 10, 0},
-            },
-            altBeatMap = {0,0,0,0, 1, 1, 1, 1}
-        },
-
-        sprites = {
-            chill = StaticSprite:new(312, 2),
-            prepareJump = Sprite:new({312, 344}, 2),
-            flyJump = Sprite:new(anim.gen60({346,348,346}), 2),
-            resetJump = Sprite:new({348,344,312}, 2),
-            death = Sprite:new(anim.gen60({312,314,312,314,312}), 2)
-        },
-    },
-
-    [66] = {
-        name = 'Snowman',
-        color = 12,
-        speed = 15, -- data.Player.speed - 0.41,
-        speedWithWhirl = 0.8, --data.Player.speed - 0.61,
         hp = 150,
         prepareJumpTime = 20,
         --jumpTime = 20,
@@ -230,10 +179,10 @@ data.EnemyConfig = {
             sfxMap = {
                 -- {4, 'A-2', 16, 0, 4, -1},
                 -- {4, 'C-3', 16, 0, 4, -1},
-                {1, 'A-4', -1, 2, 10, 0},
-                {1, 'G-4', -1, 2, 10, 0},
-                {1, 'A-4', -1, 2, 10, 0},
-                {1, 'G-4', -1, 2, 10, 0},
+                {42, 'A-5', -1, 2, 10, 0},
+                {42, 'G-5', -1, 2, 10, 0},
+                {42, 'A-5', -1, 2, 10, 0},
+                {42, 'G-5', -1, 2, 10, 0},
             },
             altBeatMap = {0,0,0,0, 1, 1, 1, 1}
         },
@@ -246,6 +195,57 @@ data.EnemyConfig = {
             death = Sprite:new(anim.gen60({312,314,312,314,312}), 2)
         },
     },
+
+    -- [66] = {
+    --     name = 'Snowman',
+    --     color = 12,
+    --     speed = 15, -- data.Player.speed - 0.41,
+    --     speedWithWhirl = 0.8, --data.Player.speed - 0.61,
+    --     hp = 150,
+    --     prepareJumpTime = 20,
+    --     --jumpTime = 20,
+    --     resetJumpTime = 24,
+
+    --     deathParticleCountMin = 100,
+    --     deathParticleCountMax = 300,
+    --     deathAnimationParticleSpeed = 1,
+    --     deathAnimationParticleSpeedNormalizer = 0.4,
+    --     deathParticleMinSpeed = 1,
+    --     deathParticleSprite = StaticSprite:new(378, 1),
+
+    --     specialTaraxacum = {
+    --         radius = 3,
+    --         bodyLength = 15,
+    --         shiftForCenterX = 12,
+    --         shiftForCenterY = -3,
+    --         startStickX = 0,
+    --         startStickY = 0,
+    --         bodyColor = 10,
+    --         color = 12,
+    --         reloadAnimationTime = 18, -- in tics should divide by 3
+    --     },
+
+    --     music = {
+    --         beatMap = {0, 0, 0, 0, 0, 0, 0, 0,},
+    --         sfxMap = {
+    --             -- {4, 'A-2', 16, 0, 4, -1},
+    --             -- {4, 'C-3', 16, 0, 4, -1},
+    --             {1, 'A-4', -1, 2, 15, 0},
+    --             {1, 'G-4', -1, 2, 15, 0},
+    --             {1, 'A-4', -1, 2, 15, 0},
+    --             {1, 'G-4', -1, 2, 15, 0},
+    --         },
+    --         altBeatMap = {0,0,0,0, 1, 1, 1, 1}
+    --     },
+
+    --     sprites = {
+    --         chill = StaticSprite:new(312, 2),
+    --         prepareJump = Sprite:new({312, 344}, 2),
+    --         flyJump = Sprite:new(anim.gen60({346,348,346}), 2),
+    --         resetJump = Sprite:new({348,344,312}, 2),
+    --         death = Sprite:new(anim.gen60({312,314,312,314,312}), 2)
+    --     },
+    -- },
     [97] = {
         name = 'StaticTaraxacum',
         speed = 2,
@@ -305,6 +305,7 @@ data.add_all_bullethell_sizes(
             {20, 'E-8', -1, 1, 9, 0},
             {20, 'A-8', -1, 1, 9, 0},
         },
+        intro = silence,
     }
 )
 
@@ -524,8 +525,8 @@ data.add_enemy(
         intro = {
             beatMap = {0,0, 0,0, 1,0, 1,0},
             sfxMap = {
-                {2, 'A-3', -1, 1, 4, 0},
-                {2, 'F#3', -1, 1, 4, 0},
+                {2, 'A-3', -1, 1, 15, 0},
+                {2, 'F#3', -1, 1, 15, 0},
             },  
         },
     }
