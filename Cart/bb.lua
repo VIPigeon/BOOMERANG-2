@@ -1,9 +1,7 @@
-
 -- title:  BOOMERANG 2: RETURN
 -- author: V. Crocodile
 -- desc:   A little game about killing flowers.
 -- script: lua
-
 C0 = 0  -- прозрачный цвет
 
 -- Heap.lua
@@ -1573,11 +1571,13 @@ function HitCircle:set_xy(x, y)
 end
 
 function HitCircle:drawOutline(color)
-    circb(self.x + 2 - 8*gm.x + gm.sx, self.y + 2 - 8*gm.y + gm.sy, (self.d/2), color)
+    local radius = math.floor(self.d/2)
+    circb(radius + self.x - 8*gm.x + gm.sx, radius + self.y - 8*gm.y + gm.sy, (self.d/2), color)
 end
 
 function HitCircle:draw(color)
-    circ(self.x + 2 - 8*gm.x + gm.sx, self.y + 2 - 8*gm.y + gm.sy, (self.d/2), color)
+    local radius = math.floor(self.d/2)
+    circ(radius + self.x - 8*gm.x + gm.sx, radius + self.y - 8*gm.y + gm.sy, self.d/2, color)
 end
 
 function HitCircle:get_center()
@@ -2275,7 +2275,7 @@ common = {
         bulletSpreadRadius = 11,
         bulletRotationSpeed = 1,
         bulletCount = 16,
-        bulletSpeed = 1.3,
+        bulletSpeed = 1.5,
         deathBulletSpeed = 0.1,
         color = 14,
         hp = BulletHellHP.big,
@@ -2289,7 +2289,7 @@ autobullethellprefab = {
         bulletSpreadRadius = 5,
         bulletRotationSpeed = 0.002,
         bulletCount = 8,
-        bulletSpeed = 1.5,
+        bulletSpeed = 2,
         deathBulletSpeed = 0.1,
         color = 13,
         hp = BulletHellHP.small,
@@ -2300,7 +2300,7 @@ autobullethellprefab = {
         bulletSpreadRadius = 8,
         bulletRotationSpeed = 0.0009,
         bulletCount = 12,
-        bulletSpeed = 1.8,
+        bulletSpeed = 4,
         deathBulletSpeed = 0.03,
         color = 13,
         hp = BulletHellHP.medium,
@@ -2311,7 +2311,7 @@ autobullethellprefab = {
         bulletSpreadRadius = 11,
         bulletRotationSpeed = 1,
         bulletCount = 16,
-        bulletSpeed = 2.1,
+        bulletSpeed = 5,
         deathBulletSpeed = 0.03,
         color = 13,
         hp = BulletHellHP.big,
@@ -2390,10 +2390,10 @@ data.EnemyConfig = {
             sfxMap = {
                 -- {4, 'A-2', 16, 0, 4, -1},
                 -- {4, 'C-3', 16, 0, 4, -1},
-                {1, 'A-4', -1, 2, 15, 0},
-                {1, 'G-4', -1, 2, 15, 0},
-                {1, 'A-4', -1, 2, 15, 0},
-                {1, 'G-4', -1, 2, 15, 0},
+                {1, 'A-4', -1, 2, 10, 0},
+                {1, 'G-4', -1, 2, 10, 0},
+                {1, 'A-4', -1, 2, 10, 0},
+                {1, 'G-4', -1, 2, 10, 0},
             },
             altBeatMap = {0,0,0,0, 1, 1, 1, 1}
         },
@@ -2441,10 +2441,10 @@ data.EnemyConfig = {
             sfxMap = {
                 -- {4, 'A-2', 16, 0, 4, -1},
                 -- {4, 'C-3', 16, 0, 4, -1},
-                {1, 'A-4', -1, 2, 15, 0},
-                {1, 'G-4', -1, 2, 15, 0},
-                {1, 'A-4', -1, 2, 15, 0},
-                {1, 'G-4', -1, 2, 15, 0},
+                {1, 'A-4', -1, 2, 10, 0},
+                {1, 'G-4', -1, 2, 10, 0},
+                {1, 'A-4', -1, 2, 10, 0},
+                {1, 'G-4', -1, 2, 10, 0},
             },
             altBeatMap = {0,0,0,0, 1, 1, 1, 1}
         },
@@ -3423,6 +3423,8 @@ end
 -- MapAreas.lua
 MapAreas = {}
 
+AreaToEnemies = {}
+
 function MapAreas.generate()
     local areas = {}
     local transitionTiles = {}
@@ -3499,6 +3501,17 @@ function MapAreas.generate()
     end
 
     return areas, transitionTiles
+end
+
+function MapAreas.CookEnemies()
+    for i, area in ipairs(game.areas) do
+        AreaToEnemies[i] = {}
+    end
+
+    for _, enemy in ipairs(game.enemies) do
+        local enemyLocation = MapAreas.findAreaWithTile(enemy.x // 8, enemy.y // 8)
+        table.insert(AreaToEnemies[enemyLocation], enemy)
+    end
 end
 
 function MapAreas.findAreaWithTile(tilex, tiley)
@@ -3961,6 +3974,7 @@ function BulletHell:new(x, y, config)
         bullets[i] = HellBullet:new()
     end
 
+    local radius = math.floor(config.circleDiameter / 2) - 2
     local object = {
         x = x,
         y = y,
@@ -3976,6 +3990,7 @@ function BulletHell:new(x, y, config)
         deathBulletSpeed = config.deathBulletSpeed,
         hp = config.hp,
         hitbox = HitCircle:new(x, y, config.circleDiameter),
+        radius = radius,
         time = 0,
         status = '',
         color = config.color,
@@ -4048,8 +4063,8 @@ function BulletHell:launchBulletsAround()
         bullet.y = self.bullets[i].y
         bullet.hitbox:set_xy(bullet.x, bullet.y)
 
-        local directionX = bullet.x - self.x
-        local directionY = bullet.y - self.y
+        local directionX = bullet.x - (self.x + self.radius)
+        local directionY = bullet.y - (self.y + self.radius)
 
         local speed = self.deathBulletSpeed
 
@@ -4097,13 +4112,14 @@ function BulletHell:update()
 end
 
 function BulletHell._moveBullets(bullethell, offset)
+    local radius = bullethell.radius
     local step = 2 * math.pi / bullethell.bulletCount
     for i = 1, #bullethell.bullets do
         local pheta = i * step + bullethell.rotationSpeed * offset
         local x = math.round(bullethell.spread * math.cos(pheta))
         local y = math.round(bullethell.spread * math.sin(pheta))
         local bullet = bullethell.bullets[i]
-        bullet:setPos(bullethell.x + x, bullethell.y + y) --не настоящие пули
+        bullet:setPos(bullethell.x + radius + x, bullethell.y + radius + y) --не настоящие пули
     end
 end
 
@@ -4139,7 +4155,7 @@ function BulletHell:draw()
         self.bullets[i]:draw(self.color)
     end
 
-    -- self.hitbox:draw(1)
+    --self.hitbox.hb:draw(1)
     self:_drawAnimations()
 end
 
@@ -4433,6 +4449,7 @@ function MusicAutoBulletHell:new(x, y, config)
         bullets[i] = AutoHellBullet:new()
     end
 
+    local radius = math.floor(config.circleDiameter / 2) - 1
     local object = {
         x = x,
         y = y,
@@ -4446,6 +4463,7 @@ function MusicAutoBulletHell:new(x, y, config)
         deathBulletSpeed = config.deathBulletSpeed,
         hp = config.hp,
         hitbox = HitCircle:new(x, y, config.circleDiameter),
+        radius = radius,
         time = 0,
         status = '',
         color = config.color,
@@ -4646,6 +4664,7 @@ function MusicAutoBulletHell:onBeat()
         self.reserveMusic = false
     end
 end
+
 
 -- Rose.lua
 Rose = table.copy(Enemy)
@@ -7546,20 +7565,16 @@ end
 
 function game.updateActiveEnemies()
     local plarea = game.playerArea
+
+    if game.playerAreaLast and game.playerAreaLast ~= -2147483648 then
+        for _, enemy in ipairs(AreaToEnemies[game.playerAreaLast]) do
+            enemy.isActive = false
+        end
+    end
     
-    for _, enemy in ipairs(game.enemies) do
+    for _, enemy in ipairs(AreaToEnemies[plarea]) do
         if enemy.isActive ~= nil then
-            -- TODO: OPTIMIZE PRIME
-            local enemyLocation = MapAreas.findAreaWithTile(enemy.x // 8, enemy.y // 8)
-            enemy.isActive = plarea == enemyLocation
-            
-            --debug
-            local lol = -1
-            if enemy.isActive then
-                lol = 1
-            else
-                lol = 0
-            end
+            enemy.isActive = true
         end
     end
 end
@@ -7569,8 +7584,8 @@ function game.updatePlayerArea()
         if game.playerAreaLast == game.playerArea then
             return
         else
-            game.playerAreaLast = game.playerArea
             game.updateActiveEnemies()
+            game.playerAreaLast = game.playerArea
         end
     else
         game.playerAreaLast = -2147483648
@@ -7720,12 +7735,14 @@ function game.restart()
     game.camera = camera
     game.enemies = enemies
 
+    MapAreas.CookEnemies()
     game.updateActiveEnemies()
 end
 
 game.restart()
 
 function game.draw()
+    -- map(gm.x, gm.y , 30, 17, gm.sx, gm.sy, C0)
     map(gm.x, gm.y , 31, 18, gm.sx, gm.sy, C0)
     
     for _, drawable in ipairs(game.drawables) do
