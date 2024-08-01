@@ -66,6 +66,7 @@ data.Player = {
     movementNormalizerStraight = 1,
     movementNormalizerDiagonal = 0.7,
     speed = 1.03,
+    -- speed = 0.1,
     deathParticleSprite = StaticSprite:new(377, 1),
     deathAnimationDurationMs = 1000,
     deathParticleCountMin = 10,

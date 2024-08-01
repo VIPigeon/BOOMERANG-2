@@ -52,12 +52,14 @@ end
 
 function HitCircle:drawOutline(color)
     local radius = math.floor(self.d/2)
-    circb(radius + self.x - 8*gm.x + gm.sx, radius + self.y - 8*gm.y + gm.sy, (self.d/2), color)
+    -- circb(radius + self.x - 8*gm.x + gm.sx, radius + self.y - 8*gm.y + gm.sy, (self.d/2), color)
+    circb(radius + self.x - 8*gm.x + gm.sx - 1, radius + self.y - 8*gm.y + gm.sy - 1, (self.d/2), color)
 end
 
 function HitCircle:draw(color)
     local radius = math.floor(self.d/2)
-    circ(radius + self.x - 8*gm.x + gm.sx, radius + self.y - 8*gm.y + gm.sy, self.d/2, color)
+    -- circ(radius + self.x - 8*gm.x + gm.sx, radius + self.y - 8*gm.y + gm.sy, self.d/2, color)
+    circ(radius + self.x - 8*gm.x + gm.sx - 1, radius + self.y - 8*gm.y + gm.sy - 1, self.d/2, color)
 end
 
 function HitCircle:get_center()

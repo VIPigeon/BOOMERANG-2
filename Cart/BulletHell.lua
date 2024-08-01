@@ -21,7 +21,7 @@ function BulletHell:new(x, y, config)
         rotationSpeed = config.bulletRotationSpeed,
         deathBulletSpeed = config.deathBulletSpeed,
         hp = config.hp,
-        hitbox = HitCircle:new(x, y, config.circleDiameter),
+        hitbox = HitCircle:new(x+1, y+1, config.circleDiameter),
         radius = radius,
         time = 0,
         status = '',

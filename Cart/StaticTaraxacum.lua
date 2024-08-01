@@ -13,7 +13,7 @@ function StaticTaraxacum:new(
     local deathBulletSpeed = config.deathBulletSpeed or error('no config!')
 
     local object = {
-        x = x+1,  -- wtf
+        x = x,  -- wtf
         y = y,
         w = 0,
         h = bodyLength,

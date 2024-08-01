@@ -8,7 +8,7 @@ function MusicAutoBulletHell:new(x, y, config)
         bullets[i] = AutoHellBullet:new()
     end
 
-    local radius = math.floor(config.circleDiameter / 2) - 1
+    local radius = math.floor(config.circleDiameter / 2) - 2
     local object = {
         x = x,
         y = y,
@@ -21,7 +21,7 @@ function MusicAutoBulletHell:new(x, y, config)
         rotationSpeed = config.bulletRotationSpeed,
         deathBulletSpeed = config.deathBulletSpeed,
         hp = config.hp,
-        hitbox = HitCircle:new(x, y, config.circleDiameter),
+        hitbox = HitCircle:new(x+1, y+1, config.circleDiameter),
         radius = radius,
         time = 0,
         status = '',
