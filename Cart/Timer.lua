@@ -32,14 +32,23 @@ end
 
 function Timer:onEnd(onElapsed)
     table.insert(self.onElapsed, onElapsed)
+    return self
 end
 
 function Timer:update()
     self.elapsed = self.elapsed + Time.dt()
 
-    if self.elapsed >= self.durationMs then
+    if self:ended() then
         for _, onElapsed in ipairs(self.onElapsed) do
             onElapsed()
         end
     end
+end
+
+function Timer:ended()
+    return self.elapsed >= self.durationMs
+end
+
+function Timer:reset()
+    self.elapsed = 0
 end

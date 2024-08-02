@@ -9,6 +9,7 @@ function Boomerang:new(x, y, dx, dy)
         y = y,
         dx = dx,
         dy = dy,
+        canBePickedUp = false,
         speed = data.Boomerang.speed,
         flightNormalizer = data.Boomerang.flightNormalizerStraight,
         px = 0,
@@ -17,8 +18,9 @@ function Boomerang:new(x, y, dx, dy)
         hitbox = Hitbox:new_with_shift(-1000+2, -1000+2, -1000+6, -1000+6, 2, 2),
         active = false,
         status = 'going brrr',
-        shakeOld = false
+        shakeOld = false,
     }
+    obj.pickupTimer = Timer:new(900):onEnd(function() obj.canBePickedUp = true end)
 
     if obj['dx'] * obj['dy'] ~= 0 then
         obj['flightNormalizer'] = data.Boomerang.flightNormalizerDiagonal
@@ -34,6 +36,7 @@ function Boomerang:init(x, y, dx, dy)
     self.x = x; self.y = y
     self.dx = dx; self.dy = dy
     self.speed = data.Boomerang.speed
+    self.pickupTimer:reset()
     if self.shakeOld then
         game.camera:shakeByBoomer(0.2)
         self.shaking = true
@@ -52,19 +55,21 @@ function Boomerang:update()
 
     self.sprite:nextFrame()
 
+    self.pickupTimer:update()
     self.speed = self.speed - self.decelerationThing
+
+    if self.pickupTimer:ended() and self.hitbox:collide(game.player.hitbox) then
+        if self.shakeOld or self.shaking then
+            game.camera:shakeByBoomerStop()
+            self.shaking = false
+        end
+        self.active = false
+        self.hitbox:set_xy(-1000, -1000)
+        return
+    end
+
     if self.speed < 0 then
         self:focus()
-        if self.hitbox:collide(game.player.hitbox) and
-                self.speed < game.player.speed then
-            if self.shakeOld or self.shaking then
-                game.camera:shakeByBoomerStop()
-                self.shaking = false
-            end
-            self.active = false
-            self.hitbox:set_xy(-1000, -1000)
-            return
-        end
         self:_reverseUpdate()
         return
     end

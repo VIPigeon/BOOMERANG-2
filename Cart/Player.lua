@@ -132,6 +132,7 @@ end
 
 function Player:_shoot()
     self.boomerang.active = true
+    self.boomerang.canBePickedUp = false
 
     if game.key(KEY_UP) then
         self.boomerang:init(self.x, self.y, C0, -1) -- С0 - яйца самого лучшего качества 
