@@ -38,16 +38,16 @@ function Player:_willMoveCheck()
     self.dx = 0
     self.dy = 0 -- chill bro~~
 
-    if key(KEY_W) then
+    if game.key(KEY_W) then
         self.dy = self.dy - 1
     end
-    if key(KEY_S) then
+    if game.key(KEY_S) then
         self.dy = self.dy + 1
     end
-    if key(KEY_A) then
+    if game.key(KEY_A) then
         self.dx = self.dx - 1
     end
-    if key(KEY_D) then
+    if game.key(KEY_D) then
         self.dx = self.dx + 1
     end
 end
@@ -133,19 +133,19 @@ end
 function Player:_shoot()
     self.boomerang.active = true
 
-    if key(KEY_UP) then
+    if game.key(KEY_UP) then
         self.boomerang:init(self.x, self.y, C0, -1) -- С0 - яйца самого лучшего качества 
         return
     end
-    if key(KEY_DOWN) then
+    if game.key(KEY_DOWN) then
         self.boomerang:init(self.x, self.y, C0, 1)
         return
     end
-    if key(KEY_LEFT) then
+    if game.key(KEY_LEFT) then
         self.boomerang:init(self.x, self.y, -1, C0)
         return
     end
-    if key(KEY_RIGHT) then
+    if game.key(KEY_RIGHT) then
         self.boomerang:init(self.x, self.y, 1, C0)
         return
     end
@@ -210,7 +210,7 @@ function Player:update()
         return
     end
 
-    if keyp(KEY_R) then
+    if game.keyp(KEY_R) then
         -- Smert :)
         self:die()
         return

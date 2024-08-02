@@ -22,6 +22,18 @@ KEY_DOWN = 59
 KEY_LEFT = 60
 KEY_RIGHT = 61
 
+KEY_to_btn = {
+    [KEY_W] = 0,
+    [KEY_S] = 1,
+    [KEY_A] = 2,
+    [KEY_D] = 3,
+    [KEY_UP] = 7,
+    [KEY_DOWN] = 4,
+    [KEY_LEFT] = 6,
+    [KEY_RIGHT] = 5,
+}
+
+
 KEY_B = 02 -- Что это?? Это круто. 🙂 ЁЯЩа<😎>
 
 MAP_WIDTH = 239
