@@ -385,47 +385,60 @@ local textYs = {20, 100, 130}
 
 function game.drawGameEndScreen()
     local backgroundColor = 0
-    local textColor = 5
+    local textColor = 8
     local textX = 4
     
     local scrollAmount = 10
     local minScroll = 20 - 4 * scrollAmount
     local maxScroll = 130
     
-    if key(KEY_W) and textYs[3] + scrollAmount <= maxScroll then
-        for i = 1, 3 do
-            textYs[i] = textYs[i] + scrollAmount
-        end
-    end
-    if key(KEY_S) and textYs[1] - scrollAmount >= minScroll then
-        for i = 1, 3 do
-            textYs[i] = textYs[i] - scrollAmount
-        end
-    end
+    -- if key(KEY_W) and textYs[3] + scrollAmount <= maxScroll then
+    --     for i = 1, 3 do
+    --         textYs[i] = textYs[i] + scrollAmount
+    --     end
+    -- end
+    -- if key(KEY_S) and textYs[1] - scrollAmount >= minScroll then
+    --     for i = 1, 3 do
+    --         textYs[i] = textYs[i] - scrollAmount
+    --     end
+    -- end
     
     
-    rect(0, 0, MAP_WIDTH, MAP_HEIGHT, backgroundColor)
+    -- rect(0, 0, MAP_WIDTH, MAP_HEIGHT, backgroundColor)
+    game.draw()
     print(
-    'Thank you\nfor playing!\n\n'..'Fruits collected:\n\n       ' .. fruitsCollection.collected .. ' / ' .. fruitsCollection.needed,
-    textX, textYs[1],
+    -- '              Thank you for playing!',
+    'Thank you for playing!',
+    textX, textYs[1] - 2,
     textColor,
     false,
     2
     )
+    local SHIFT_X = 120
+    local SHIFT_Y = 28
+
     print(
-    'Your time: ' .. game.completionTimeSeconds .. 's',
-    textX, textYs[2],
+    'Fruits collected:\n\n       ' .. fruitsCollection.collected .. ' / ' .. fruitsCollection.needed,
+    textX, textYs[1] + SHIFT_Y,
     textColor,
     false,
-    2
+    1
     )
+
     print(
-    'Dev time: ' .. 100 .. 's',
-    textX, textYs[3],
+    'Your time: ' .. math.floor(game.completionTimeSeconds) .. 's\n\n' .. 'Dev time: ' .. 288 .. 's',
+    textX + SHIFT_X, textYs[1] + SHIFT_Y,
     textColor,
     false,
-    2
+    1
     )
+    -- print(
+    -- 'Dev time: ' .. 100 .. 's',
+    -- textX, textYs[3],
+    -- textColor,
+    -- false,
+    -- 1
+    -- )
 end
 
 return game
