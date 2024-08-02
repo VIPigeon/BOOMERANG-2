@@ -16,11 +16,13 @@ function game.key(id)
             then
         return true
     end
+    return false
 end
 function game.keyp(id)
     if keyp(id) then
         return true
     end
+    return false
     if btnp(KEY_to_btn[id]) and not key(KEY_UP)
             and not key(KEY_DOWN) and not key(KEY_LEFT) and not key(KEY_RIGHT)
             and not key(KEY_A) and not key(KEY_S) and not key(KEY_D)
