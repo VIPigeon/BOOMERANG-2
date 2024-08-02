@@ -30,6 +30,17 @@ function MusicSnowman:tuning(music)
 end
 
 function MusicSnowman:update()
+    --if not self.awake then
+    --    trace('not awake')
+    --    return
+    --end
+    --trace('awake')
+    -- trace('sdtp = ' .. self.sleepDistanceToPlayer .. ' x = ' .. self.x .. ' gpx = ' .. game.player.x .. 'distance = ' .. math.distance(self.x, self.y, game.player.x, game.player.y))
+    if math.distance(self.x, self.y, game.player.x, game.player.y) >= self.sleepDistanceToPlayer then
+        self.boxOfBirth:activate()
+        return
+    end
+
     if (#self.beatMap == 4 and game.metronome.beat4) or
        (#self.beatMap == 6 and game.metronome.beat6) or
        (#self.beatMap == 8 and game.metronome.beat8) then

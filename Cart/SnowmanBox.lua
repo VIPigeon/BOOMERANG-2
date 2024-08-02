@@ -3,6 +3,7 @@ SnowmanBox = table.copy(Body)
 function SnowmanBox:new(x, y, config)
     local object = {
         sprite = data.SnowmanBox.sleepSprite:copy(),
+        snowman = MusicSnowman:new(x, y, config),
         snowmanConfig = config,
         x = x,
         y = y,
@@ -10,19 +11,32 @@ function SnowmanBox:new(x, y, config)
         wakeUpDistance = data.SnowmanBox.wakeUpDistanceToPlayer,
     }
 
-    local time = 0
-    object.checkTimer = function()
-        time = time + Time.dt()
-        if time > object.playerCheckTimeMs then
-            time = 0
-            return true
-        end
-        return false
-    end
+    setmetatable(object, self)
+    self.__index = self
+    return object
+end
+
+function SnowmanBox:newFake(x, y, config, snowman)
+    local object = {
+        sprite = data.SnowmanBox.sleepSprite:copy(),
+        snowman = snowman,
+        snowmanConfig = config,
+        x = x,
+        y = y,
+        playerCheckTimeMs = data.SnowmanBox.playerCheckFrequencyMs,
+        wakeUpDistance = data.SnowmanBox.wakeUpDistanceToPlayer,
+    }
 
     setmetatable(object, self)
     self.__index = self
     return object
+end
+
+function SnowmanBox:activate()
+    fakeBox = self:newFake(self.snowman.x, self.snowman.y, self.snowmanConfig, self.snowman)
+    table.insert(game.updatables, fakeBox)
+    table.insert(game.drawables, fakeBox)
+    self.snowman:die()
 end
 
 function SnowmanBox:deactivate()
@@ -36,13 +50,16 @@ function SnowmanBox:_distanceToPlayer()
 end
 
 function SnowmanBox:_spawnSnowman()
-    local snowman = MusicSnowman:new(self.x, self.y, self.snowmanConfig)
+    self.snowman.awake = true
+    self.snowman.boxOfBirth = self
     -- snowman:tuning(self.snowmanConfig.music.beatMap, self.snowmanConfig.music.sfxMap); -- Затюнил 🏎сноумена ☃
-    snowman:tuning(self.snowmanConfig.music); -- Затюнил 🏎сноумена ☃
-    table.insert(game.updatables, snowman)
-    table.insert(game.drawables, snowman)
-    table.insert(game.collideables, snowman)
-    table.insert(game.enemies, snowman) -- всем привет, пока что он здесь не босс 👾
+    self.snowman:tuning(self.snowmanConfig.music); -- Затюнил 🏎сноумена ☃
+    self.snowman.x = self.x
+    self.snowman.y = self.y
+    table.insert(game.updatables, self.snowman)
+    table.insert(game.drawables, self.snowman)
+    table.insert(game.collideables, self.snowman)
+    table.insert(game.enemies, self.snowman) -- всем привет, пока что он здесь не босс 👾
     self:deactivate()
 end
 

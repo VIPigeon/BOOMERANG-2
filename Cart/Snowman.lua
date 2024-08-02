@@ -14,7 +14,9 @@ function Snowman:new(x, y, config)
     local object = {
         x = x,
         y = y,
+        awake = false,
         speed = config.speed,
+        sleepDistanceToPlayer = config.sleepDistanceToPlayer,
         config = config,
         damageSound = data.EnemyDamageSounds.Snowman,
         deathSound = data.EnemyDeathSounds.Snowman,
@@ -182,6 +184,7 @@ function Snowman:_setPath()
     end
 end
 
+-- DO NOT EDIT. UPDATE OVERRIDE IN MUSIC SNOWMAN. YES THIS IS STUPID. 😊
 function Snowman:update()
     if game.boomer.hitbox:collide(self.hitbox) then
         local damage = game.boomer.dpMs * Time.dt()
@@ -320,4 +323,6 @@ function Snowman:draw()
     end
 
     self:_drawAnimations()
+
+    circb(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.sleepDistanceToPlayer, 4)
 end

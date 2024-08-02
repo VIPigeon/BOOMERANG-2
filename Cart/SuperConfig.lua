@@ -152,6 +152,7 @@ data.EnemyConfig = {
         speedWithWhirl = 0.8, --data.Player.speed - 0.61,
         hp = 150,
         prepareJumpTime = 20,
+        sleepDistanceToPlayer = 320,
         --jumpTime = 20,
         resetJumpTime = 24,
 
