@@ -179,8 +179,8 @@ function aim.compute(x, y, fx, fy, v)
     end
 
     if math.sq_distance(x, y, fx, fy) < math.sq_distance(x + kx*dx, y + ky*dy, fx, fy) then
-        trace(kx * dx)
-        trace(ky * dy)
+        -- trace(kx * dx)
+        -- trace(ky * dy)
     end
 
     return {x = kx * dx,
@@ -260,7 +260,7 @@ function aim.bfs(startPos)
             end
 
             if (x == px) and (y == py) then
-                trace('I chased you 🤗'..' '..x..' '..y..' !!') -- 🤗
+                -- trace('I chased you 🤗'..' '..x..' '..y..' !!') -- 🤗
                 table.insert(cur.path, {x = x, y = y})
                 return cur.path
             elseif not visited[x][y] then --🤗
@@ -564,6 +564,10 @@ function math.sign(x)
     return 0
 end
 
+function math.distance(x1, y1, x2, y2)
+    -- возвращает квадрат расстояния между точками
+    return math.sqrt((x1 - x2)^2 + (y1 - y2)^2)
+end
 
 function math.sq_distance(x1, y1, x2, y2)
     -- возвращает квадрат расстояния между точками
@@ -1758,6 +1762,18 @@ KEY_DOWN = 59
 KEY_LEFT = 60
 KEY_RIGHT = 61
 
+KEY_to_btn = {
+    [KEY_W] = 0,
+    [KEY_S] = 1,
+    [KEY_A] = 2,
+    [KEY_D] = 3,
+    [KEY_UP] = 7,
+    [KEY_DOWN] = 4,
+    [KEY_LEFT] = 6,
+    [KEY_RIGHT] = 5,
+}
+
+
 KEY_B = 02 -- Что это?? Это круто. 🙂 ЁЯЩа<😎>
 
 MAP_WIDTH = 239
@@ -1765,8 +1781,8 @@ MAP_HEIGHT = 135
 
 PLAYER_START_Y = 76 * 8 -- 128 * 8 -- 😋😋
 PLAYER_START_X = 105 * 8 -- 42 * 8  -- 😲😲
--- PLAYER_START_X = 8* 75     
--- PLAYER_START_Y = 8* 14
+-- PLAYER_START_X = 8* 10     
+-- PLAYER_START_Y = 8* 99
 
 -- PLAYER_END_Y = 89 * 8 -- BYKE 😎😎
 -- PLAYER_END_X = 118 * 8 -- G🤠T🤠 BYKE
@@ -2278,7 +2294,7 @@ common = {
         bulletSpreadRadius = 11,
         bulletRotationSpeed = 1,
         bulletCount = 16,
-        bulletSpeed = 1.4,
+        bulletSpeed = 1.3,
         deathBulletSpeed = 0.1,
         color = 14,
         hp = BulletHellHP.big,
@@ -2366,6 +2382,7 @@ data.EnemyConfig = {
         speedWithWhirl = 0.8, --data.Player.speed - 0.61,
         hp = 150,
         prepareJumpTime = 20,
+        sleepDistanceToPlayer = 320,
         --jumpTime = 20,
         resetJumpTime = 24,
 
@@ -2389,16 +2406,18 @@ data.EnemyConfig = {
         },
 
         music = {
-            beatMap = {0, 0, 0, 0, 0, 0, 0, 0,},
+            altBeatMap = {0, 0, 0, 0, 0, 0, 0, 0,},
             sfxMap = {
                 -- {4, 'A-2', 16, 0, 4, -1},
                 -- {4, 'C-3', 16, 0, 4, -1},
+                -- {42, 'A-5', -1, 2, 1, 0},
+                -- {42, 'A-5', -1, 2, 10, 0},
                 {42, 'A-5', -1, 2, 10, 0},
                 {42, 'G-5', -1, 2, 10, 0},
                 {42, 'A-5', -1, 2, 10, 0},
                 {42, 'G-5', -1, 2, 10, 0},
             },
-            altBeatMap = {0,0,0,0, 1, 1, 1, 1}
+            beatMap = {0,0,0,0, 1, 1, 1, 1},
         },
 
         sprites = {
@@ -2519,7 +2538,7 @@ data.add_all_bullethell_sizes(
             {20, 'E-8', -1, 1, 9, 0},
             {20, 'A-8', -1, 1, 9, 0},
         },
-        intro = silence,
+        -- intro = silence,
     }
 )
 
@@ -3672,16 +3691,25 @@ end
 
 function Timer:onEnd(onElapsed)
     table.insert(self.onElapsed, onElapsed)
+    return self
 end
 
 function Timer:update()
     self.elapsed = self.elapsed + Time.dt()
 
-    if self.elapsed >= self.durationMs then
+    if self:ended() then
         for _, onElapsed in ipairs(self.onElapsed) do
             onElapsed()
         end
     end
+end
+
+function Timer:ended()
+    return self.elapsed >= self.durationMs
+end
+
+function Timer:reset()
+    self.elapsed = 0
 end
 
 -- Metronome.lua
@@ -3921,7 +3949,7 @@ end
 
 function Enemy:die()
     -- Это самый древний trace в нашей кодовой базе! 🦖
-    trace("I AM DEAD!!!")
+    trace("Enemy: I AM DEAD!!!")
     if self.deathSound ~= nil then
         local sound = self.deathSound
         sfx(sound[1], sound[2], sound[3], sound[4], sound[5], sound[6])
@@ -5515,7 +5543,9 @@ function Snowman:new(x, y, config)
     local object = {
         x = x,
         y = y,
+        awake = false,
         speed = config.speed,
+        sleepDistanceToPlayer = config.sleepDistanceToPlayer,
         config = config,
         damageSound = data.EnemyDamageSounds.Snowman,
         deathSound = data.EnemyDeathSounds.Snowman,
@@ -5594,7 +5624,7 @@ function Snowman:_moveOneTile() -- оптимизируем вычисления
             local vec = {x = 8 * self.theWay[2].x - self.x, y = 8 * self.theWay[2].y - self.y}
             return self:_slowMoveOneTile(math.vecNormalize(vec), {x = 8 * self.theWay[2].x, y = 8 * self.theWay[2].y})
         else
-            trace('next time i chase you 👿')
+            -- trace('next time i chase you 👿')
             return false
         end
         -- Честно говоря, я тоже боюсь того, что написал
@@ -5604,7 +5634,7 @@ function Snowman:_moveOneTile() -- оптимизируем вычисления
             local vec = {x = 8 * self.theWay[2 + self.outOfChaseTime].x - self.x, y = 8 * self.theWay[2 + self.outOfChaseTime].y - self.y}
             return self:_slowMoveOneTile(math.vecNormalize(vec), {x = 8 * self.theWay[2 + self.outOfChaseTime].x, y = 8 * self.theWay[2 + self.outOfChaseTime].y})
         else
-            trace('damn you, player the sandass')
+            -- trace('damn you, player the sandass')
             return false
         end
     else
@@ -5683,6 +5713,7 @@ function Snowman:_setPath()
     end
 end
 
+-- DO NOT EDIT. UPDATE OVERRIDE IN MUSIC SNOWMAN. YES THIS IS STUPID. 😊
 function Snowman:update()
     if game.boomer.hitbox:collide(self.hitbox) then
         local damage = game.boomer.dpMs * Time.dt()
@@ -5802,7 +5833,7 @@ function Snowman:_createDeathEffect()
 end
 
 function Snowman:die()
-    trace("I AM DEAD!!!")
+    trace("Snowman: I AM DEAD!!!")
     table.removeElement(game.updatables, self)
     table.removeElement(game.drawables, self)
     table.removeElement(game.collideables, self)
@@ -5821,6 +5852,8 @@ function Snowman:draw()
     end
 
     self:_drawAnimations()
+
+    -- circb(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.sleepDistanceToPlayer, 4)
 end
 
 -- MusicSnowman.lua
@@ -5856,6 +5889,17 @@ function MusicSnowman:tuning(music)
 end
 
 function MusicSnowman:update()
+    --if not self.awake then
+    --    trace('not awake')
+    --    return
+    --end
+    --trace('awake')
+    -- trace('sdtp = ' .. self.sleepDistanceToPlayer .. ' x = ' .. self.x .. ' gpx = ' .. game.player.x .. 'distance = ' .. math.distance(self.x, self.y, game.player.x, game.player.y))
+    if math.distance(self.x, self.y, game.player.x, game.player.y) >= self.sleepDistanceToPlayer then
+        self.boxOfBirth:activate()
+        return
+    end
+
     if (#self.beatMap == 4 and game.metronome.beat4) or
        (#self.beatMap == 6 and game.metronome.beat6) or
        (#self.beatMap == 8 and game.metronome.beat8) then
@@ -5942,6 +5986,7 @@ SnowmanBox = table.copy(Body)
 function SnowmanBox:new(x, y, config)
     local object = {
         sprite = data.SnowmanBox.sleepSprite:copy(),
+        snowman = MusicSnowman:new(x, y, config),
         snowmanConfig = config,
         x = x,
         y = y,
@@ -5949,19 +5994,32 @@ function SnowmanBox:new(x, y, config)
         wakeUpDistance = data.SnowmanBox.wakeUpDistanceToPlayer,
     }
 
-    local time = 0
-    object.checkTimer = function()
-        time = time + Time.dt()
-        if time > object.playerCheckTimeMs then
-            time = 0
-            return true
-        end
-        return false
-    end
+    setmetatable(object, self)
+    self.__index = self
+    return object
+end
+
+function SnowmanBox:newFake(x, y, config, snowman)
+    local object = {
+        sprite = data.SnowmanBox.sleepSprite:copy(),
+        snowman = snowman,
+        snowmanConfig = config,
+        x = x,
+        y = y,
+        playerCheckTimeMs = data.SnowmanBox.playerCheckFrequencyMs,
+        wakeUpDistance = data.SnowmanBox.wakeUpDistanceToPlayer,
+    }
 
     setmetatable(object, self)
     self.__index = self
     return object
+end
+
+function SnowmanBox:activate()
+    fakeBox = self:newFake(self.snowman.x, self.snowman.y, self.snowmanConfig, self.snowman)
+    table.insert(game.updatables, fakeBox)
+    table.insert(game.drawables, fakeBox)
+    self.snowman:die()
 end
 
 function SnowmanBox:deactivate()
@@ -5975,13 +6033,16 @@ function SnowmanBox:_distanceToPlayer()
 end
 
 function SnowmanBox:_spawnSnowman()
-    local snowman = MusicSnowman:new(self.x, self.y, self.snowmanConfig)
+    self.snowman.awake = true
+    self.snowman.boxOfBirth = self
     -- snowman:tuning(self.snowmanConfig.music.beatMap, self.snowmanConfig.music.sfxMap); -- Затюнил 🏎сноумена ☃
-    snowman:tuning(self.snowmanConfig.music); -- Затюнил 🏎сноумена ☃
-    table.insert(game.updatables, snowman)
-    table.insert(game.drawables, snowman)
-    table.insert(game.collideables, snowman)
-    table.insert(game.enemies, snowman) -- всем привет, пока что он здесь не босс 👾
+    self.snowman:tuning(self.snowmanConfig.music); -- Затюнил 🏎сноумена ☃
+    self.snowman.x = self.x
+    self.snowman.y = self.y
+    table.insert(game.updatables, self.snowman)
+    table.insert(game.drawables, self.snowman)
+    table.insert(game.collideables, self.snowman)
+    table.insert(game.enemies, self.snowman) -- всем привет, пока что он здесь не босс 👾
     self:deactivate()
 end
 
@@ -6712,16 +6773,16 @@ function Player:_willMoveCheck()
     self.dx = 0
     self.dy = 0 -- chill bro~~
 
-    if key(KEY_W) then
+    if game.key(KEY_W) then
         self.dy = self.dy - 1
     end
-    if key(KEY_S) then
+    if game.key(KEY_S) then
         self.dy = self.dy + 1
     end
-    if key(KEY_A) then
+    if game.key(KEY_A) then
         self.dx = self.dx - 1
     end
-    if key(KEY_D) then
+    if game.key(KEY_D) then
         self.dx = self.dx + 1
     end
 end
@@ -6806,20 +6867,21 @@ end
 
 function Player:_shoot()
     self.boomerang.active = true
+    self.boomerang.canBePickedUp = false
 
-    if key(KEY_UP) then
+    if game.key(KEY_UP) then
         self.boomerang:init(self.x, self.y, C0, -1) -- С0 - яйца самого лучшего качества 
         return
     end
-    if key(KEY_DOWN) then
+    if game.key(KEY_DOWN) then
         self.boomerang:init(self.x, self.y, C0, 1)
         return
     end
-    if key(KEY_LEFT) then
+    if game.key(KEY_LEFT) then
         self.boomerang:init(self.x, self.y, -1, C0)
         return
     end
-    if key(KEY_RIGHT) then
+    if game.key(KEY_RIGHT) then
         self.boomerang:init(self.x, self.y, 1, C0)
         return
     end
@@ -6851,6 +6913,7 @@ function Player:_createDeathEffect()
 end
 
 function Player:die()
+    trace("Never trust the flowers...")
     if self.status == 'dying' then
         return
     end
@@ -6884,7 +6947,7 @@ function Player:update()
         return
     end
 
-    if keyp(KEY_R) then
+    if game.keyp(KEY_R) then
         -- Smert :)
         self:die()
         return
@@ -6955,7 +7018,7 @@ function Bike:new(x, y)
 end
 
 function Bike:sparkle()
-    trace('sparkling~~')
+    trace('Bike is sparkling~~')
 end
 
 function Bike:_drawAnimations()
@@ -7049,7 +7112,7 @@ function Bike:update()
 
     if self.status ~= 'endgame' and self.hitbox:collide(game.player.hitbox) then
         self.sprite = data.Bike.sprites.himAgain:copy()
-        trace('Ugh, rolled around in the sandbox again, drunkard!😞')
+        -- trace('Ugh, rolled around in the sandbox again, drunkard!😞')
         
         self.cutscene = CutScene:new(game.player, game.bike)
         self.cutscene:init()
@@ -7080,6 +7143,7 @@ function Boomerang:new(x, y, dx, dy)
         y = y,
         dx = dx,
         dy = dy,
+        canBePickedUp = false,
         speed = data.Boomerang.speed,
         flightNormalizer = data.Boomerang.flightNormalizerStraight,
         px = 0,
@@ -7088,8 +7152,9 @@ function Boomerang:new(x, y, dx, dy)
         hitbox = Hitbox:new_with_shift(-1000+2, -1000+2, -1000+6, -1000+6, 2, 2),
         active = false,
         status = 'going brrr',
-        shakeOld = false
+        shakeOld = false,
     }
+    obj.pickupTimer = Timer:new(900):onEnd(function() obj.canBePickedUp = true end)
 
     if obj['dx'] * obj['dy'] ~= 0 then
         obj['flightNormalizer'] = data.Boomerang.flightNormalizerDiagonal
@@ -7105,6 +7170,7 @@ function Boomerang:init(x, y, dx, dy)
     self.x = x; self.y = y
     self.dx = dx; self.dy = dy
     self.speed = data.Boomerang.speed
+    self.pickupTimer:reset()
     if self.shakeOld then
         game.camera:shakeByBoomer(0.2)
         self.shaking = true
@@ -7123,19 +7189,21 @@ function Boomerang:update()
 
     self.sprite:nextFrame()
 
+    self.pickupTimer:update()
     self.speed = self.speed - self.decelerationThing
+
+    if self.pickupTimer:ended() and self.hitbox:collide(game.player.hitbox) then
+        if self.shakeOld or self.shaking then
+            game.camera:shakeByBoomerStop()
+            self.shaking = false
+        end
+        self.active = false
+        self.hitbox:set_xy(-1000, -1000)
+        return
+    end
+
     if self.speed < 0 then
         self:focus()
-        if self.hitbox:collide(game.player.hitbox) and
-                self.speed < game.player.speed then
-            if self.shakeOld or self.shaking then
-                game.camera:shakeByBoomerStop()
-                self.shaking = false
-            end
-            self.active = false
-            self.hitbox:set_xy(-1000, -1000)
-            return
-        end
         self:_reverseUpdate()
         return
     end
@@ -7412,6 +7480,39 @@ end
 
 -- Game.lua
 game = {}
+
+function game.key(id)
+    if key(id) then
+        return true
+    end
+    local z = 26
+    local x = 24
+    if key(z) or key(x) then
+        return false
+    end
+    if btn(KEY_to_btn[id]) and not key(KEY_UP)
+            and not key(KEY_DOWN) and not key(KEY_LEFT) and not key(KEY_RIGHT)
+            and not key(KEY_A) and not key(KEY_S) and not key(KEY_D)
+            and not key(KEY_W)
+            then
+        return true
+    end
+    return false
+end
+function game.keyp(id)
+    if keyp(id) then
+        return true
+    end
+    return false
+    --if btnp(KEY_to_btn[id]) and not key(KEY_UP)
+    --        and not key(KEY_DOWN) and not key(KEY_LEFT) and not key(KEY_RIGHT)
+    --        and not key(KEY_A) and not key(KEY_S) and not key(KEY_D)
+    --        and not key(KEY_W)
+    --        then
+    --    return true
+    --end
+end
+
 
 local function createMetronome()
     return Metronome4_4:new(GAME_BPM)
@@ -7798,47 +7899,60 @@ local textYs = {20, 100, 130}
 
 function game.drawGameEndScreen()
     local backgroundColor = 0
-    local textColor = 5
+    local textColor = 8
     local textX = 4
     
     local scrollAmount = 10
     local minScroll = 20 - 4 * scrollAmount
     local maxScroll = 130
     
-    if key(KEY_W) and textYs[3] + scrollAmount <= maxScroll then
-        for i = 1, 3 do
-            textYs[i] = textYs[i] + scrollAmount
-        end
-    end
-    if key(KEY_S) and textYs[1] - scrollAmount >= minScroll then
-        for i = 1, 3 do
-            textYs[i] = textYs[i] - scrollAmount
-        end
-    end
+    -- if key(KEY_W) and textYs[3] + scrollAmount <= maxScroll then
+    --     for i = 1, 3 do
+    --         textYs[i] = textYs[i] + scrollAmount
+    --     end
+    -- end
+    -- if key(KEY_S) and textYs[1] - scrollAmount >= minScroll then
+    --     for i = 1, 3 do
+    --         textYs[i] = textYs[i] - scrollAmount
+    --     end
+    -- end
     
     
-    rect(0, 0, MAP_WIDTH, MAP_HEIGHT, backgroundColor)
+    -- rect(0, 0, MAP_WIDTH, MAP_HEIGHT, backgroundColor)
+    game.draw()
     print(
-    'Thank you\nfor playing!\n\n'..'Fruits collected:\n\n       ' .. fruitsCollection.collected .. ' / ' .. fruitsCollection.needed,
-    textX, textYs[1],
+    -- '              Thank you for playing!',
+    'Thank you for playing!',
+    textX, textYs[1] - 2,
     textColor,
     false,
     2
     )
+    local SHIFT_X = 120
+    local SHIFT_Y = 28
+
     print(
-    'Your time: ' .. game.completionTimeSeconds .. 's',
-    textX, textYs[2],
+    'Fruits collected:\n\n       ' .. fruitsCollection.collected .. ' / ' .. fruitsCollection.needed,
+    textX, textYs[1] + SHIFT_Y,
     textColor,
     false,
-    2
+    1
     )
+
     print(
-    'Dev time: ' .. 100 .. 's',
-    textX, textYs[3],
+    'Your time: ' .. math.floor(game.completionTimeSeconds) .. 's\n\n' .. 'Dev time: ' .. 288 .. 's',
+    textX + SHIFT_X, textYs[1] + SHIFT_Y,
     textColor,
     false,
-    2
+    1
     )
+    -- print(
+    -- 'Dev time: ' .. 100 .. 's',
+    -- textX, textYs[3],
+    -- textColor,
+    -- false,
+    -- 1
+    -- )
 end
 
 -- return game

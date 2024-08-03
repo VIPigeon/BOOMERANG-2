@@ -324,5 +324,5 @@ function Snowman:draw()
 
     self:_drawAnimations()
 
-    circb(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.sleepDistanceToPlayer, 4)
+    -- circb(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.sleepDistanceToPlayer, 4)
 end

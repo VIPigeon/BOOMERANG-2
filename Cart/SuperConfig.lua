@@ -64,7 +64,7 @@ common = {
         bulletSpreadRadius = 11,
         bulletRotationSpeed = 1,
         bulletCount = 16,
-        bulletSpeed = 1.4,
+        bulletSpeed = 1.3,
         deathBulletSpeed = 0.1,
         color = 14,
         hp = BulletHellHP.big,
@@ -176,16 +176,18 @@ data.EnemyConfig = {
         },
 
         music = {
-            beatMap = {0, 0, 0, 0, 0, 0, 0, 0,},
+            altBeatMap = {0, 0, 0, 0, 0, 0, 0, 0,},
             sfxMap = {
                 -- {4, 'A-2', 16, 0, 4, -1},
                 -- {4, 'C-3', 16, 0, 4, -1},
+                -- {42, 'A-5', -1, 2, 1, 0},
+                -- {42, 'A-5', -1, 2, 10, 0},
                 {42, 'A-5', -1, 2, 10, 0},
                 {42, 'G-5', -1, 2, 10, 0},
                 {42, 'A-5', -1, 2, 10, 0},
                 {42, 'G-5', -1, 2, 10, 0},
             },
-            altBeatMap = {0,0,0,0, 1, 1, 1, 1}
+            beatMap = {0,0,0,0, 1, 1, 1, 1},
         },
 
         sprites = {
@@ -306,7 +308,7 @@ data.add_all_bullethell_sizes(
             {20, 'E-8', -1, 1, 9, 0},
             {20, 'A-8', -1, 1, 9, 0},
         },
-        intro = silence,
+        -- intro = silence,
     }
 )
 
