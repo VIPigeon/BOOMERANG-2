@@ -84,7 +84,7 @@ function Snowman:_moveOneTile() -- оптимизируем вычисления
     for _, tile in ipairs(game.transitionTiles) do -- этот парень почти как игрок, ему можно
         if tile.x == self.x // 8 and tile.y == self.y // 8 and self.area ~= tile.area then
             self.area = tile.area
-            trace('Snowman transitioned into area ' .. self.area)
+            -- trace('Snowman transitioned into area ' .. self.area)
         end
     end
 
@@ -95,7 +95,7 @@ function Snowman:_moveOneTile() -- оптимизируем вычисления
             local vec = {x = 8 * self.theWay[2].x - self.x, y = 8 * self.theWay[2].y - self.y}
             return self:_slowMoveOneTile(math.vecNormalize(vec), {x = 8 * self.theWay[2].x, y = 8 * self.theWay[2].y})
         else
-            trace('next time i chase you 👿')
+            -- trace('next time i chase you 👿')
             return false
         end
         -- Честно говоря, я тоже боюсь того, что написал
@@ -105,7 +105,7 @@ function Snowman:_moveOneTile() -- оптимизируем вычисления
             local vec = {x = 8 * self.theWay[2 + self.outOfChaseTime].x - self.x, y = 8 * self.theWay[2 + self.outOfChaseTime].y - self.y}
             return self:_slowMoveOneTile(math.vecNormalize(vec), {x = 8 * self.theWay[2 + self.outOfChaseTime].x, y = 8 * self.theWay[2 + self.outOfChaseTime].y})
         else
-            trace('damn you, player the sandass')
+            -- trace('damn you, player the sandass')
             return false
         end
     else
