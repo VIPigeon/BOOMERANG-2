@@ -57,7 +57,7 @@ function Boomerang:update()
     self.sprite:nextFrame()
 
     self.pickupTimer:update()
-    self.speed = self.speed - self.decelerationThing
+    self.speed = self.speed - self.decelerationThing * Time.dt_in_60fps()
 
     if self.pickupTimer:ended() and self.hitbox:collide(game.player.hitbox) then
         if self.shakeOld or self.shaking then

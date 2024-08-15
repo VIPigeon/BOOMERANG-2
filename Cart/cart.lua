@@ -179,8 +179,8 @@ function aim.compute(x, y, fx, fy, v)
     end
 
     if math.sq_distance(x, y, fx, fy) < math.sq_distance(x + kx*dx, y + ky*dy, fx, fy) then
-        -- trace(kx * dx)
-        -- trace(ky * dy)
+        trace(kx * dx)
+        trace(ky * dy)
     end
 
     return {x = kx * dx,
@@ -260,7 +260,7 @@ function aim.bfs(startPos)
             end
 
             if (x == px) and (y == py) then
-                -- trace('I chased you 🤗'..' '..x..' '..y..' !!') -- 🤗
+                trace('I chased you 🤗'..' '..x..' '..y..' !!') -- 🤗
                 table.insert(cur.path, {x = x, y = y})
                 return cur.path
             elseif not visited[x][y] then --🤗
@@ -364,7 +364,7 @@ end
 
 
 function aim.astar_2x2(startPos)
-    local MAX_PATH_LENGTH = math.random(4, 13)
+    local MAX_PATH_LENGTH = math.random(4, 9)
 
     local steps = {
         {x = 1, y =-1},
@@ -3656,6 +3656,11 @@ function Time.dt()
     return Time.delta
 end
 
+function Time.dt_in_60fps()
+    -- 60 / 1000 == 0.06
+    return Time.dt() * 0.06
+end
+
 -- Timer.lua
 GameTimers = {
     timers = {}
@@ -3949,7 +3954,7 @@ end
 
 function Enemy:die()
     -- Это самый древний trace в нашей кодовой базе! 🦖
-    trace("Enemy: I AM DEAD!!!")
+    trace("I AM DEAD!!!")
     if self.deathSound ~= nil then
         local sound = self.deathSound
         sfx(sound[1], sound[2], sound[3], sound[4], sound[5], sound[6])
@@ -5613,7 +5618,7 @@ function Snowman:_moveOneTile() -- оптимизируем вычисления
     for _, tile in ipairs(game.transitionTiles) do -- этот парень почти как игрок, ему можно
         if tile.x == self.x // 8 and tile.y == self.y // 8 and self.area ~= tile.area then
             self.area = tile.area
-            trace('Snowman transitioned into area ' .. self.area)
+            -- trace('Snowman transitioned into area ' .. self.area)
         end
     end
 
@@ -5833,7 +5838,7 @@ function Snowman:_createDeathEffect()
 end
 
 function Snowman:die()
-    trace("Snowman: I AM DEAD!!!")
+    trace("I AM DEAD!!!")
     table.removeElement(game.updatables, self)
     table.removeElement(game.drawables, self)
     table.removeElement(game.collideables, self)
@@ -6913,7 +6918,6 @@ function Player:_createDeathEffect()
 end
 
 function Player:die()
-    trace("Never trust the flowers...")
     if self.status == 'dying' then
         return
     end
@@ -7018,7 +7022,7 @@ function Bike:new(x, y)
 end
 
 function Bike:sparkle()
-    trace('Bike is sparkling~~')
+    trace('sparkling~~')
 end
 
 function Bike:_drawAnimations()
@@ -7112,7 +7116,7 @@ function Bike:update()
 
     if self.status ~= 'endgame' and self.hitbox:collide(game.player.hitbox) then
         self.sprite = data.Bike.sprites.himAgain:copy()
-        -- trace('Ugh, rolled around in the sandbox again, drunkard!😞')
+        trace('Ugh, rolled around in the sandbox again, drunkard!😞')
         
         self.cutscene = CutScene:new(game.player, game.bike)
         self.cutscene:init()
@@ -7183,6 +7187,7 @@ function Boomerang:focus()
 end
 
 function Boomerang:update()
+    -- trace(self.x.." "..self.y)
     if not self.active then
         return
     end
@@ -7190,7 +7195,7 @@ function Boomerang:update()
     self.sprite:nextFrame()
 
     self.pickupTimer:update()
-    self.speed = self.speed - self.decelerationThing
+    self.speed = self.speed - self.decelerationThing * Time.dt_in_60fps()
 
     if self.pickupTimer:ended() and self.hitbox:collide(game.player.hitbox) then
         if self.shakeOld or self.shaking then
@@ -7208,8 +7213,8 @@ function Boomerang:update()
         return
     end
 
-    local dx = self.speed * self.dx * self.flightNormalizer
-    local dy = self.speed * self.dy * self.flightNormalizer
+    local dx = self.speed * self.dx * self.flightNormalizer * Time.dt_in_60fps()
+    local dy = self.speed * self.dy * self.flightNormalizer * Time.dt_in_60fps()
 
     self:moveUnclamped(dx, dy)
 end
@@ -7223,8 +7228,8 @@ function Boomerang:_reverseUpdate()
         fx = fx + 0.0000001
     end
     d = math.abs(fy - y) / math.abs(fx - x)
-    dx = self.speed / math.sqrt(1 + d*d)
-    dy = dx*d -- xdd~~~
+    dx = self.speed / math.sqrt(1 + d*d) * Time.dt_in_60fps()
+    dy = dx*d * Time.dt_in_60fps() -- xdd~~~
 
     local kx = 1
     local ky = 1
