@@ -75,8 +75,8 @@ function Boomerang:update()
         return
     end
 
-    local dx = self.speed * self.dx * self.flightNormalizer * Time.dt_in_60fps()
-    local dy = self.speed * self.dy * self.flightNormalizer * Time.dt_in_60fps()
+    local dx = self.speed * self.dx * self.flightNormalizer --* Time.dt_in_60fps()
+    local dy = self.speed * self.dy * self.flightNormalizer --* Time.dt_in_60fps()
 
     self:moveUnclamped(dx, dy)
 end
@@ -90,8 +90,8 @@ function Boomerang:_reverseUpdate()
         fx = fx + 0.0000001
     end
     d = math.abs(fy - y) / math.abs(fx - x)
-    dx = self.speed / math.sqrt(1 + d*d) * Time.dt_in_60fps()
-    dy = dx*d * Time.dt_in_60fps() -- xdd~~~
+    dx = self.speed / math.sqrt(1 + d*d) --* Time.dt_in_60fps()
+    dy = dx*d --* Time.dt_in_60fps() -- xdd~~~
 
     local kx = 1
     local ky = 1
