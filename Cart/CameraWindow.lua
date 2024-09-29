@@ -109,7 +109,7 @@ function CameraWindow:update()
     local dx, dy = self:getDirectionToTarget()
 
     if self.area:isObjectInside(self.target, self.targetWidth, self.targetHeight) then
-        self:centerOnTarget()
+        -- self:centerOnTarget()
         -- Ура, я использовал goto!!!
         goto move
     end
