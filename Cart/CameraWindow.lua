@@ -110,7 +110,7 @@ function CameraWindow:update()
     local dx, dy = self:getDirectionToTarget()
 
     if self.area:isObjectInside(self.target, self.targetWidth, self.targetHeight) then
-        -- self:centerOnTarget()
+        self:centerOnTarget()
         -- Ура, я использовал goto!!!
         goto move
     end
@@ -153,7 +153,7 @@ function CameraWindow:update()
     if do_we_shake then
         self.we_are_shaking_for = self.we_are_shaking_for + Time.dt()
         if self.we_are_shaking_for > 2.0 then
-            trace("fuck you$$")
+            -- trace("fuck you$$")
             self.statuses['doork'] = false
             self.statuses['boomer'] = false
             self.statuses['shake'] = false
