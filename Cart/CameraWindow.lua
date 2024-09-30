@@ -7,6 +7,7 @@ function CameraWindow:new(deadZoneRect, target, targetWidth, targetHeight)
         target = target,
         targetWidth = targetWidth,
         targetHeight = targetHeight,
+        we_are_shaking_for = 0,
 
         shakeMagnitude = {},
         statuses = {},
@@ -128,22 +129,38 @@ function CameraWindow:update()
 
     ::move::
 
+    local do_we_shake = false
     if self.statuses['doork'] then
         self.area:move(
             self.shakeMagnitude['doork'] * oneOrMinusOne(),
             self.shakeMagnitude['doork'] * oneOrMinusOne()
         )
+        do_we_shake = true
     elseif self.statuses['boomer'] then
         self.area:move(
             self.shakeMagnitude['boomer'] * oneOrMinusOne(),
             self.shakeMagnitude['boomer'] * oneOrMinusOne()
         )
+        do_we_shake = true
     elseif self.statuses['shake'] then
         self.area:move(
             self.shakeMagnitude['shake'] * oneOrMinusOne(),
             self.shakeMagnitude['shake'] * oneOrMinusOne()
         )
+        do_we_shake = true
     end
+
+    if do_we_shake then
+        self.we_are_shaking_for = self.we_are_shaking_for + Time.dt()
+        if self.we_are_shaking_for > 2.0 then
+            self.statuses['doork'] = false
+            self.statuses['boomer'] = false
+            self.statuses['shake'] = false
+        end
+    else
+        self.we_are_shaking_for = 0
+    end
+
     --if self.status == 'shake' then
     --    self.area:move(
     --        self.shakeMagnitude['shake'] * oneOrMinusOne(),
