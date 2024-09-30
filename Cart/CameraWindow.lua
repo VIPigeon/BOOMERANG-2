@@ -141,7 +141,7 @@ function CameraWindow:update()
             self.shakeMagnitude['boomer'] * oneOrMinusOne(),
             self.shakeMagnitude['boomer'] * oneOrMinusOne()
         )
-        do_we_shake = true
+        -- do_we_shake = true
     elseif self.statuses['shake'] then
         self.area:move(
             self.shakeMagnitude['shake'] * oneOrMinusOne(),
@@ -153,6 +153,7 @@ function CameraWindow:update()
     if do_we_shake then
         self.we_are_shaking_for = self.we_are_shaking_for + Time.dt()
         if self.we_are_shaking_for > 2.0 then
+            trace("fuck you$$")
             self.statuses['doork'] = false
             self.statuses['boomer'] = false
             self.statuses['shake'] = false
