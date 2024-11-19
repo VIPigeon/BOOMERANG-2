@@ -368,6 +368,17 @@ end
 
 game.restart()
 
+function get_time_str()
+    local ms = math.floor(Time.t)
+    local s = math.floor(ms / 1000)
+    local m = math.floor(s / 60)
+    local mss = math.floor(Time.t * 100) % 100
+    local s_str = string.format("%02d", s % 60)
+    local m_str = string.format("%02d", m)
+    local mss_str = string.format("%02d", mss)
+    return s_str, m_str, mss_str
+end
+
 function game.draw()
     -- map(gm.x, gm.y , 30, 17, gm.sx, gm.sy, C0)
     map(gm.x, gm.y , 31, 18, gm.sx, gm.sy, C0)
@@ -375,6 +386,13 @@ function game.draw()
     for _, drawable in ipairs(game.drawables) do
         drawable:draw()
     end
+
+    local s_str, m_str = get_time_str()
+    -- Включить чтобы была тень 🕶
+    -- print(m_str .. ':' .. s_str .. '\n', 0, 1, 6, true, 1, true)
+    -- Рамка
+    rect(0, 0, 22, 7, 6)
+    print(m_str .. ':' .. s_str .. '\n', 1, 0, 8, true, 1, true)
 end
 
 game.deleteSchedule = {}
@@ -458,8 +476,9 @@ function game.drawGameEndScreen()
     1
     )
 
+    local s_str, m_str, ms_str = get_time_str()
     print(
-    'Your time: ' .. math.floor(game.completionTimeSeconds) .. 's\n\n' .. 'Dev time: ' .. 288 .. 's',
+    'Your time: ' .. s_str .. ':' .. m_str .. '.' .. ms_str .. '\n\n' .. 'Dev time: ' .. 288 .. 's',
     textX + SHIFT_X, textYs[1] + SHIFT_Y,
     textColor,
     false,
