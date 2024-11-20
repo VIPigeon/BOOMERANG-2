@@ -389,10 +389,10 @@ function game.draw()
 
     local s_str, m_str = get_time_str()
     -- Включить чтобы была тень 🕶
-    -- print(m_str .. ':' .. s_str .. '\n', 0, 1, 6, true, 1, true)
+    print(m_str .. ':' .. s_str .. '\n', 0, 1, 6, true, 1, true)
     -- Рамка
-    rect(0, 0, 22, 7, 6)
-    print(m_str .. ':' .. s_str .. '\n', 1, 0, 8, true, 1, true)
+    -- rect(0, 0, 22, 7, 6)
+    print(m_str .. ':' .. s_str .. '\n', 0, 0, 14, true, 1, true)
 end
 
 game.deleteSchedule = {}

@@ -517,7 +517,7 @@ function aim.getShortestKingPath(startX, startY, targetX, targetY)
 end
 
 
--- return aim
+
 
 -- Math.lua
 
@@ -603,7 +603,7 @@ end
 -- end
 
 
--- return math
+
 
 -- Animation.lua
 
@@ -631,7 +631,7 @@ function anim.gen60(t)
     return res
 end
 
--- return anim
+
 
 -- AnimeParticles.lua
 -- title:  pslib
@@ -1276,8 +1276,6 @@ function Body:willCollideAfter(dx, dy)
 end
 
 function Body:moveUnclamped(dx, dy)
-    -- local newX = self.x + dx * Time.dt()
-    -- local newY = self.y + dy * Time.dt()
     local newX = self.x + dx * Time.dt()
     local newY = self.y + dy * Time.dt()
 
@@ -1327,7 +1325,7 @@ function Body:born_update()
     return true
 end
 
--- return Body
+
 
 -- Table.lua
 function table.copy(t)
@@ -1422,7 +1420,7 @@ function table.chooseRandomElement(t)
     return choosen
 end
 
--- return table
+
 
 -- Hitbox.lua
 --Hitbox = table.copy(Rect)
@@ -1521,7 +1519,7 @@ function Hitbox:getHeight()
     return self.y2 - self.y1
 end
 
--- return Hitbox
+
 
 -- HitCircle.lua
 HitCircle = table.copy(Hitbox)
@@ -1607,7 +1605,7 @@ function HitCircle:getHeight()
     return self.d
 end
 
--- return HitCircle
+
 
 -- Sprite.lua
 
@@ -1687,7 +1685,7 @@ end
 
 
 
--- return Sprite
+
 
 
 -- Drums.lua
@@ -1783,8 +1781,8 @@ MAP_HEIGHT = 135
 
 PLAYER_START_Y = 76 * 8 -- 128 * 8 -- 😋😋
 PLAYER_START_X = 105 * 8 -- 42 * 8  -- 😲😲
--- PLAYER_START_X = 8* 10     
--- PLAYER_START_Y = 8* 99
+-- PLAYER_START_X = 8* 197     
+-- PLAYER_START_Y = 8* 59
 
 -- PLAYER_END_Y = 89 * 8 -- BYKE 😎😎
 -- PLAYER_END_X = 118 * 8 -- G🤠T🤠 BYKE
@@ -2227,7 +2225,7 @@ data.Cutscene = {
     smoke_frequency = 3, -- More - less particles
 }   
 
--- return data
+
 
 -- SuperConfig.lua
 
@@ -2962,7 +2960,7 @@ for i = 1, 15 do
     table.insert(palette.defaultColors, color)
 end
 
--- return palette
+
 
 -- Rect.lua
 Rect = {}
@@ -3066,7 +3064,7 @@ function Rect:drawDebug()
     )
 end
 
--- return Rect
+
 -- Queue.lua
 Queue = {}
 
@@ -3218,7 +3216,7 @@ function Whirl:draw()
     self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
 end
 
--- return Whirl
+
 
 -- AnimationOver.lua
 --Эпикграф
@@ -3639,7 +3637,7 @@ function gm.in_one_screen(obj1, obj2)
             math.round(y1 // 136) == math.round(y2 // 136)
 end
 
--- return gm
+
 
 
 -- Time.lua
@@ -6996,7 +6994,7 @@ function Player:update()
     end
 end
 
--- return Player
+
 
 -- Bike.lua
 Bike = table.copy(Body)
@@ -7255,7 +7253,7 @@ function Boomerang:draw()
 end
 
 
--- return Boomerang
+
 
 -- CameraWindow.lua
 CameraWindow = {}
@@ -7267,6 +7265,7 @@ function CameraWindow:new(deadZoneRect, target, targetWidth, targetHeight)
         target = target,
         targetWidth = targetWidth,
         targetHeight = targetHeight,
+        we_are_shaking_for = 0,
 
         shakeMagnitude = {},
         statuses = {},
@@ -7388,22 +7387,39 @@ function CameraWindow:update()
 
     ::move::
 
+    local do_we_shake = false
     if self.statuses['doork'] then
         self.area:move(
             self.shakeMagnitude['doork'] * oneOrMinusOne(),
             self.shakeMagnitude['doork'] * oneOrMinusOne()
         )
+        do_we_shake = true
     elseif self.statuses['boomer'] then
         self.area:move(
             self.shakeMagnitude['boomer'] * oneOrMinusOne(),
             self.shakeMagnitude['boomer'] * oneOrMinusOne()
         )
+        -- do_we_shake = true
     elseif self.statuses['shake'] then
         self.area:move(
             self.shakeMagnitude['shake'] * oneOrMinusOne(),
             self.shakeMagnitude['shake'] * oneOrMinusOne()
         )
+        do_we_shake = true
     end
+
+    if do_we_shake then
+        self.we_are_shaking_for = self.we_are_shaking_for + Time.dt()
+        if self.we_are_shaking_for > 2.0 then
+            -- trace("fuck you$$")
+            self.statuses['doork'] = false
+            self.statuses['boomer'] = false
+            self.statuses['shake'] = false
+        end
+    else
+        self.we_are_shaking_for = 0
+    end
+
     --if self.status == 'shake' then
     --    self.area:move(
     --        self.shakeMagnitude['shake'] * oneOrMinusOne(),
@@ -7413,7 +7429,7 @@ function CameraWindow:update()
     self:moveCamera()
 end
 
--- return CameraWindow
+
 
 -- Settings.lua
 settings = {}
@@ -7962,7 +7978,7 @@ function game.drawGameEndScreen()
     -- )
 end
 
--- return game
+
 
 
 function TIC()
