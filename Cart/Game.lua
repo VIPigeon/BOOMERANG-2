@@ -457,8 +457,14 @@ function game.drawGameEndScreen()
     
     -- rect(0, 0, MAP_WIDTH, MAP_HEIGHT, backgroundColor)
     game.draw()
+    print(  -- shadow
+    'Thank you for playing!',
+    textX, textYs[1] - 2 + 2,
+    6,
+    false,
+    2
+    )
     print(
-    -- '              Thank you for playing!',
     'Thank you for playing!',
     textX, textYs[1] - 2,
     textColor,
@@ -468,6 +474,13 @@ function game.drawGameEndScreen()
     local SHIFT_X = 120
     local SHIFT_Y = 28
 
+    print(  -- shadow
+    'Fruits collected:\n\n       ' .. fruitsCollection.collected .. ' / ' .. fruitsCollection.needed,
+    textX, textYs[1] + SHIFT_Y + 1,
+    6,
+    false,
+    1
+    )
     print(
     'Fruits collected:\n\n       ' .. fruitsCollection.collected .. ' / ' .. fruitsCollection.needed,
     textX, textYs[1] + SHIFT_Y,
@@ -477,8 +490,15 @@ function game.drawGameEndScreen()
     )
 
     local s_str, m_str, ms_str = get_time_str()
+    print(  -- shadow
+    'Your time: ' .. m_str .. ':' .. s_str .. '.' .. ms_str .. '\n\n' .. 'Dev time: 04:48.07',
+    textX + SHIFT_X, textYs[1] + SHIFT_Y + 1,
+    6,
+    false,
+    1
+    )
     print(
-    'Your time: ' .. s_str .. ':' .. m_str .. '.' .. ms_str .. '\n\n' .. 'Dev time: ' .. 288 .. 's',
+    'Your time: ' .. m_str .. ':' .. s_str .. '.' .. ms_str .. '\n\n' .. 'Dev time: 04:48.07',
     textX + SHIFT_X, textYs[1] + SHIFT_Y,
     textColor,
     false,

@@ -517,7 +517,7 @@ function aim.getShortestKingPath(startX, startY, targetX, targetY)
 end
 
 
-
+-- return aim
 
 -- Math.lua
 
@@ -603,7 +603,7 @@ end
 -- end
 
 
-
+-- return math
 
 -- Animation.lua
 
@@ -631,7 +631,7 @@ function anim.gen60(t)
     return res
 end
 
-
+-- return anim
 
 -- AnimeParticles.lua
 -- title:  pslib
@@ -1325,7 +1325,7 @@ function Body:born_update()
     return true
 end
 
-
+-- return Body
 
 -- Table.lua
 function table.copy(t)
@@ -1420,7 +1420,7 @@ function table.chooseRandomElement(t)
     return choosen
 end
 
-
+-- return table
 
 -- Hitbox.lua
 --Hitbox = table.copy(Rect)
@@ -1519,7 +1519,7 @@ function Hitbox:getHeight()
     return self.y2 - self.y1
 end
 
-
+-- return Hitbox
 
 -- HitCircle.lua
 HitCircle = table.copy(Hitbox)
@@ -1605,7 +1605,7 @@ function HitCircle:getHeight()
     return self.d
 end
 
-
+-- return HitCircle
 
 -- Sprite.lua
 
@@ -1685,7 +1685,7 @@ end
 
 
 
-
+-- return Sprite
 
 
 -- Drums.lua
@@ -1781,8 +1781,8 @@ MAP_HEIGHT = 135
 
 PLAYER_START_Y = 76 * 8 -- 128 * 8 -- 😋😋
 PLAYER_START_X = 105 * 8 -- 42 * 8  -- 😲😲
--- PLAYER_START_X = 8* 197     
--- PLAYER_START_Y = 8* 59
+-- PLAYER_START_X = 8* 114
+-- PLAYER_START_Y = 8* 14
 
 -- PLAYER_END_Y = 89 * 8 -- BYKE 😎😎
 -- PLAYER_END_X = 118 * 8 -- G🤠T🤠 BYKE
@@ -2225,7 +2225,7 @@ data.Cutscene = {
     smoke_frequency = 3, -- More - less particles
 }   
 
-
+-- return data
 
 -- SuperConfig.lua
 
@@ -2960,7 +2960,7 @@ for i = 1, 15 do
     table.insert(palette.defaultColors, color)
 end
 
-
+-- return palette
 
 -- Rect.lua
 Rect = {}
@@ -3064,7 +3064,7 @@ function Rect:drawDebug()
     )
 end
 
-
+-- return Rect
 -- Queue.lua
 Queue = {}
 
@@ -3216,7 +3216,7 @@ function Whirl:draw()
     self.sprite:draw(self.x - gm.x*8 + gm.sx, self.y - gm.y*8 + gm.sy, self.flip, self.rotate)
 end
 
-
+-- return Whirl
 
 -- AnimationOver.lua
 --Эпикграф
@@ -3637,7 +3637,7 @@ function gm.in_one_screen(obj1, obj2)
             math.round(y1 // 136) == math.round(y2 // 136)
 end
 
-
+-- return gm
 
 
 -- Time.lua
@@ -6994,7 +6994,7 @@ function Player:update()
     end
 end
 
-
+-- return Player
 
 -- Bike.lua
 Bike = table.copy(Body)
@@ -7253,7 +7253,7 @@ function Boomerang:draw()
 end
 
 
-
+-- return Boomerang
 
 -- CameraWindow.lua
 CameraWindow = {}
@@ -7429,7 +7429,7 @@ function CameraWindow:update()
     self:moveCamera()
 end
 
-
+-- return CameraWindow
 
 -- Settings.lua
 settings = {}
@@ -7872,6 +7872,17 @@ end
 
 game.restart()
 
+function get_time_str()
+    local ms = math.floor(Time.t)
+    local s = math.floor(ms / 1000)
+    local m = math.floor(s / 60)
+    local mss = math.floor(Time.t * 100) % 100
+    local s_str = string.format("%02d", s % 60)
+    local m_str = string.format("%02d", m)
+    local mss_str = string.format("%02d", mss)
+    return s_str, m_str, mss_str
+end
+
 function game.draw()
     -- map(gm.x, gm.y , 30, 17, gm.sx, gm.sy, C0)
     map(gm.x, gm.y , 31, 18, gm.sx, gm.sy, C0)
@@ -7879,6 +7890,13 @@ function game.draw()
     for _, drawable in ipairs(game.drawables) do
         drawable:draw()
     end
+
+    local s_str, m_str = get_time_str()
+    -- Включить чтобы была тень 🕶
+    print(m_str .. ':' .. s_str .. '\n', 0, 1, 6, true, 1, true)
+    -- Рамка
+    -- rect(0, 0, 22, 7, 6)
+    print(m_str .. ':' .. s_str .. '\n', 0, 0, 14, true, 1, true)
 end
 
 game.deleteSchedule = {}
@@ -7943,8 +7961,14 @@ function game.drawGameEndScreen()
     
     -- rect(0, 0, MAP_WIDTH, MAP_HEIGHT, backgroundColor)
     game.draw()
+    print(  -- shadow
+    'Thank you for playing!',
+    textX, textYs[1] - 2 + 2,
+    6,
+    false,
+    2
+    )
     print(
-    -- '              Thank you for playing!',
     'Thank you for playing!',
     textX, textYs[1] - 2,
     textColor,
@@ -7954,6 +7978,13 @@ function game.drawGameEndScreen()
     local SHIFT_X = 120
     local SHIFT_Y = 28
 
+    print(  -- shadow
+    'Fruits collected:\n\n       ' .. fruitsCollection.collected .. ' / ' .. fruitsCollection.needed,
+    textX, textYs[1] + SHIFT_Y + 1,
+    6,
+    false,
+    1
+    )
     print(
     'Fruits collected:\n\n       ' .. fruitsCollection.collected .. ' / ' .. fruitsCollection.needed,
     textX, textYs[1] + SHIFT_Y,
@@ -7962,8 +7993,16 @@ function game.drawGameEndScreen()
     1
     )
 
+    local s_str, m_str, ms_str = get_time_str()
+    print(  -- shadow
+    'Your time: ' .. m_str .. ':' .. s_str .. '.' .. ms_str .. '\n\n' .. 'Dev time: 04:48.07',
+    textX + SHIFT_X, textYs[1] + SHIFT_Y + 1,
+    6,
+    false,
+    1
+    )
     print(
-    'Your time: ' .. math.floor(game.completionTimeSeconds) .. 's\n\n' .. 'Dev time: ' .. 288 .. 's',
+    'Your time: ' .. m_str .. ':' .. s_str .. '.' .. ms_str .. '\n\n' .. 'Dev time: 04:48.07',
     textX + SHIFT_X, textYs[1] + SHIFT_Y,
     textColor,
     false,
@@ -7978,7 +8017,7 @@ function game.drawGameEndScreen()
     -- )
 end
 
-
+-- return game
 
 
 function TIC()
